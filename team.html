@@ -2,61 +2,66 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Team - Bio-Revive 360° | JRU Ranchi | Futuristic Software Lab</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<title>Team - Bio-Revive 360° Alien Lab | JRU Ranchi</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Manrope:wght@700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-:root{--green:#0f9d4e;--green2:#2cf6b3;--blue:#1d4ed8;--purple:#7c3aed;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--light:#f8fafc}
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#fff;color:var(--text)}
-.container{max-width:1100px;margin:0 auto;padding:0 5%}
-nav{padding:14px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+:root{--green:#0f9d4e;--green2:#2cf6b3;--blue:#1d4ed8;--purple:#7c3aed;--cyan:#06b6d4;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--light:#f8fafc}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#fff;color:var(--text);overflow-x:hidden}
+.container{max-width:1100px;margin:0 auto;padding:0 5%;position:relative;z-index:2}
+.fx-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
+#starsCanvas{opacity:0.45}#neuralCanvas{opacity:0.3}
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:14px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .btn{padding:10px 20px;border-radius:999px;font-weight:700;text-decoration:none;display:inline-flex;gap:8px;align-items:center;font-size:0.88rem;transition:0.2s;border:none;cursor:pointer}
 .btn-dark{background:var(--text);color:white}.btn-glow{background:linear-gradient(135deg,var(--blue),#7c3aed);color:white;box-shadow:0 8px 24px rgba(29,78,216,0.25)}
 .btn-outline{border:1.5px solid var(--border);background:white;color:var(--text)}
-.hero{padding:32px 0 12px;text-align:center}
+.hero{padding:32px 0 12px;text-align:center;position:relative}
 .hero h1{font-family:'Manrope';font-size:clamp(1.8rem,3.5vw,2.6rem);letter-spacing:-0.8px;line-height:1.1}
-.team-hero-img{width:100%;border-radius:24px;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,0.1);margin:20px 0}
+.team-hero-img{width:100%;border-radius:24px;border:1px solid var(--border);box-shadow:0 20px 60px rgba(44,246,179,0.12),0 20px 60px rgba(0,0,0,0.08);margin:20px 0;position:relative;z-index:2}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:20px 0}
-.card{border:1px solid var(--border);border-radius:18px;padding:18px;background:white;box-shadow:0 4px 20px rgba(0,0,0,0.03);transition:0.2s}
-.card:hover{transform:translateY(-3px)}
+.card{background:rgba(255,255,255,0.95);backdrop-filter:blur(6px);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 4px 20px rgba(0,0,0,0.03);transition:0.25s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--green2),var(--cyan));opacity:0}
+.card:hover::before{opacity:1}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,0.08);border-color:#a7f3d0}
 .card h3{font-size:1.05rem;margin-bottom:4px}
 .card b{color:var(--green);font-size:0.9rem}
 .badge-role{display:inline-block;background:var(--light);border:1px solid var(--border);padding:4px 10px;border-radius:999px;font-size:0.72rem;font-weight:700;margin-top:6px}
-.launch-box{background:var(--text);color:white;border-radius:20px;padding:26px;text-align:center;margin:30px 0}
-footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid var(--border);margin-top:30px;font-size:0.84rem;background:var(--light)}
-/* BOOT - LIGHT THEME */
-#boot{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#f0fdf4 0%,#ecfeff 50%,#f5f3ff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.8s cubic-bezier(0.76,0,0.24,1)}
+.launch-box{background:radial-gradient(600px 300px at 20% 0%, rgba(44,246,179,0.14), transparent), var(--text);color:white;border-radius:20px;padding:26px;text-align:center;margin:30px 0;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08)}
+footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid var(--border);margin-top:30px;font-size:0.84rem;background:var(--light);position:relative;z-index:2}
+/* BOOT ALIEN LAB */
+#boot{position:fixed;inset:0;z-index:9999;background:radial-gradient(1200px 600px at 20% 0%, rgba(44,246,179,0.18), transparent), radial-gradient(900px 600px at 90% 30%, rgba(124,58,237,0.18), transparent), linear-gradient(135deg,#f0fdf4 0%,#ecfeff 50%,#f5f3ff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.8s cubic-bezier(0.76,0,0.24,1);overflow:hidden}
 #boot.hide{transform:translateY(-100%);opacity:0;pointer-events:none}
-.boot-logo{width:88px;height:88px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;animation:pulse 2s infinite;box-shadow:0 20px 40px rgba(10,155,74,0.25)}
+.boot-core{position:absolute;width:600px;height:600px;border-radius:50%;border:1px dashed rgba(16,157,78,0.15);animation:rotate 20s linear infinite;top:50%;left:50%;transform:translate(-50%,-50%)}
+.boot-core2{width:380px;height:380px;border-style:solid;border-width:1px;animation:rotate 12s linear infinite reverse}
+@keyframes rotate{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.boot-logo{width:88px;height:88px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;animation:pulse 2s infinite;box-shadow:0 0 0 10px rgba(44,246,179,0.12),0 20px 40px rgba(10,155,74,0.25);position:relative;z-index:2}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-.boot-lines{margin-top:18px;width:360px;max-width:85vw;text-align:left;font-family:monospace;font-size:0.8rem;line-height:1.7;color:var(--muted)}
+.boot-lines{margin-top:18px;width:360px;max-width:85vw;text-align:left;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.7;color:var(--muted);position:relative;z-index:2}
 .boot-line{opacity:0;transform:translateY(8px);animation:lineIn 0.4s forwards}
-.boot-line.active{color:var(--green);font-weight:700}
+.boot-line.active{color:var(--green);font-weight:700;text-shadow:0 0 12px rgba(44,246,179,0.6)}
 @keyframes lineIn{to{opacity:1;transform:translateY(0)}}
-.boot-progress{width:360px;max-width:85vw;height:5px;background:rgba(0,0,0,0.06);border-radius:999px;margin-top:14px;overflow:hidden}
-.boot-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--green2),var(--blue));transition:width 0.3s}
-.lang-row{margin-top:12px;display:flex;gap:7px;flex-wrap:wrap;justify-content:center;align-items:center}
+.boot-progress{width:360px;max-width:85vw;height:5px;background:rgba(0,0,0,0.06);border-radius:999px;margin-top:14px;overflow:hidden;position:relative;z-index:2}
+.boot-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--green2),var(--cyan),var(--blue));transition:width 0.3s;box-shadow:0 0 12px var(--green2)}
+.lang-row{margin-top:12px;display:flex;gap:7px;flex-wrap:wrap;justify-content:center;align-items:center;position:relative;z-index:2}
 .lang-btn{padding:8px 16px;border-radius:999px;background:white;border:1px solid var(--border);font-weight:700;font-size:0.78rem;box-shadow:0 4px 16px rgba(0,0,0,0.05);cursor:pointer;transition:0.2s;display:flex;align-items:center;gap:6px}
 .lang-btn.active{background:var(--text);color:white}
 .quit-btn{background:rgba(0,0,0,0.06);color:var(--muted)}
-.voice-card{margin:16px auto;max-width:760px;background:white;border:1px solid var(--border);border-radius:16px;padding:12px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,0.05);text-align:left}
+.voice-card{margin:16px auto;max-width:760px;background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:16px;padding:12px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,0.05);text-align:left;position:relative;z-index:2}
 .voice-dot{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;color:white;flex-shrink:0;animation:voicePulse 1.5s infinite}
 @keyframes voicePulse{0%{box-shadow:0 0 0 0 rgba(10,155,74,0.4)}70%{box-shadow:0 0 0 10px rgba(10,155,74,0)}100%{box-shadow:0 0 0 0 rgba(10,155,74,0)}}
+.brain-wave{height:28px;display:flex;align-items:center;gap:2px;margin-top:4px}
+.brain-bar{width:3px;background:linear-gradient(180deg,var(--green2),var(--blue));border-radius:999px;animation:wave 0.9s infinite ease-in-out}
+@keyframes wave{0%,100%{height:6px}50%{height:18px}}
 </style>
 </head>
 <body>
+<canvas id="starsCanvas" class="fx-canvas"></canvas>
+<canvas id="neuralCanvas" class="fx-canvas"></canvas>
 
-<!-- SOUNDS - Add your MP3s in sounds/ folder -->
-<audio id="s_boot" src="sounds/boot.mp3" preload="auto"></audio>
-<audio id="s_welcome_en" src="sounds/welcome_en.mp3" preload="auto"></audio>
-<audio id="s_welcome_hi" src="sounds/welcome_hi.mp3" preload="auto"></audio>
-<audio id="s_beep" src="sounds/beep.mp3" preload="auto"></audio>
-<audio id="s_launch" src="sounds/launch.mp3" preload="auto"></audio>
-
-<!-- BOOT SEQUENCE -->
 <div id="boot">
+<div class="boot-core"></div><div class="boot-core boot-core2"></div>
 <div class="boot-logo">👥</div>
-<h2 style="margin-top:12px;font-size:1.6rem;letter-spacing:-0.5px">Bio-Revive 360° Team OS</h2>
-<p style="color:var(--muted);font-size:0.82rem;margin-top:2px">Futuristic Software • Health AI Genius • Scientist • Developer Lab</p>
+<h2 style="margin-top:12px;font-size:1.6rem;letter-spacing:-0.5px;position:relative;z-index:2">Bio-Revive 360° Team OS <span style="font-size:0.68rem;background:var(--text);color:#2cf6b3;padding:3px 8px;border-radius:999px;font-family:'JetBrains Mono'">ALIEN LAB</span></h2>
+<p style="color:var(--muted);font-size:0.82rem;margin-top:2px;position:relative;z-index:2">Futuristic Software • Health AI Genius • Scientist • Developer • Neural • DNA • Brain Waves • Robots</p>
 <div class="boot-lines" id="bootLines"></div>
 <div class="boot-progress"><div class="boot-bar" id="bootBar"></div></div>
 <div class="lang-row">
@@ -64,140 +69,125 @@ footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid va
 <button class="lang-btn" id="btnHi" onclick="setLang('hi')">🇮🇳 Hindi Female</button>
 <button class="lang-btn quit-btn" onclick="skipBoot()">Quit / Skip ⏭️</button>
 </div>
-<div style="margin-top:14px;display:flex;gap:8px">
-<button class="btn" style="background:var(--green);color:white" onclick="playWelcome()">🔊 Play Welcome</button>
+<div style="margin-top:14px;display:flex;gap:8px;position:relative;z-index:2">
+<button class="btn" style="background:var(--green);color:white" onclick="enableAudioAndPlay()">🔊 Enable Audio + Voice</button>
 <button class="btn btn-dark" onclick="skipBoot()">Enter Team Lab →</button>
 </div>
-<p style="font-size:0.68rem;color:var(--muted);margin-top:8px">Press ESC to Quit • Space to Play Voice</p>
+<p style="font-size:0.68rem;color:var(--muted);margin-top:8px;position:relative;z-index:2">First click unlocks futuristic alien lab sounds • ESC to Quit</p>
 </div>
 
 <div class="container">
 <nav>
-<div style="font-weight:800;font-size:1.1rem">JRU | Bio-Revive 360° Team • Futuristic Software Lab</div>
+<div style="font-weight:800;font-size:1.1rem;display:flex;align-items:center;gap:8px"><span style="width:32px;height:32px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:8px;display:flex;align-items:center;justify-content:center;color:white">B</span> JRU | Bio-Revive 360° Team • Alien Lab</div>
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <a href="index.html" class="btn btn-dark">← Home</a>
 <a href="index.html#problem" class="btn btn-outline">Problem</a>
 <a href="index.html#solution" class="btn btn-outline">Solution</a>
-<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" onclick="playS('launch')">BIO-REVIVE AI ↗</a>
+<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" onclick="playFuturistic('launch')">BIO-REVIVE AI ↗</a>
 </div>
 </nav>
 
 <div class="hero">
-<span style="background:#dcfce7;color:#065f46;border:1px solid #a7f3d0;padding:5px 12px;border-radius:999px;font-size:0.7rem;font-weight:800;letter-spacing:1px">MCA 2025 • JHARKHAND RAI UNIVERSITY RANCHI • FUTURISTIC SOFTWARE • AI GENIUS • SCIENTIST • DEVELOPER</span>
-<h1 style="margin-top:12px">Meet the Minds Behind<br>Bio-Revive 360° Lab</h1>
-<p style="color:var(--muted);margin-top:8px">Department of Computer Applications (MCA) • Futuristic Software • Health AI Genius • Scientist • Developer Team</p>
+<span style="background:linear-gradient(135deg,#dcfce7,#a7f3d0);color:#065f46;border:1px solid #86efac;padding:5px 12px;border-radius:999px;font-size:0.7rem;font-weight:800;letter-spacing:1px">MCA 2025 • JHARKHAND RAI UNIVERSITY RANCHI • FUTURISTIC SOFTWARE • NEURAL • DNA • ROBOT • ALIEN SPACE LAB</span>
+<h1 style="margin-top:12px">Meet the Minds Behind<br>Bio-Revive 360° Alien Lab</h1>
+<p style="color:var(--muted);margin-top:8px">Department of Computer Applications (MCA) • Futuristic Time Machine • Neural Networks • Genetic Engineering • Brain Waves • Robots</p>
 
 <div class="voice-card">
 <div class="voice-dot" id="voiceDot">🎙️</div>
 <div style="flex:1">
-<div style="font-weight:700;font-size:0.84rem"><span id="voiceLangLabel">English Female AI Scientist Voice</span> <span style="background:#dcfce7;color:#065f46;padding:2px 6px;border-radius:999px;font-size:0.6rem">LIVE</span></div>
-<div style="font-size:0.8rem;color:var(--muted);margin-top:2px" id="welcomeText">"Welcome to Bio-Revive 360 Team Lab. We are Futuristic Software Engineers, Health AI Genius, Scientists and Developers from Jharkhand Rai University Ranchi, building the future of health intelligence."</div>
+<div style="font-weight:700;font-size:0.84rem"><span id="voiceLangLabel">English Female AI Scientist Voice</span> <span style="background:#dcfce7;color:#065f46;padding:2px 6px;border-radius:999px;font-size:0.6rem">NEURAL LIVE</span> <span style="background:#0f172a;color:#2cf6b3;padding:2px 6px;border-radius:999px;font-size:0.6rem;font-family:'JetBrains Mono'">ROBOT SYNC</span></div>
+<div style="font-size:0.8rem;color:var(--muted);margin-top:2px" id="welcomeText">"Welcome to Bio-Revive 360 Team Alien Lab. We are Futuristic Software Engineers, Health AI Genius, Scientists and Developers from Jharkhand Rai University Ranchi, building time machine health intelligence with neural networks and genetic engineering."</div>
+<div class="brain-wave"><div class="brain-bar" style="animation-delay:0s"></div><div class="brain-bar" style="animation-delay:0.1s"></div><div class="brain-bar" style="animation-delay:0.2s"></div><div class="brain-bar" style="animation-delay:0.15s"></div><div class="brain-bar" style="animation-delay:0.25s"></div><div class="brain-bar" style="animation-delay:0.05s"></div></div>
 </div>
-<button class="lang-btn" onclick="playWelcome()">▶️ Play</button>
+<button class="lang-btn" onclick="enableAudioAndPlay()">▶️ Play</button>
 </div>
 
 <img src="team_page.png" alt="Team Bio-Revive 360 Animated" class="team-hero-img">
 <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px">
-<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" style="padding:13px 26px;font-size:1rem" onclick="playS('launch')">🚀 Launch BIO-REVIVE AI Platform</a>
+<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" style="padding:13px 26px;font-size:1rem" onclick="playFuturistic('launch')">🚀 Launch BIO-REVIVE AI Platform</a>
 <a href="index.html" class="btn btn-dark">← Back to Home</a>
 <button class="btn btn-outline" onclick="toggleLang()">🎧 Hear in <span id="btnLangTxt">Hindi</span></button>
+<button class="btn btn-outline" onclick="playFuturistic('robot')">🤖 Robot Beep</button>
 </div>
 </div>
 
 <div class="grid">
-<div class="card"><h3>👨‍💻 Ashish Kumar</h3><b>MC/25/018</b><br><span class="badge-role">Lead AI Developer & Architect</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">System Design, GenAI, RAG, Backend Architecture - Futuristic Software Lab</p></div>
-<div class="card" style="border-color:#a7f3d0;background:#f0fdf4"><h3>👩‍🎨 Gudiya Kumari</h3><b>MC/25/044</b><br><span class="badge-role" style="background:white">Frontend & UI/UX Scientist (Swapped)</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">React, Next.js, Visualization, User Experience</p></div>
-<div class="card"><h3>👨‍🔧 Harshvardhan Kumar</h3><b>MC/25/004</b><br><span class="badge-role">Backend & AI Integration</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">FastAPI, OCR, NLP Pipelines, ML Integration</p></div>
-<div class="card" style="border-color:#bfdbfe;background:#eff6ff"><h3>📊 Saksham Keshri</h3><b>MC/25/010</b><br><span class="badge-role" style="background:white">Data Analytics & Research Lead (Swapped)</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">Data Analytics, Risk Indicators, Research Evaluation</p></div>
+<div class="card"><h3>👨‍💻 Ashish Kumar</h3><b>MC/25/018</b><br><span class="badge-role">Lead AI Developer & Time Machine Architect</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">System Design, GenAI, RAG, Neural Networks, Robot Orchestration - Futuristic Software Lab</p></div>
+<div class="card" style="border-color:#a7f3d0;background:linear-gradient(135deg,#f0fdf4,#ecfeff)"><h3>👩‍🎨 Gudiya Kumari</h3><b>MC/25/044</b><br><span class="badge-role" style="background:white">Frontend & UI/UX Scientist (Swapped)</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">React, Next.js, Alien Space UI, Brain Wave Visualization, Human-Centric AI</p></div>
+<div class="card"><h3>👨‍🔧 Harshvardhan Kumar</h3><b>MC/25/004</b><br><span class="badge-role">Backend & Robot AI Integration</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">FastAPI, OCR, NLP, Genetic Signal Pipelines, Robot Vision</p></div>
+<div class="card" style="border-color:#bfdbfe;background:linear-gradient(135deg,#eff6ff,#f5f3ff)"><h3>📊 Saksham Keshri</h3><b>MC/25/010</b><br><span class="badge-role" style="background:white">Data Analytics & Genetic Research Lead (Swapped)</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">DNA Analytics, Risk Indicators, Brain Wave Research, Time Machine Evaluation</p></div>
 </div>
 
 <div class="launch-box">
-<h2 style="font-family:'Manrope';font-size:1.6rem">Built by Futuristic Software Lab</h2>
-<p style="color:#94a3b8;margin:8px 0 16px">Health AI Genius • Scientist • Developer Team • BIO-REVIVE 360°</p>
-<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" style="background:white;color:black!important;padding:14px 28px;font-size:1.05rem" onclick="playS('launch')">🚀 BIO-REVIVE AI - https://biorevive-jh9.caffeine.xyz/</a>
-<div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-<a href="index.html#problem" class="btn" style="background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15)">Problem Statement</a>
-<a href="index.html#solution" class="btn" style="background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15)">Solution</a>
+<h2 style="font-family:'Manrope';font-size:1.6rem">Built by Futuristic Alien Lab - Time Machine • Neural • DNA • Brain Waves • Robots</h2>
+<p style="color:#94a3b8;margin:8px 0 16px">Health AI Genius • Scientist • Developer Team • Bio-Revive 360° Alien Intelligence Platform</p>
+<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" style="background:white;color:black!important;padding:14px 28px;font-size:1.05rem" onclick="playFuturistic('launch')">🚀 BIO-REVIVE AI - https://biorevive-jh9.caffeine.xyz/</a>
+<div style="margin-top:10px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
+<span style="background:rgba(44,246,179,0.15);color:#2cf6b3;padding:5px 10px;border-radius:999px;font-size:0.7rem">🧠 Neural Net</span>
+<span style="background:rgba(124,58,237,0.2);color:#c4b5fd;padding:5px 10px;border-radius:999px;font-size:0.7rem">🧬 Genetic Eng</span>
+<span style="background:rgba(6,182,214,0.15);color:#67e8f9;padding:5px 10px;border-radius:999px;font-size:0.7rem">⚡ Brain Waves</span>
+<span style="background:rgba(255,255,255,0.08);color:white;padding:5px 10px;border-radius:999px;font-size:0.7rem">🤖 Robot Lab</span>
 </div>
 </div>
 
 <footer>
-<div><b>BIO-REVIVE 360°</b> • AI-Based Health Report Analysis, Organ Biological Age Estimation and Health Risk Prediction Platform</div>
-<div style="margin-top:6px">Team: Ashish MC/25/018 | Gudiya MC/25/044 (Frontend & UI/UX Scientist) | Harshvardhan MC/25/004 | Saksham MC/25/010 (Data Analytics & Research Lead) • JRU Ranchi • MCA 2025 • Futuristic Software • Health AI Genius • Scientist • Developer</div>
-<div style="margin-top:6px;font-size:0.74rem">⚠️ Research Prototype - AI-generated indicators for education & awareness only. Not clinical diagnosis.</div>
+<div><b>BIO-REVIVE 360° Alien Lab</b> • Time Machine • Neural Networks • Genetic Engineering • Brain Waves • Robots • AI-Based Health Report Analysis, Organ Biological Age Estimation Platform</div>
+<div style="margin-top:6px">Team: Ashish MC/25/018 | Gudiya MC/25/044 (Frontend & UI/UX Scientist) | Harshvardhan MC/25/004 | Saksham MC/25/010 (Data Analytics & Research Lead) • JRU Ranchi • MCA 2025 • Futuristic Software • Health AI Genius • Scientist • Developer • Alien Space Lab</div>
+<div style="margin-top:6px;font-size:0.74rem">⚠️ Research Prototype - AI-generated indicators for education & awareness only. Not clinical diagnosis. Future time machine concept.</div>
 </footer>
 </div>
 
 <script>
-let currentLang='en';
-const welcomeMessages={
-en:"Welcome to Bio-Revive 360 Team Lab. We are Futuristic Software Engineers, Health AI Genius, Scientists and Developers from Jharkhand Rai University Ranchi, building the future of health intelligence with AI.",
-hi:"Bio-Revive 360 टीम लैब में आपका स्वागत है। हम झारखंड राय यूनिवर्सिटी रांची के फ्यूचरिस्टिक सॉफ्टवेयर इंजीनियर्स, हेल्थ एआई जीनियस, साइंटिस्ट्स और डेवलपर्स हैं, जो एआई के साथ हेल्थ इंटेलिजेंस का भविष्य बना रहे हैं।"
-};
-const bootSteps=["Initializing Bio-Revive Team OS...","Loading Futuristic Software Lab...","Connecting Health AI Genius Core...","Syncing Scientist Modules...","Loading Team Avatars: Ashish, Gudiya, Harsh, Saksham...","System Ready. Welcome to Bio-Revive 360 Lab."];
-function setLang(lang){
-currentLang=lang;
-document.getElementById('btnEn').classList.toggle('active',lang==='en');
-document.getElementById('btnHi').classList.toggle('active',lang==='hi');
-document.getElementById('voiceLangLabel').innerText= lang==='en'? 'English Female AI Scientist Voice' : 'Hindi Female AI Scientist Voice';
-document.getElementById('welcomeText').innerText='"'+welcomeMessages[lang]+'"';
-document.getElementById('btnLangTxt').innerText= lang==='en'? 'Hindi' : 'English';
-playS('beep');
-}
-function toggleLang(){ setLang(currentLang==='en'?'hi':'en'); playWelcome(); }
-function playS(id){
+// FUTURISTIC AUDIO ENGINE - SAME AS INDEX
+let audioCtx=null; let audioEnabled=false;
+function initAudio(){ if(!audioCtx){audioCtx=new (window.AudioContext||window.webkitAudioContext)();} if(audioCtx.state==='suspended') audioCtx.resume(); audioEnabled=true; }
+function playFuturistic(type){
 try{
-const map={beep:'s_beep',launch:'s_launch',boot:'s_boot'};
-const el=document.getElementById(map[id]);
-if(el) el.play().catch(()=>{});
+initAudio(); const now=audioCtx.currentTime; const master=audioCtx.createGain(); master.gain.setValueAtTime(0.18,now); master.connect(audioCtx.destination);
+if(type==='beep'){ const o=audioCtx.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(900,now); o.frequency.exponentialRampToValueAtTime(1400,now+0.12); const g=audioCtx.createGain(); g.gain.setValueAtTime(0.4,now); g.gain.exponentialRampToValueAtTime(0.01,now+0.15); o.connect(g); g.connect(master); o.start(now); o.stop(now+0.16); }
+else if(type==='boot'){ const o=audioCtx.createOscillator(); o.type='sawtooth'; o.frequency.setValueAtTime(120,now); o.frequency.linearRampToValueAtTime(380,now+0.6); const g=audioCtx.createGain(); g.gain.setValueAtTime(0.12,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.7); o.connect(g); g.connect(master); o.start(now); o.stop(now+0.75); }
+else if(type==='launch'){ [0,0.12,0.24].forEach((d,i)=>{ const o=audioCtx.createOscillator(); o.type='triangle'; o.frequency.setValueAtTime(440+i*180,now+d); const g=audioCtx.createGain(); g.gain.setValueAtTime(0.22,now+d); g.gain.exponentialRampToValueAtTime(0.01,now+d+0.3); o.connect(g); g.connect(master); o.start(now+d); o.stop(now+d+0.35); }); }
+else if(type==='robot'){ const o=audioCtx.createOscillator(); o.type='square'; o.frequency.setValueAtTime(600,now); o.frequency.setValueAtTime(900,now+0.08); o.frequency.setValueAtTime(600,now+0.16); const g=audioCtx.createGain(); g.gain.setValueAtTime(0.18,now); g.gain.exponentialRampToValueAtTime(0.01,now+0.28); o.connect(g); g.connect(master); o.start(now); o.stop(now+0.3); }
+else if(type==='hum'){ const o=audioCtx.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(55,now); const g=audioCtx.createGain(); g.gain.setValueAtTime(0.08,now); g.gain.setValueAtTime(0.08,now+1.5); g.gain.exponentialRampToValueAtTime(0.001,now+1.6); o.connect(g); g.connect(master); o.start(now); o.stop(now+1.6); }
 }catch(e){}
 }
+let currentLang='en';
+const welcomeMessages={
+en:"Welcome to Bio-Revive 360 Team Alien Lab. We are Futuristic Software Engineers, Health AI Genius, Scientists and Developers from Jharkhand Rai University Ranchi, building time machine health intelligence with neural networks, genetic engineering, brain waves and robots.",
+hi:"Bio-Revive 360 टीम एलियन लैब में आपका स्वागत है। हम झारखंड राय यूनिवर्सिटी रांची के फ्यूचरिस्टिक सॉफ्टवेयर इंजीनियर्स, हेल्थ एआई जीनियस, साइंटिस्ट्स और डेवलपर्स हैं, जो न्यूरल नेटवर्क, जेनेटिक इंजीनियरिंग, ब्रेन वेव्स और रोबोट्स के साथ टाइम मशीन हेल्थ इंटेलिजेंस बना रहे हैं।"
+};
+const bootSteps=["Initializing Bio-Revive Team Alien OS v2.0...","Loading Futuristic Time Machine Core...","Connecting Neural Network Matrix...","Calibrating Genetic Engineering Helix...","Syncing Brain Waves α β θ...","Awakening Robot Assistants...","Loading Team: Ashish, Gudiya, Harsh, Saksham...","System Ready. Welcome to Team Lab."];
+function setLang(lang){ currentLang=lang; document.getElementById('btnEn').classList.toggle('active',lang==='en'); document.getElementById('btnHi').classList.toggle('active',lang==='hi'); document.getElementById('voiceLangLabel').innerText= lang==='en'? 'English Female AI Scientist Voice' : 'Hindi Female AI Scientist Voice'; document.getElementById('welcomeText').innerText='"'+welcomeMessages[lang]+'"'; document.getElementById('btnLangTxt').innerText= lang==='en'? 'Hindi' : 'English'; playFuturistic('beep'); }
+function toggleLang(){ setLang(currentLang==='en'?'hi':'en'); enableAudioAndPlay(); }
 function speak(text,lang){
 if('speechSynthesis' in window){
-speechSynthesis.cancel();
-const u=new SpeechSynthesisUtterance(text);
-u.rate=0.92;u.pitch=1.15;u.volume=1;
-u.lang=lang==='hi'?'hi-IN':'en-US';
-const voices=speechSynthesis.getVoices();
-let female=voices.find(v=>v.name.toLowerCase().includes('female') && v.lang.includes(lang==='hi'?'hi':'en')) || voices.find(v=>v.lang.includes(lang==='hi'?'hi':'en')) || voices[0];
-if(female) u.voice=female;
-speechSynthesis.speak(u);
+speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.rate=0.92;u.pitch=1.15;u.volume=1; u.lang=lang==='hi'?'hi-IN':'en-US';
+const voices=speechSynthesis.getVoices(); let female=voices.find(v=>v.name.toLowerCase().includes('female') && v.lang.includes(lang==='hi'?'hi':'en')) || voices.find(v=>v.lang.includes(lang==='hi'?'hi':'en')) || voices[0]; if(female) u.voice=female; speechSynthesis.speak(u);
+const dot=document.getElementById('voiceDot'); if(dot) dot.style.animation='voicePulse 0.7s infinite'; u.onend=()=>{if(dot) dot.style.animation='voicePulse 1.5s infinite'};
 }
 }
-function playWelcome(){
-const custom=document.getElementById(currentLang==='hi'?'s_welcome_hi':'s_welcome_en');
-if(custom && custom.duration>0 &&!isNaN(custom.duration)){custom.play().catch(()=>speak(welcomeMessages[currentLang],currentLang));}
-else speak(welcomeMessages[currentLang],currentLang);
-playS('beep');
-}
+function enableAudioAndPlay(){ initAudio(); playFuturistic('hum'); setTimeout(()=>{playFuturistic('beep'); speak(welcomeMessages[currentLang],currentLang);},200); }
+function playWelcome(){ enableAudioAndPlay(); }
 function runBoot(){
-const container=document.getElementById('bootLines');
-const bar=document.getElementById('bootBar');
-let i=0;playS('boot');
+const container=document.getElementById('bootLines'); const bar=document.getElementById('bootBar'); let i=0; playFuturistic('boot');
 const interval=setInterval(()=>{
 if(i<bootSteps.length){
-const div=document.createElement('div');
-div.className='boot-line'+(i===bootSteps.length-1?' active':'');
-div.innerText='> '+bootSteps[i];
-container.appendChild(div);
-bar.style.width=((i+1)/bootSteps.length*100)+'%';
-playS('beep');
-i++;
-}else{
-clearInterval(interval);
-setTimeout(()=>playWelcome(),400);
-}
+const div=document.createElement('div'); div.className='boot-line'+(i===bootSteps.length-1?' active':''); div.innerText='> '+bootSteps[i]; container.appendChild(div); bar.style.width=((i+1)/bootSteps.length*100)+'%'; playFuturistic('beep'); i++;
+}else{ clearInterval(interval); setTimeout(()=>{ if(audioEnabled) enableAudioAndPlay(); },400); }
 },360);
 }
 function skipBoot(){document.getElementById('boot').classList.add('hide');speechSynthesis.cancel();}
-window.addEventListener('load',()=>{
-runBoot();
-if(speechSynthesis.getVoices().length===0){speechSynthesis.onvoiceschanged=()=>{}}
-});
-document.addEventListener('keydown',(e)=>{
-if(e.key==='Escape') skipBoot();
-if(e.key===' ') {e.preventDefault(); playWelcome();}
-});
+function initCanvases(){
+const stars=document.getElementById('starsCanvas'); const neural=document.getElementById('neuralCanvas'); if(!stars||!neural) return;
+const sCtx=stars.getContext('2d'), nCtx=neural.getContext('2d');
+function resize(){stars.width=window.innerWidth;stars.height=window.innerHeight;neural.width=window.innerWidth;neural.height=window.innerHeight;} resize(); window.addEventListener('resize',resize);
+const particles=[];for(let i=0;i<90;i++){particles.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.5+0.3,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3})}
+(function animateStars(){ sCtx.clearRect(0,0,stars.width,stars.height); particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>stars.width)p.vx*=-1;if(p.y<0||p.y>stars.height)p.vy*=-1;sCtx.beginPath();sCtx.arc(p.x,p.y,p.r,0,Math.PI*2);sCtx.fillStyle='rgba(29,78,216,0.5)';sCtx.fill();}); requestAnimationFrame(animateStars); })();
+const nodes=[];for(let i=0;i<22;i++){nodes.push({x:Math.random()*neural.width,y:Math.random()*neural.height,vx:(Math.random()-0.5)*0.6,vy:(Math.random()-0.5)*0.6})}
+(function animateNeural(){ nCtx.clearRect(0,0,neural.width,neural.height); nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>neural.width)n.vx*=-1;if(n.y<0||n.y>neural.height)n.vy*=-1;}); nodes.forEach((a,i)=>{nodes.slice(i+1).forEach(b=>{const d=Math.hypot(a.x-b.x,a.y-b.y);if(d<160){nCtx.beginPath();nCtx.moveTo(a.x,a.y);nCtx.lineTo(b.x,b.y);nCtx.strokeStyle=`rgba(44,246,179,${0.18*(1-d/160)})`;nCtx.lineWidth=0.8;nCtx.stroke();}});}); nodes.forEach(n=>{nCtx.beginPath();nCtx.arc(n.x,n.y,2.2,0,Math.PI*2);nCtx.fillStyle='rgba(16,157,78,0.7)';nCtx.fill();}); requestAnimationFrame(animateNeural); })();
+}
+window.addEventListener('load',()=>{ initCanvases(); runBoot(); document.body.addEventListener('click',()=>{if(!audioEnabled)initAudio();},{once:true}); if(speechSynthesis.getVoices().length===0){speechSynthesis.onvoiceschanged=()=>{}} });
+document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') skipBoot(); if(e.key===' ') {e.preventDefault(); enableAudioAndPlay();} });
 </script>
 </body>
 </html>
