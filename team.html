@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Team - Bio-Revive 360° | JRU Ranchi</title>
+<title>Team - Bio-Revive 360° | JRU Ranchi | Futuristic Software Lab</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
 <style>
-:root{--green:#0f9d4e;--blue:#1d4ed8;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--light:#f8fafc}
+:root{--green:#0f9d4e;--green2:#2cf6b3;--blue:#1d4ed8;--purple:#7c3aed;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--light:#f8fafc}
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#fff;color:var(--text)}
 .container{max-width:1100px;margin:0 auto;padding:0 5%}
-nav{padding:14px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+nav{padding:14px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .btn{padding:10px 20px;border-radius:999px;font-weight:700;text-decoration:none;display:inline-flex;gap:8px;align-items:center;font-size:0.88rem;transition:0.2s;border:none;cursor:pointer}
 .btn-dark{background:var(--text);color:white}.btn-glow{background:linear-gradient(135deg,var(--blue),#7c3aed);color:white;box-shadow:0 8px 24px rgba(29,78,216,0.25)}
 .btn-outline{border:1.5px solid var(--border);background:white;color:var(--text)}
@@ -16,49 +16,188 @@ nav{padding:14px 0;border-bottom:1px solid var(--border);display:flex;justify-co
 .hero h1{font-family:'Manrope';font-size:clamp(1.8rem,3.5vw,2.6rem);letter-spacing:-0.8px;line-height:1.1}
 .team-hero-img{width:100%;border-radius:24px;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,0.1);margin:20px 0}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:20px 0}
-.card{border:1px solid var(--border);border-radius:18px;padding:18px;background:white;box-shadow:0 4px 20px rgba(0,0,0,0.03)}
+.card{border:1px solid var(--border);border-radius:18px;padding:18px;background:white;box-shadow:0 4px 20px rgba(0,0,0,0.03);transition:0.2s}
+.card:hover{transform:translateY(-3px)}
 .card h3{font-size:1.05rem;margin-bottom:4px}
 .card b{color:var(--green);font-size:0.9rem}
 .badge-role{display:inline-block;background:var(--light);border:1px solid var(--border);padding:4px 10px;border-radius:999px;font-size:0.72rem;font-weight:700;margin-top:6px}
 .launch-box{background:var(--text);color:white;border-radius:20px;padding:26px;text-align:center;margin:30px 0}
 footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid var(--border);margin-top:30px;font-size:0.84rem;background:var(--light)}
+/* BOOT - LIGHT THEME */
+#boot{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#f0fdf4 0%,#ecfeff 50%,#f5f3ff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.8s cubic-bezier(0.76,0,0.24,1)}
+#boot.hide{transform:translateY(-100%);opacity:0;pointer-events:none}
+.boot-logo{width:88px;height:88px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;animation:pulse 2s infinite;box-shadow:0 20px 40px rgba(10,155,74,0.25)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.boot-lines{margin-top:18px;width:360px;max-width:85vw;text-align:left;font-family:monospace;font-size:0.8rem;line-height:1.7;color:var(--muted)}
+.boot-line{opacity:0;transform:translateY(8px);animation:lineIn 0.4s forwards}
+.boot-line.active{color:var(--green);font-weight:700}
+@keyframes lineIn{to{opacity:1;transform:translateY(0)}}
+.boot-progress{width:360px;max-width:85vw;height:5px;background:rgba(0,0,0,0.06);border-radius:999px;margin-top:14px;overflow:hidden}
+.boot-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--green2),var(--blue));transition:width 0.3s}
+.lang-row{margin-top:12px;display:flex;gap:7px;flex-wrap:wrap;justify-content:center;align-items:center}
+.lang-btn{padding:8px 16px;border-radius:999px;background:white;border:1px solid var(--border);font-weight:700;font-size:0.78rem;box-shadow:0 4px 16px rgba(0,0,0,0.05);cursor:pointer;transition:0.2s;display:flex;align-items:center;gap:6px}
+.lang-btn.active{background:var(--text);color:white}
+.quit-btn{background:rgba(0,0,0,0.06);color:var(--muted)}
+.voice-card{margin:16px auto;max-width:760px;background:white;border:1px solid var(--border);border-radius:16px;padding:12px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,0.05);text-align:left}
+.voice-dot{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;color:white;flex-shrink:0;animation:voicePulse 1.5s infinite}
+@keyframes voicePulse{0%{box-shadow:0 0 0 0 rgba(10,155,74,0.4)}70%{box-shadow:0 0 0 10px rgba(10,155,74,0)}100%{box-shadow:0 0 0 0 rgba(10,155,74,0)}}
 </style>
 </head>
 <body>
+
+<!-- SOUNDS - Add your MP3s in sounds/ folder -->
+<audio id="s_boot" src="sounds/boot.mp3" preload="auto"></audio>
+<audio id="s_welcome_en" src="sounds/welcome_en.mp3" preload="auto"></audio>
+<audio id="s_welcome_hi" src="sounds/welcome_hi.mp3" preload="auto"></audio>
+<audio id="s_beep" src="sounds/beep.mp3" preload="auto"></audio>
+<audio id="s_launch" src="sounds/launch.mp3" preload="auto"></audio>
+
+<!-- BOOT SEQUENCE -->
+<div id="boot">
+<div class="boot-logo">👥</div>
+<h2 style="margin-top:12px;font-size:1.6rem;letter-spacing:-0.5px">Bio-Revive 360° Team OS</h2>
+<p style="color:var(--muted);font-size:0.82rem;margin-top:2px">Futuristic Software • Health AI Genius • Scientist • Developer Lab</p>
+<div class="boot-lines" id="bootLines"></div>
+<div class="boot-progress"><div class="boot-bar" id="bootBar"></div></div>
+<div class="lang-row">
+<button class="lang-btn active" id="btnEn" onclick="setLang('en')">🇬🇧 English Female</button>
+<button class="lang-btn" id="btnHi" onclick="setLang('hi')">🇮🇳 Hindi Female</button>
+<button class="lang-btn quit-btn" onclick="skipBoot()">Quit / Skip ⏭️</button>
+</div>
+<div style="margin-top:14px;display:flex;gap:8px">
+<button class="btn" style="background:var(--green);color:white" onclick="playWelcome()">🔊 Play Welcome</button>
+<button class="btn btn-dark" onclick="skipBoot()">Enter Team Lab →</button>
+</div>
+<p style="font-size:0.68rem;color:var(--muted);margin-top:8px">Press ESC to Quit • Space to Play Voice</p>
+</div>
+
 <div class="container">
 <nav>
-<div style="font-weight:800;font-size:1.1rem">JRU | Bio-Revive 360° Team</div>
-<div style="display:flex;gap:8px">
+<div style="font-weight:800;font-size:1.1rem">JRU | Bio-Revive 360° Team • Futuristic Software Lab</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
 <a href="index.html" class="btn btn-dark">← Home</a>
 <a href="index.html#problem" class="btn btn-outline">Problem</a>
 <a href="index.html#solution" class="btn btn-outline">Solution</a>
-<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow">BIO-REVIVE AI ↗</a>
+<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" onclick="playS('launch')">BIO-REVIVE AI ↗</a>
 </div>
 </nav>
+
 <div class="hero">
-<span style="background:#dcfce7;color:#065f46;border:1px solid #a7f3d0;padding:5px 12px;border-radius:999px;font-size:0.7rem;font-weight:800;letter-spacing:1px">MCA 2025 • JHARKHAND RAI UNIVERSITY RANCHI</span>
+<span style="background:#dcfce7;color:#065f46;border:1px solid #a7f3d0;padding:5px 12px;border-radius:999px;font-size:0.7rem;font-weight:800;letter-spacing:1px">MCA 2025 • JHARKHAND RAI UNIVERSITY RANCHI • FUTURISTIC SOFTWARE • AI GENIUS • SCIENTIST • DEVELOPER</span>
 <h1 style="margin-top:12px">Meet the Minds Behind<br>Bio-Revive 360° Lab</h1>
-<p style="color:var(--muted);margin-top:8px">Department of Computer Applications (MCA) • Futuristic Software Lab</p>
+<p style="color:var(--muted);margin-top:8px">Department of Computer Applications (MCA) • Futuristic Software • Health AI Genius • Scientist • Developer Team</p>
+
+<div class="voice-card">
+<div class="voice-dot" id="voiceDot">🎙️</div>
+<div style="flex:1">
+<div style="font-weight:700;font-size:0.84rem"><span id="voiceLangLabel">English Female AI Scientist Voice</span> <span style="background:#dcfce7;color:#065f46;padding:2px 6px;border-radius:999px;font-size:0.6rem">LIVE</span></div>
+<div style="font-size:0.8rem;color:var(--muted);margin-top:2px" id="welcomeText">"Welcome to Bio-Revive 360 Team Lab. We are Futuristic Software Engineers, Health AI Genius, Scientists and Developers from Jharkhand Rai University Ranchi, building the future of health intelligence."</div>
+</div>
+<button class="lang-btn" onclick="playWelcome()">▶️ Play</button>
+</div>
+
 <img src="team_page.png" alt="Team Bio-Revive 360 Animated" class="team-hero-img">
 <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px">
-<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" style="padding:13px 26px;font-size:1rem">🚀 Launch BIO-REVIVE AI Platform</a>
+<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" style="padding:13px 26px;font-size:1rem" onclick="playS('launch')">🚀 Launch BIO-REVIVE AI Platform</a>
 <a href="index.html" class="btn btn-dark">← Back to Home</a>
+<button class="btn btn-outline" onclick="toggleLang()">🎧 Hear in <span id="btnLangTxt">Hindi</span></button>
 </div>
 </div>
+
 <div class="grid">
-<div class="card"><h3>👨‍💻 Ashish Kumar</h3><b>MC/25/018</b><br><span class="badge-role">Lead AI Developer & Architect</span></div>
-<div class="card" style="border-color:#a7f3d0;background:#f0fdf4"><h3>👩‍🎨 Gudiya Kumari</h3><b>MC/25/044</b><br><span class="badge-role" style="background:white">Frontend & UI/UX Scientist</span></div>
-<div class="card"><h3>👨‍🔧 Harshvardhan</h3><b>MC/25/004</b><br><span class="badge-role">Backend & AI Integration</span></div>
-<div class="card" style="border-color:#bfdbfe;background:#eff6ff"><h3>📊 Saksham Keshri</h3><b>MC/25/010</b><br><span class="badge-role" style="background:white">Data Analytics & Research Lead</span></div>
+<div class="card"><h3>👨‍💻 Ashish Kumar</h3><b>MC/25/018</b><br><span class="badge-role">Lead AI Developer & Architect</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">System Design, GenAI, RAG, Backend Architecture - Futuristic Software Lab</p></div>
+<div class="card" style="border-color:#a7f3d0;background:#f0fdf4"><h3>👩‍🎨 Gudiya Kumari</h3><b>MC/25/044</b><br><span class="badge-role" style="background:white">Frontend & UI/UX Scientist (Swapped)</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">React, Next.js, Visualization, User Experience</p></div>
+<div class="card"><h3>👨‍🔧 Harshvardhan Kumar</h3><b>MC/25/004</b><br><span class="badge-role">Backend & AI Integration</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">FastAPI, OCR, NLP Pipelines, ML Integration</p></div>
+<div class="card" style="border-color:#bfdbfe;background:#eff6ff"><h3>📊 Saksham Keshri</h3><b>MC/25/010</b><br><span class="badge-role" style="background:white">Data Analytics & Research Lead (Swapped)</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">Data Analytics, Risk Indicators, Research Evaluation</p></div>
 </div>
+
 <div class="launch-box">
 <h2 style="font-family:'Manrope';font-size:1.6rem">Built by Futuristic Software Lab</h2>
-<p style="color:#94a3b8;margin:8px 0 16px">Health AI Genius • Scientist • Developer Team</p>
-<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" style="background:white;color:black!important;padding:14px 28px;font-size:1.05rem">🚀 BIO-REVIVE AI - https://biorevive-jh9.caffeine.xyz/</a>
+<p style="color:#94a3b8;margin:8px 0 16px">Health AI Genius • Scientist • Developer Team • BIO-REVIVE 360°</p>
+<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" style="background:white;color:black!important;padding:14px 28px;font-size:1.05rem" onclick="playS('launch')">🚀 BIO-REVIVE AI - https://biorevive-jh9.caffeine.xyz/</a>
+<div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+<a href="index.html#problem" class="btn" style="background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15)">Problem Statement</a>
+<a href="index.html#solution" class="btn" style="background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15)">Solution</a>
 </div>
+</div>
+
 <footer>
-<div><b>BIO-REVIVE 360°</b> • Team: Ashish MC/25/018 | Gudiya MC/25/044 (Frontend) | Harshvardhan MC/25/004 | Saksham MC/25/010 (Analytics) • JRU Ranchi • MCA 2025</div>
+<div><b>BIO-REVIVE 360°</b> • AI-Based Health Report Analysis, Organ Biological Age Estimation and Health Risk Prediction Platform</div>
+<div style="margin-top:6px">Team: Ashish MC/25/018 | Gudiya MC/25/044 (Frontend & UI/UX Scientist) | Harshvardhan MC/25/004 | Saksham MC/25/010 (Data Analytics & Research Lead) • JRU Ranchi • MCA 2025 • Futuristic Software • Health AI Genius • Scientist • Developer</div>
+<div style="margin-top:6px;font-size:0.74rem">⚠️ Research Prototype - AI-generated indicators for education & awareness only. Not clinical diagnosis.</div>
 </footer>
 </div>
+
+<script>
+let currentLang='en';
+const welcomeMessages={
+en:"Welcome to Bio-Revive 360 Team Lab. We are Futuristic Software Engineers, Health AI Genius, Scientists and Developers from Jharkhand Rai University Ranchi, building the future of health intelligence with AI.",
+hi:"Bio-Revive 360 टीम लैब में आपका स्वागत है। हम झारखंड राय यूनिवर्सिटी रांची के फ्यूचरिस्टिक सॉफ्टवेयर इंजीनियर्स, हेल्थ एआई जीनियस, साइंटिस्ट्स और डेवलपर्स हैं, जो एआई के साथ हेल्थ इंटेलिजेंस का भविष्य बना रहे हैं।"
+};
+const bootSteps=["Initializing Bio-Revive Team OS...","Loading Futuristic Software Lab...","Connecting Health AI Genius Core...","Syncing Scientist Modules...","Loading Team Avatars: Ashish, Gudiya, Harsh, Saksham...","System Ready. Welcome to Bio-Revive 360 Lab."];
+function setLang(lang){
+currentLang=lang;
+document.getElementById('btnEn').classList.toggle('active',lang==='en');
+document.getElementById('btnHi').classList.toggle('active',lang==='hi');
+document.getElementById('voiceLangLabel').innerText= lang==='en'? 'English Female AI Scientist Voice' : 'Hindi Female AI Scientist Voice';
+document.getElementById('welcomeText').innerText='"'+welcomeMessages[lang]+'"';
+document.getElementById('btnLangTxt').innerText= lang==='en'? 'Hindi' : 'English';
+playS('beep');
+}
+function toggleLang(){ setLang(currentLang==='en'?'hi':'en'); playWelcome(); }
+function playS(id){
+try{
+const map={beep:'s_beep',launch:'s_launch',boot:'s_boot'};
+const el=document.getElementById(map[id]);
+if(el) el.play().catch(()=>{});
+}catch(e){}
+}
+function speak(text,lang){
+if('speechSynthesis' in window){
+speechSynthesis.cancel();
+const u=new SpeechSynthesisUtterance(text);
+u.rate=0.92;u.pitch=1.15;u.volume=1;
+u.lang=lang==='hi'?'hi-IN':'en-US';
+const voices=speechSynthesis.getVoices();
+let female=voices.find(v=>v.name.toLowerCase().includes('female') && v.lang.includes(lang==='hi'?'hi':'en')) || voices.find(v=>v.lang.includes(lang==='hi'?'hi':'en')) || voices[0];
+if(female) u.voice=female;
+speechSynthesis.speak(u);
+}
+}
+function playWelcome(){
+const custom=document.getElementById(currentLang==='hi'?'s_welcome_hi':'s_welcome_en');
+if(custom && custom.duration>0 &&!isNaN(custom.duration)){custom.play().catch(()=>speak(welcomeMessages[currentLang],currentLang));}
+else speak(welcomeMessages[currentLang],currentLang);
+playS('beep');
+}
+function runBoot(){
+const container=document.getElementById('bootLines');
+const bar=document.getElementById('bootBar');
+let i=0;playS('boot');
+const interval=setInterval(()=>{
+if(i<bootSteps.length){
+const div=document.createElement('div');
+div.className='boot-line'+(i===bootSteps.length-1?' active':'');
+div.innerText='> '+bootSteps[i];
+container.appendChild(div);
+bar.style.width=((i+1)/bootSteps.length*100)+'%';
+playS('beep');
+i++;
+}else{
+clearInterval(interval);
+setTimeout(()=>playWelcome(),400);
+}
+},360);
+}
+function skipBoot(){document.getElementById('boot').classList.add('hide');speechSynthesis.cancel();}
+window.addEventListener('load',()=>{
+runBoot();
+if(speechSynthesis.getVoices().length===0){speechSynthesis.onvoiceschanged=()=>{}}
+});
+document.addEventListener('keydown',(e)=>{
+if(e.key==='Escape') skipBoot();
+if(e.key===' ') {e.preventDefault(); playWelcome();}
+});
+</script>
 </body>
 </html>
