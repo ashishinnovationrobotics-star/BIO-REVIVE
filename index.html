@@ -3,288 +3,181 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BIO-REVIVE 360° | Futuristic Health Intelligence Lab</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@600;700&display=swap" rel="stylesheet">
+<title>BIO-REVIVE 360° | Jharkhand Rai University Ranchi | MCA Project</title>
+<meta name="description" content="Bio-Revive 360° - AI-Based Health Report Analysis, Organ Biological Age Estimation and Health Risk Prediction Platform by Jharkhand Rai University Ranchi">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#f8fdf9;
-  --green:#0a9b4a;
-  --green2:#2cf6b3;
-  --blue:#2563eb;
-  --purple:#7c3aed;
-  --text:#0f172a;
-  --muted:#64748b;
-  --card:#ffffff;
-  --border:rgba(15,23,42,0.08);
-  --shadow:0 20px 60px rgba(10,155,74,0.08);
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
-h1,h2,h3{font-family:'Syne',sans-serif}
-button{cursor:pointer;border:none;outline:none}
-
-/* BOOT SEQUENCE */
-#boot{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#f0fdf4 0%,#ecfeff 50%,#f5f3ff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.8s cubic-bezier(0.76,0,0.24,1)}
-#boot.hide{transform:translateY(-100%);opacity:0;pointer-events:none}
-.boot-logo{width:120px;height:120px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:3rem;animation:pulse 2s infinite;box-shadow:0 20px 40px rgba(10,155,74,0.2)}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-.boot-lines{margin-top:24px;width:360px;max-width:80vw;text-align:left;font-family:monospace;font-size:0.85rem;line-height:1.8;color:var(--muted)}
-.boot-line{opacity:0;transform:translateY(10px);animation:lineIn 0.4s forwards}
-.boot-line.active{color:var(--green);font-weight:600}
-@keyframes lineIn{to{opacity:1;transform:translateY(0)}}
-.boot-progress{width:360px;max-width:80vw;height:6px;background:rgba(0,0,0,0.06);border-radius:999px;margin-top:20px;overflow:hidden}
-.boot-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--green2),var(--blue));transition:width 0.3s;border-radius:999px}
-.boot-actions{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeIn 0.5s 2.5s forwards}
-@keyframes fadeIn{to{opacity:1}}
-.lang-btn{padding:10px 20px;border-radius:999px;background:white;border:1px solid var(--border);font-weight:600;box-shadow:var(--shadow);transition:0.2s;display:flex;align-items:center;gap:8px}
-.lang-btn:hover{transform:translateY(-2px);border-color:var(--green)}
-.lang-btn.active{background:var(--text);color:white}
-.quit-btn{background:rgba(0,0,0,0.05);color:var(--muted)}
-.btn-main{background:linear-gradient(135deg,var(--green),#059669);color:white;padding:12px 28px;border-radius:999px;font-weight:700;box-shadow:0 10px 30px rgba(10,155,74,0.3);display:inline-flex;align-items:center;gap:10px;transition:0.3s}
-.btn-main:hover{transform:translateY(-2px) scale(1.02)}
-
-/* NAV */
-nav{position:sticky;top:0;z-index:100;background:rgba(248,253,249,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 5%}
-.nav-inner{max-width:1320px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.3rem}
-.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:12px;display:flex;align-items:center;justify-content:center;color:white}
-.dev-badge{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border:1px solid #fcd34d;padding:6px 12px;border-radius:999px;font-size:0.72rem;font-weight:700;letter-spacing:0.5px}
-
-/* HERO */
-.hero{max-width:1320px;margin:0 auto;padding:60px 5% 40px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:36px;align-items:center}
-.hero h1{font-size:clamp(2.6rem,5vw,4.2rem);line-height:0.95;letter-spacing:-1px}
-.hero h1 span.green{color:var(--green)}
-.hero h1 span.blue{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{margin:18px 0 26px;color:var(--muted);font-size:1.12rem;line-height:1.6;max-width:560px}
-.voice-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;margin-bottom:20px}
-.voice-dot{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;color:white;font-size:1.2rem;animation:voicePulse 1.5s infinite}
-@keyframes voicePulse{0%{box-shadow:0 0 0 0 rgba(10,155,74,0.4)}70%{box-shadow:0 0 0 12px rgba(10,155,74,0)}100%{box-shadow:0 0 0 0 rgba(10,155,74,0)}}
-.hero-visual{position:relative}
-.glass{background:rgba(255,255,255,0.9);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:28px;padding:18px;box-shadow:var(--shadow)}
-.ecg{height:60px;width:100%;background:linear-gradient(180deg,#f0fdf4,#ffffff);border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-.ecg-line{width:100%;height:2px;background:repeating-linear-gradient(90deg,var(--green) 0 8px,transparent 8px 14px);animation:ecgMove 2s linear infinite}
-@keyframes ecgMove{from{transform:translateX(0)}to{transform:translateX(28px)}}
-.organs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.organ{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:12px;text-align:center}
-.organ b{color:var(--green);font-size:1.1rem}
-.btn-glow{background:linear-gradient(135deg,var(--blue),var(--purple));color:white;padding:14px 30px;border-radius:999px;font-weight:700;font-size:1.05rem;box-shadow:0 12px 30px rgba(124,58,237,0.25);display:inline-flex;align-items:center;gap:10px;transition:0.3s}
-.btn-glow:hover{transform:translateY(-3px)}
-
-/* SECTIONS */
-section{max-width:1320px;margin:0 auto;padding:70px 5%}
-.section-label{color:var(--green);font-weight:800;letter-spacing:2px;font-size:0.78rem;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.section-label::before{content:'';width:28px;height:3px;background:var(--green);border-radius:999px}
-.section-title{font-size:clamp(1.8rem,3.5vw,2.8rem);line-height:1.1;margin-bottom:14px;letter-spacing:-0.5px}
-.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:var(--shadow);transition:0.3s}
-.card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,0.06)}
-footer{border-top:1px solid var(--border);padding:30px 5%;text-align:center;color:var(--muted);background:white}
-@media(max-width:900px){.hero{grid-template-columns:1fr}nav.hide-m{display:none}}
+:root{--green:#0f9d4e;--green-light:#dcfce7;--green2:#a7f3d0;--blue:#1d4ed8;--purple:#7c3aed;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--light:#f8fafc;--white:#ffffff}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:var(--white);color:var(--text);line-height:1.6;overflow-x:hidden}
+h1,h2,h3{font-family:'Manrope',sans-serif}
+a{text-decoration:none;color:inherit}
+.container{max-width:1240px;margin:0 auto;padding:0 5%}
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav{height:64px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800}
+.nav-links{display:flex;gap:22px;align-items:center}
+.nav-links a{font-size:0.88rem;font-weight:600;color:var(--muted);transition:0.2s}
+.nav-links a:hover{color:var(--text)}
+.btn-glow{background:linear-gradient(135deg,var(--blue),var(--purple));color:white!important;padding:11px 22px;border-radius:999px;font-weight:700;font-size:0.9rem;box-shadow:0 8px 24px rgba(29,78,216,0.28);display:inline-flex;align-items:center;gap:8px;transition:0.25s;border:none;cursor:pointer}
+.btn-glow:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(29,78,216,0.35)}
+.btn-dark{background:var(--text);color:white!important;padding:11px 22px;border-radius:999px;font-weight:700;font-size:0.88rem;display:inline-flex;align-items:center;gap:8px}
+.btn-outline{background:white;border:1.5px solid var(--border);padding:11px 22px;border-radius:999px;font-weight:700;font-size:0.88rem;display:inline-flex;align-items:center;gap:8px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);border:1px solid var(--green2);color:#065f46;padding:5px 12px;border-radius:999px;font-size:0.7rem;font-weight:800;letter-spacing:0.8px}
+.hero{padding:48px 0 32px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:36px;align-items:center}
+.hero h1{font-size:clamp(2.2rem,4.5vw,3.5rem);line-height:0.96;letter-spacing:-1.2px;margin:14px 0}
+.hero h1 .green{color:var(--green)}
+.hero p{color:var(--muted);font-size:1.06rem;margin:14px 0 22px;max-width:560px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.hero-card{background:white;border:1px solid var(--border);border-radius:22px;padding:16px;box-shadow:0 10px 40px rgba(0,0,0,0.05)}
+.mismatch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.mismatch-box{padding:12px;border-radius:12px;font-size:0.86rem}
+.problem-section{background:linear-gradient(180deg,#ffffff,#f8fafc);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:70px 0}
+.label{color:var(--green);font-weight:800;font-size:0.78rem;letter-spacing:1.4px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.label::before{content:'';width:22px;height:3px;background:var(--green);border-radius:99px;display:inline-block}
+.title{font-size:clamp(1.7rem,3vw,2.4rem);line-height:1.1;letter-spacing:-0.6px;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{background:white;border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,0.03);transition:0.2s}
+.card:hover{transform:translateY(-3px)}
+.list{margin:10px 0 0 18px;color:var(--muted);font-size:0.9rem}.list li{margin-bottom:6px}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+.flow-item{background:white;border:1px solid var(--border);border-radius:16px;padding:16px;text-align:center;position:relative}
+.flow-item b{color:var(--green);display:block;margin-bottom:4px;font-size:0.9rem}
+.flow-item::after{content:'→';position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:800}
+.flow-item:last-child::after{display:none}
+.launch{background:var(--text);color:white;border-radius:26px;padding:36px;display:grid;grid-template-columns:1.2fr 0.8fr;gap:24px;align-items:center;margin:40px 0}
+.team-preview{padding:50px 0 70px;text-align:center}
+.team-img{width:100%;border-radius:22px;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,0.08);margin:18px 0}
+footer{border-top:1px solid var(--border);padding:24px 0;text-align:center;color:var(--muted);font-size:0.84rem;background:var(--light)}
+@media(max-width:900px){.hero,.grid2,.launch{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}.flow::after{display:none}.nav-links{display:none}}
 </style>
 </head>
 <body>
-
-<!-- SOUNDS - Put your files in /sounds/ folder -->
-<audio id="s_boot" src="sounds/boot.mp3" preload="auto"></audio>
-<audio id="s_welcome_en" src="sounds/welcome_en.mp3" preload="auto"></audio>
-<audio id="s_welcome_hi" src="sounds/welcome_hi.mp3" preload="auto"></audio>
-<audio id="s_beep" src="sounds/beep.mp3" preload="auto"></audio>
-<audio id="s_launch" src="sounds/launch.mp3" preload="auto"></audio>
-
-<!-- BOOT SEQUENCE -->
-<div id="boot">
-<div class="boot-logo">🧬</div>
-<h2 style="margin-top:18px;font-size:1.8rem;letter-spacing:-0.5px">BioRevive 360° OS</h2>
-<p style="color:var(--muted);font-size:0.9rem;margin-top:6px">Developed by Futuristic Software & AI Genius Lab • Health Scientist Edition</p>
-<div class="boot-lines" id="bootLines"></div>
-<div class="boot-progress"><div class="boot-bar" id="bootBar"></div></div>
-<div style="margin-top:14px;display:flex;align-items:center;gap:10px">
-<span style="font-size:0.8rem;color:var(--muted)">Voice:</span>
-<button class="lang-btn active" id="btnEn" onclick="setLang('en')">🇬🇧 English Female</button>
-<button class="lang-btn" id="btnHi" onclick="setLang('hi')">🇮🇳 Hindi Female</button>
-<button class="lang-btn quit-btn" onclick="skipBoot()">Quit / Skip ⏭️</button>
-</div>
-<div class="boot-actions" id="bootActions">
-<button class="btn-main" onclick="startWelcome()">🔊 Play Welcome Voice</button>
-<button class="lang-btn" onclick="skipBoot()">Enter Lab →</button>
-</div>
-</div>
-
 <nav>
-<div class="nav-inner">
-<div class="logo"><div class="logo-icon">B</div> BioRevive 360° <span style="font-weight:400;color:var(--muted)">Lab</span></div>
-<div style="display:flex;gap:10px;align-items:center">
-<div class="dev-badge hide-m">✦ Built by Futuristic Software • AI Genius • Scientist • Developer</div>
-<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn-glow" onclick="playSound('launch')">BIO REVIVE AI ↗</a>
+<div class="container nav">
+<div class="logo"><div class="logo-icon">B</div> JRU | Bio-Revive 360°</div>
+<div class="nav-links">
+<a href="#home">Home</a>
+<a href="#problem">Problem Statement</a>
+<a href="#solution">Solution</a>
+<a href="team.html">Team Page</a>
+<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn-glow">BIO-REVIVE AI ↗</a>
 </div>
 </div>
 </nav>
 
+<div class="container" id="home">
 <section class="hero">
 <div>
-<div style="display:inline-flex;background:linear-gradient(135deg,#dcfce7,#dbeafe);border:1px solid #bbf7d0;color:#166534;padding:6px 14px;border-radius:999px;font-size:0.75rem;font-weight:700;letter-spacing:1px">● FUTURISTIC SOFTWARE • HEALTH AI • SCIENTIST GRADE</div>
-<h1>Welcome to<br><span class="green">Bio-Revive</span><br><span class="blue">360° Lab</span></h1>
-<p>AI-powered Health Report Intelligence that decodes your reports, estimates your <b>true biological age</b> for every major organ, and creates your personalized regeneration roadmap.</p>
+<span class="badge">● MCA PROJECT 2025 • JHARKHAND RAI UNIVERSITY RANCHI • RESEARCH PROTOTYPE</span>
+<h1>Your Reports Say Normal.<br>Your Organs Say <span class="green">Different.</span></h1>
+<p><b>Bio-Revive 360°</b> is an AI-Based Health Report Intelligence Platform that detects biological age of every major organ and corrects lifestyle-induced degeneration.</p>
+<div class="hero-actions">
+<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn-glow" style="padding:14px 28px;font-size:1rem">🚀 Launch BIO-REVIVE AI Platform</a>
+<a href="#problem" class="btn-outline">View Problem Statement</a>
+<a href="team.html" class="btn-dark">👥 Team Page</a>
+</div>
+</div>
+<div>
+<div class="hero-card">
+<div style="background:#f0fdf4;border:1px dashed #86efac;border-radius:14px;padding:12px;text-align:center">
+<div style="font-size:0.72rem;font-weight:800;letter-spacing:1px;color:#065f46">BIOLOGICAL AGE MISMATCH DETECTED</div>
+<div class="mismatch">
+<div class="mismatch-box" style="background:white;border:1px solid var(--border)"><b>Chronological</b><br><span style="font-size:1.5rem;font-weight:800">35</span> Yrs</div>
+<div class="mismatch-box" style="background:#fef2f2;border:1px solid #fecaca;color:#991b1b"><b>Biological</b><br>Heart 45, Brain 42<br>Pancreas 50</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
 
-<div class="voice-card">
-<div class="voice-dot" id="voiceDot">🎙️</div>
-<div style="flex:1">
-<div style="font-weight:700;font-size:0.9rem;display:flex;align-items:center;gap:8px"><span id="voiceLangLabel">English Female AI Scientist Voice</span> <span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:999px;font-size:0.65rem">LIVE</span></div>
-<div style="font-size:0.85rem;color:var(--muted);margin-top:2px" id="welcomeText">"Welcome to Bio-Revive 360. I am your AI health scientist. I decode your health, reveal your true biological age, and guide you towards regeneration, longevity and peak performance."</div>
+<section class="problem-section" id="problem">
+<div class="container">
+<div class="grid2">
+<div>
+<div class="label">01 / PROBLEM STATEMENT</div>
+<h2 class="title">One Problem Statement: Rapid, Silent Health Decline in Digital Generation</h2>
+<p style="color:var(--muted)">Modern lifestyle is accelerating organ aging years ahead of chronological age. Existing health reports are fragmented, difficult to understand.</p>
+<div class="card" style="margin-top:16px;background:#fffbeb;border-color:#fde68a">
+<h3 style="color:#92400e;font-size:0.95rem">🎯 Official Problem Title</h3>
+<p style="font-weight:700;margin-top:6px;font-size:0.92rem">AI-Based Health Report Analysis, Organ Biological Age Estimation and Health Risk Prediction Platform</p>
 </div>
-<button class="lang-btn" onclick="playWelcome()" style="padding:8px 12px">▶️ Play</button>
 </div>
-
-<div style="display:flex;gap:12px;flex-wrap:wrap">
-<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn-glow" onclick="playSound('launch')" style="font-size:1.15rem;padding:16px 32px">🚀 Launch BIO REVIVE AI</a>
-<button class="lang-btn" onclick="playWelcome()">🎧 Hear Welcome in <span id="btnLangTxt">Hindi</span></button>
+<div>
+<div class="grid2">
+<div class="card"><h3>📱 Digital Dependency</h3><ul class="list"><li>6-10+ hrs/day screen</li><li>Blue light → circadian disruption</li></ul></div>
+<div class="card"><h3>🍔 Poor Diet</h3><ul class="list"><li>Ultra-processed foods</li><li>High sugar, low nutrients</li></ul></div>
+<div class="card"><h3>😴 Inactivity & Sleep</h3><ul class="list"><li>Muscle & bone loss</li><li>Melatonin suppression</li></ul></div>
+<div class="card"><h3>📄 Report Gap</h3><ul class="list"><li>Fragmented params</li><li>Low comprehension</li></ul></div>
 </div>
-<p style="font-size:0.8rem;margin-top:14px">🔬 Developed by: <b>Futuristic Software Engineers, Health AI Genius, Bio-Scientists & Full-Stack Developers</b> from Jharkhand Rai University Ranchi</p>
 </div>
-
-<div class="hero-visual">
-<div class="glass">
-<div class="ecg"><div class="ecg-line"></div><div style="position:absolute;font-size:1.5rem">💓 AI Scanning...</div></div>
-<div class="organs">
-<div class="organ"><div>🫀 Heart</div><b>Bio 45</b><div style="font-size:0.7rem;color:#ef4444">+10 years</div></div>
-<div class="organ"><div>🧠 Brain</div><b>Bio 42</b><div style="font-size:0.7rem;color:#f59e0b">+7 years</div></div>
-<div class="organ"><div>🫁 Liver</div><b>Bio 38</b><div style="font-size:0.7rem;color:var(--green)">Healthy</div></div>
-<div class="organ"><div>🦴 Bone</div><b>Bio 50</b><div style="font-size:0.7rem;color:#ef4444">Attention</div></div>
-</div>
-<div style="margin-top:14px;background:#f8fdf9;border:1px dashed #bbf7d0;border-radius:12px;padding:10px;font-size:0.8rem"><b>Team:</b> Ashish MC/25/018, Gudiya MC/25/044, Harsh MC/25/004, Saksham MC/25/010 • JRUR Ranchi<br><b>Link:</b> biorevive-jh9.caffeine.xyz</div>
 </div>
 </div>
 </section>
 
-<section style="background:white;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
-<div class="section-label">LAB MODULES</div>
-<h2 class="section-title">Every Organ Has a Biological Clock. We Read It.</h2>
-<div class="grid-4">
-<div class="card"><h3>💓 Cardiovascular</h3><p style="color:var(--muted);font-size:0.9rem">HRV, Arterial stiffness, BP variability → HIIT, Nitric-oxide diet</p></div>
-<div class="card"><h3>🧠 Brain & Lifestyle</h3><p style="color:var(--muted);font-size:0.9rem">EEG, Memory, Sleep → Digital sunset, Neuroplasticity training</p></div>
-<div class="card"><h3>🫀 Metabolic</h3><p style="color:var(--muted);font-size:0.9rem">HbA1c, Insulin resistance → Intermittent fasting, Microbiome</p></div>
-<div class="card"><h3>⚖️ Hormonal</h3><p style="color:var(--muted);font-size:0.9rem">Cortisol, Thyroid → Circadian alignment, Adaptogens</p></div>
+<section id="solution">
+<div class="container" style="padding:70px 0">
+<div class="label">02 / OUR SOLUTION</div>
+<h2 class="title">Bio-Revive 360° - From Report to Regeneration Roadmap</h2>
+<div class="flow">
+<div class="flow-item"><b>Step 1</b>Report Ingestion</div>
+<div class="flow-item"><b>Step 2</b>AI Scanning OCR</div>
+<div class="flow-item"><b>Step 3</b>Multi-Domain Analysis</div>
+<div class="flow-item"><b>Step 4</b>Bio Age + Education</div>
+</div>
+<div class="grid3" style="margin-top:26px">
+<div class="card"><h3>💓 Cardiovascular</h3><p style="color:var(--muted);font-size:0.88rem">HRV, Arterial stiffness, BP variability. Remedy: HIIT</p></div>
+<div class="card"><h3>🧠 Brain & Lifestyle</h3><p style="color:var(--muted);font-size:0.88rem">EEG ratio, Memory, Sleep efficiency. Remedy: Digital sunset</p></div>
+<div class="card"><h3>🫀 Metabolic</h3><p style="color:var(--muted);font-size:0.88rem">HbA1c, Insulin resistance. Remedy: Intermittent fasting</p></div>
+<div class="card"><h3>🦴 Musculoskeletal</h3><p style="color:var(--muted);font-size:0.88rem">Bone density, Grip strength. Remedy: Resistance training</p></div>
+<div class="card"><h3>⚖️ Hormonal</h3><p style="color:var(--muted);font-size:0.88rem">Cortisol, Thyroid. Remedy: Circadian alignment</p></div>
+<div class="card" style="background:var(--light)"><h3>✨ Advantages</h3><ul class="list" style="font-size:0.84rem"><li>Easy report understanding</li><li>AI extraction, no manual entry</li><li>Centralized 360° profile</li></ul></div>
+</div>
+
+<div class="launch">
+<div>
+<h2 style="font-size:1.9rem;line-height:1.1">Ready to See Your True Biological Age?</h2>
+<p style="color:#94a3b8;margin:12px 0 18px">Live AI platform built by Futuristic Software Lab from JRU Ranchi.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn-glow" style="background:white;color:black!important;font-size:1.05rem;padding:14px 28px">🚀 BIO-REVIVE AI - Launch Now</a>
+<a href="team.html" class="btn-outline" style="background:transparent;color:white!important;border-color:rgba(255,255,255,0.2)">👥 View Team Page</a>
+</div>
+<div style="margin-top:10px;font-size:0.78rem;color:#94a3b8">https://biorevive-jh9.caffeine.xyz/</div>
+</div>
+<div>
+<div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px">
+<div style="font-size:0.76rem;color:#94a3b8">TECH STACK</div>
+<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:7px">
+<span style="background:rgba(255,255,255,0.08);padding:5px 10px;border-radius:999px;font-size:0.74rem">React / Next.js</span>
+<span style="background:rgba(255,255,255,0.08);padding:5px 10px;border-radius:999px;font-size:0.74rem">Python FastAPI</span>
+<span style="background:rgba(255,255,255,0.08);padding:5px 10px;border-radius:999px;font-size:0.74rem">OCR + NLP</span>
+</div>
+</div>
+</div>
+</div>
 </div>
 </section>
 
-<section>
-<div class="section-label">OBJECTIVE & INNOVATION</div>
-<div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:20px">
-<div class="card"><h3>Why This Lab?</h3><p style="color:var(--muted);margin-top:8px">6-10 hrs screen time, junk food, poor sleep = rapid organ aging. Our AI merges OCR + NLP + Multi-domain analytics + Visual dashboards to turn boring lab reports into human insights. Not a diagnosis - but awareness, education and early risk prediction for researchers.</p><div style="margin-top:16px"><a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn-main" onclick="playSound('launch')">Open Live AI Platform ↗</a></div></div>
-<div class="card" style="background:linear-gradient(135deg,#0f172a,#1e293b);color:white"><h3 style="color:#2cf6b3">Scientist Edge</h3><p style="color:#94a3b8;margin-top:8px;font-size:0.9rem">Epigenetic aging clock, Telomere tracking (future), Stem-cell regenerative monitoring, Personalized longevity roadmap</p><p style="margin-top:12px;color:white"><b>Goal:</b> Detect organ-age, correct lifestyle, regenerate function.</p></div>
+<section class="team-preview">
+<div class="container">
+<div class="label" style="justify-content:center">03 / TEAM PAGE</div>
+<h2 class="title">Built by Future Health AI Scientists</h2>
+<p style="color:var(--muted)">MCA Team - Jharkhand Rai University, Ranchi</p>
+<img src="team_page.png" alt="Team Bio-Revive 360" class="team-img">
+<div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+<a href="team.html" class="btn-dark">👥 Open Full Team Page</a>
+<a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn-glow">BIO-REVIVE AI ↗</a>
+</div>
 </div>
 </section>
 
 <footer>
-<div style="margin-bottom:12px"><a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn-glow" onclick="playSound('launch')">🚀 BIO REVIVE AI - https://biorevive-jh9.caffeine.xyz/</a></div>
-<div>Futuristic Software Lab • Health AI Genius • Scientist • Developer Team • Jharkhand Rai University Ranchi • Ashish | Gudiya | Harshvardhan | Saksham</div>
-<div style="margin-top:8px;font-size:0.75rem">All indicators are AI-generated for research & education, not clinical diagnosis. Requires clinical validation.</div>
+<div class="container">
+<div>BIO-REVIVE 360° • AI-Based Health Report Analysis, Organ Biological Age Estimation Platform</div>
+<div style="margin-top:6px">Team: Ashish MC/25/018 | Gudiya MC/25/044 (Frontend & UI/UX Scientist) | Harshvardhan MC/25/004 | Saksham MC/25/010 (Data Analytics & Research Lead) • JRU Ranchi</div>
+</div>
 </footer>
-
-<script>
-let currentLang = 'en';
-const welcomeMessages = {
-en: "Welcome to Bio-Revive 360. I am your AI health scientist. I decode your complex health reports, reveal your true biological age for every organ, and guide you towards regeneration, longevity and peak human performance. Let's begin your health transformation journey.",
-hi: "Bio-Revive 360 में आपका स्वागत है। मैं आपकी AI हेल्थ साइंटिस्ट हूँ। मैं आपकी हेल्थ रिपोर्ट को समझती हूँ, आपके हर अंग की असली जैविक उम्र का पता लगाती हूँ, और आपको बेहतर स्वास्थ्य, लंबी उम्र और नई ऊर्जा की ओर ले जाती हूँ। चलिए, आपके स्वास्थ्य परिवर्तन की यात्रा शुरू करते हैं।"
-};
-
-const bootSteps = [
-"Initializing BioRevive 360° OS...",
-"Loading Futuristic Software Core...",
-"Connecting AI Genius Modules...",
-"Calibrating Health Scientist Engine...",
-"Syncing Organ Domains: Heart, Brain, Liver...",
-"Analyzing Biological Age Algorithms...",
-"System Ready. Welcome, Scientist."
-];
-
-function setLang(lang){
-currentLang = lang;
-document.getElementById('btnEn').classList.toggle('active', lang==='en');
-document.getElementById('btnHi').classList.toggle('active', lang==='hi');
-document.getElementById('voiceLangLabel').innerText = lang==='en'? 'English Female AI Scientist Voice' : 'Hindi Female AI Scientist Voice';
-document.getElementById('welcomeText').innerText = '"' + welcomeMessages[lang] + '"';
-document.getElementById('btnLangTxt').innerText = lang==='en'? 'Hindi' : 'English';
-playSound('beep');
-}
-
-function playSound(id){
-try{
-const map = {beep:'s_beep', launch:'s_launch', boot:'s_boot'};
-const el = document.getElementById(map[id]);
-if(el && el.src &&!el.src.includes('blob:')) el.play().catch(()=>{});
-}catch(e){}
-}
-
-function speak(text, lang){
-if('speechSynthesis' in window){
-speechSynthesis.cancel();
-const u = new SpeechSynthesisUtterance(text);
-u.rate = 0.92; u.pitch = 1.15; u.volume = 1;
-u.lang = lang==='hi'? 'hi-IN' : 'en-US';
-const voices = speechSynthesis.getVoices();
-let female = voices.find(v=> v.name.toLowerCase().includes('female') && v.lang.includes(lang==='hi'?'hi':'en')) || voices.find(v=> v.lang.includes(lang==='hi'?'hi':'en')) || voices[0];
-if(female) u.voice = female;
-speechSynthesis.speak(u);
-document.getElementById('voiceDot').style.animation = 'voicePulse 0.8s infinite';
-u.onend = ()=>{document.getElementById('voiceDot').style.animation = 'voicePulse 1.5s infinite'};
-}
-}
-
-function playWelcome(){
-const customAudio = document.getElementById(currentLang==='hi'? 's_welcome_hi' : 's_welcome_en');
-if(customAudio && customAudio.duration>0 &&!isNaN(customAudio.duration)){
-customAudio.play().catch(()=> speak(welcomeMessages[currentLang], currentLang));
-}else{
-speak(welcomeMessages[currentLang], currentLang);
-}
-playSound('beep');
-}
-
-function startWelcome(){
-playWelcome();
-}
-
-function runBoot(){
-const container = document.getElementById('bootLines');
-const bar = document.getElementById('bootBar');
-let i=0;
-playSound('boot');
-const interval = setInterval(()=>{
-if(i<bootSteps.length){
-const div = document.createElement('div');
-div.className = 'boot-line' + (i===bootSteps.length-1?' active':'');
-div.innerText = '> ' + bootSteps[i];
-container.appendChild(div);
-bar.style.width = ((i+1)/bootSteps.length*100)+'%';
-playSound('beep');
-i++;
-}else{
-clearInterval(interval);
-document.getElementById('bootActions').style.opacity = '1';
-// Auto play welcome after boot
-setTimeout(()=> playWelcome(), 600);
-}
-}, 400);
-}
-
-function skipBoot(){
-document.getElementById('boot').classList.add('hide');
-speechSynthesis.cancel();
-}
-
-// Start
-window.addEventListener('load', ()=>{
-runBoot();
-if(speechSynthesis.getVoices().length===0){
-speechSynthesis.onvoiceschanged = ()=>{};
-}
-});
-
-document.addEventListener('keydown', (e)=>{
-if(e.key==='Escape') skipBoot();
-if(e.key===' ') {e.preventDefault(); playWelcome();}
-});
-</script>
 </body>
 </html>
