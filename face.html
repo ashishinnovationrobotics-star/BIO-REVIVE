@@ -27,22 +27,18 @@ nav{position:sticky;top:0;z-index:90;background:rgba(7,10,20,0.85);backdrop-filt
 </head>
 <body>
 <canvas id="stars" class="fx"></canvas><canvas id="neural" class="fx"></canvas>
-<audio id="s_dashboard" src="sounds/dashboard.mp3" preload="auto" loop></audio>
-
 <nav>
 <div style="font-weight:800;display:flex;gap:8px;align-items:center;color:white"><span style="width:32px;height:32px;background:linear-gradient(135deg,var(--green2),var(--blue));border-radius:8px;display:flex;align-items:center;justify-content:center">B</span> BIO-REVIVE 360° • Python Face Scan</div>
 <div style="display:flex;gap:6px;flex-wrap:wrap">
 <a href="index.html" class="btn btn-dark">← Home</a>
 <a href="hardware.html" class="btn">Hardware →</a>
 <a href="trinity.html" class="btn">AI Trinity →</a>
-<span class="mono" style="font-size:0.68rem;color:var(--green);padding:8px">PYTHON BACKEND: ONLINE</span>
+<span class="mono" style="font-size:0.68rem;color:var(--green);padding:8px;background:rgba(44,246,179,0.1);border-radius:20px;border:1px solid rgba(44,246,179,0.3)">● LIVE: biorevive-backend-wdly.onrender.com</span>
 </div>
 </nav>
-
 <div class="container" style="padding:28px 0">
 <h1 style="font-family:Manrope;font-size:clamp(1.6rem,2.8vw,2.2rem);color:white">Face Scan - Python Fully Working - Real Camera + Biological Age</h1>
 <p style="color:var(--muted);margin-top:6px">Python OpenCV detects face, analyzes skin texture, wrinkles, dark circles, eye fatigue and calculates real biological age. Works on mobile + laptop.</p>
-
 <div class="grid2" style="margin-top:16px">
 <div>
 <div class="video-wrap">
@@ -55,10 +51,8 @@ nav{position:sticky;top:0;z-index:90;background:rgba(7,10,20,0.85);backdrop-filt
 <button class="btn" onclick="stopFaceScan()">Stop</button>
 <button class="btn-green btn" onclick="captureAndAnalyze()">🧬 Scan & Calculate Bio Age (Python)</button>
 </div>
-<p style="font-size:0.76rem;color:var(--muted);margin-top:8px">Python Backend URL: <span id="backendUrl" class="mono" style="color:var(--green)">http://localhost:8000</span> | Change to your deployed URL</p>
-<input id="backendInput" placeholder="http://localhost:8000 or https://your-backend.onrender.com" style="width:100%;margin-top:6px;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:white;font-size:0.78rem">
+<p style="font-size:0.72rem;color:var(--muted);margin-top:8px">Backend: <span class="mono" style="color:var(--green)">https://biorevive-backend-wdly.onrender.com</span> | Status: <span id="backendStatus" style="color:var(--green)">Checking...</span></p>
 </div>
-
 <div>
 <div class="card">
 <h3 style="color:white">Live Python Analysis</h3>
@@ -68,12 +62,12 @@ nav{position:sticky;top:0;z-index:90;background:rgba(7,10,20,0.85);backdrop-filt
 <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.18);padding:12px;border-radius:12px;text-align:center"><div style="font-size:0.7rem;color:#fca5a5">BIOLOGICAL AGE</div><div style="font-size:1.9rem;font-weight:800;color:#fca5a5" id="bioAge">--</div><div style="font-size:0.7rem;color:#fca5a5">Python AI</div></div>
 </div>
 <div style="background:#0f172a;color:#cbd5e1;border-radius:12px;padding:12px;font-family:'JetBrains Mono';font-size:0.76rem;line-height:1.7;border:1px solid var(--border)">
-<div>> Face: <span style="color:#2cf6b3" id="f1">Waiting</span></div>
+<div>> Face: <span style="color:#2cf6b3" id="f1">Waiting for scan</span></div>
 <div>> Skin Texture (Laplacian): <span style="color:#7dd3fc" id="f2">--</span></div>
 <div>> Dark Circles: <span style="color:#fde68a" id="f3">--</span></div>
 <div>> Eye Fatigue: <span style="color:#fca5a5" id="f4">--</span></div>
 <div>> Skin Health: <span style="color:white" id="f5">--</span></div>
-<div id="faceResult" style="margin-top:6px;color:#f8fafc;display:none">>> PYTHON CALCULATION COMPLETE - Sending to Trinity AI</div>
+<div id="faceResult" style="margin-top:6px;color:#2cf6b3;display:none">>> PYTHON CALCULATION COMPLETE - Sending to Trinity AI</div>
 </div>
 <div class="wave"><b></b><b style="height:12px"></b><b></b><b style="height:16px"></b><b></b></div>
 </div>
@@ -82,24 +76,25 @@ nav{position:sticky;top:0;z-index:90;background:rgba(7,10,20,0.85);backdrop-filt
 </div>
 </div>
 </div>
-
 <script>
+const BACKEND_URL = "https://biorevive-backend-wdly.onrender.com";
 let stream=null;
-let currentBackend = localStorage.getItem('backend_url') || 'http://localhost:8000';
-document.getElementById('backendUrl').innerText = currentBackend;
-document.getElementById('backendInput').value = currentBackend;
-document.getElementById('backendInput').addEventListener('change', (e)=>{
-  currentBackend = e.target.value;
-  localStorage.setItem('backend_url', currentBackend);
-  document.getElementById('backendUrl').innerText = currentBackend;
-});
-
 function initFX(){
 const s=document.getElementById('stars'), n=document.getElementById('neural'); if(!s||!n) return;
 const sCtx=s.getContext('2d'), nCtx=n.getContext('2d');
 function resize(){ s.width=innerWidth; s.height=innerHeight; n.width=innerWidth; n.height=innerHeight; } resize(); addEventListener('resize',resize);
 const pts=[]; for(let i=0;i<60;i++) pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.3+0.2,vx:(Math.random()-0.5)*0.22,vy:(Math.random()-0.5)*0.22});
 (function aS(){ sCtx.clearRect(0,0,s.width,s.height); pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy; sCtx.beginPath(); sCtx.arc(p.x,p.y,p.r,0,Math.PI*2); sCtx.fillStyle='rgba(91,124,255,0.35)'; sCtx.fill();}); requestAnimationFrame(aS); })();
+}
+async function checkBackend(){
+try{
+const r=await fetch(BACKEND_URL+'/'); const d=await r.json();
+document.getElementById('backendStatus').innerText='● ONLINE - '+d.message.substring(0,30);
+document.getElementById('backendStatus').style.color='#2cf6b3';
+}catch(e){
+document.getElementById('backendStatus').innerText='○ Sleeping (wait 30 sec, refresh)';
+document.getElementById('backendStatus').style.color='#f59e0b';
+}
 }
 async function startFaceScan(){
 const video=document.getElementById('video'); const status=document.getElementById('faceStatus');
@@ -108,12 +103,10 @@ status.innerText='REQUESTING CAMERA...';
 stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user', width:{ideal:1280}, height:{ideal:720}}, audio:false});
 video.srcObject=stream; await video.play();
 status.innerText='CAMERA ON - READY TO SCAN'; status.style.background='rgba(16,157,78,0.85)'; status.style.color='white';
-const d=document.getElementById('s_dashboard'); if(d) d.play().catch(()=>{});
 drawOverlay();
 }catch(e){
-console.error(e);
 status.innerText='CAMERA ERROR: '+e.name;
-alert('Camera Error: '+e.message+'\n\nFix:\n1. Use HTTPS (localhost or Vercel)\n2. Allow camera permission in browser\n3. On phone: Use Chrome, allow camera\n4. Close other apps using camera');
+alert('Camera Error: '+e.message+'\n\nFix:\n1. Use HTTPS\n2. Allow camera permission\n3. On phone: Use Chrome');
 }
 }
 function stopFaceScan(){ if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } document.getElementById('faceStatus').innerText='CAMERA OFF'; const v=document.getElementById('video'); if(v) v.srcObject=null; }
@@ -141,23 +134,23 @@ const base64 = canvas.toDataURL('image/jpeg', 0.85);
 document.getElementById('f1').innerText='Sending to Python backend...';
 document.getElementById('faceStatus').innerText='ANALYZING WITH PYTHON...';
 try{
-const res = await fetch(currentBackend+'/api/face-scan', {
+const res = await fetch(BACKEND_URL+'/api/face-scan', {
   method:'POST',
   headers:{'Content-Type':'application/json'},
   body: JSON.stringify({image: base64})
 });
 if(!res.ok){
   const err = await res.json();
-  throw new Error(err.detail || 'No face detected');
+  throw new Error(err.detail || 'No face detected - come closer');
 }
 const data = await res.json();
 document.getElementById('faceAge').innerText = data.chrono_age;
 document.getElementById('bioAge').innerText = data.bio_age;
-document.getElementById('f1').innerText = `${data.landmarks} landmarks detected - Face OK`;
+document.getElementById('f1').innerText = `${data.landmarks} landmarks - Face OK - Box: ${data.face_box.w}x${data.face_box.h}`;
 document.getElementById('f2').innerText = `Laplacian ${data.analysis.laplacian_variance} - Texture ${data.analysis.texture_score.toFixed(1)}`;
-document.getElementById('f3').innerText = `Dark Circle Score ${data.analysis.dark_circle_score.toFixed(1)}`;
-document.getElementById('f4').innerText = `Eyes: ${data.analysis.eye_count} - Fatigue: ${data.analysis.eye_fatigue}`;
-document.getElementById('f5').innerText = data.analysis.skin_health;
+document.getElementById('f3').innerText = `Dark Circle ${data.analysis.dark_circle_score.toFixed(1)} - ${data.analysis.eye_fatigue} fatigue`;
+document.getElementById('f4').innerText = `Eyes: ${data.analysis.eye_count} - Health: ${data.analysis.skin_health}`;
+document.getElementById('f5').innerText = data.analysis.skin_health + ' - CV2: ' + data.analysis.cv2_status;
 document.getElementById('faceResult').style.display='block';
 document.getElementById('faceStatus').innerText=`DETECTED - Chrono ${data.chrono_age} / Bio ${data.bio_age}`;
 localStorage.setItem('face_chrono', data.chrono_age);
@@ -166,23 +159,10 @@ localStorage.setItem('face_analysis', JSON.stringify(data.analysis));
 }catch(e){
 console.error(e);
 document.getElementById('f1').innerText='Error: '+e.message;
-// Fallback JS calculation if backend offline
-fallbackJS();
+alert('Scan failed: '+e.message+'\n\nMake sure face is in good light and centered');
 }
 }
-function fallbackJS(){
-const chrono=Math.floor(26+Math.random()*16); const bio=chrono+Math.floor(5+Math.random()*9);
-document.getElementById('faceAge').innerText=chrono; document.getElementById('bioAge').innerText=bio;
-document.getElementById('f1').innerText='68 landmarks (JS fallback - backend offline)';
-document.getElementById('f2').innerText='Texture analysis - JS fallback';
-document.getElementById('f3').innerText='Eye fatigue - JS fallback';
-document.getElementById('f4').innerText='Stress proxy - JS fallback';
-document.getElementById('f5').innerText='Moderate';
-document.getElementById('faceResult').style.display='block';
-localStorage.setItem('face_chrono', chrono); localStorage.setItem('face_bio', bio);
-alert('Backend offline - Using JS fallback. To use Python: Run backend/main.py -> python main.py');
-}
-window.addEventListener('load',()=>{ initFX(); });
+window.addEventListener('load',()=>{ initFX(); checkBackend(); });
 </script>
 </body>
 </html>
