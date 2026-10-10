@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Experts - BIO-REVIVE 360°</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Manrope:wght@700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--green:#0f9d4e;--blue:#1d4ed8;--text:#0f172a;--muted:#64748b;--border:#e2e8f0}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#fff;color:var(--text)}
+.container{max-width:1100px;margin:0 auto;padding:0 4.5%;position:relative;z-index:2}
+.fx{position:fixed;inset:0;pointer-events:none;z-index:0}#stars{opacity:0.38}#neural{opacity:0.22}
+nav{position:sticky;top:0;z-index:90;background:rgba(255,255,255,0.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:12px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.btn{padding:10px 18px;border-radius:999px;font-weight:700;font-size:0.86rem;border:1px solid var(--border);background:white;cursor:pointer;text-decoration:none;display:inline-flex;gap:6px;align-items:center}
+.btn-dark{background:var(--text);color:white;border-color:var(--text)}.btn-green{background:linear-gradient(135deg,var(--green),#059669);color:white;border:none}.btn-glow{background:linear-gradient(135deg,var(--blue),#7c3aed);color:white;border:none}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.card{border:1px solid var(--border);border-radius:18px;padding:18px;background:rgba(255,255,255,0.94);box-shadow:0 8px 26px rgba(0,0,0,0.05)}
+.mono{font-family:'JetBrains Mono',monospace}
+.wave{display:flex;gap:2px;height:20px}.wave b{width:3px;background:linear-gradient(180deg,#2cf6b3,#1d4ed8);border-radius:999px;animation:wave 0.85s infinite ease-in-out}
+@keyframes wave{0%,100%{height:5px}50%{height:16px}}
+</style>
+</head>
+<body>
+<canvas id="stars" class="fx"></canvas><canvas id="neural" class="fx"></canvas>
+<audio id="s_dashboard" src="sounds/dashboard.mp3" preload="auto" loop></audio>
+
+<nav>
+<div style="font-weight:800;display:flex;gap:8px;align-items:center"><span style="width:32px;height:32px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:8px;display:flex;align-items:center;justify-content:center;color:white">B</span> BIO-REVIVE 360° • Health Experts Connect</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<a href="index.html" class="btn btn-dark">← Home</a>
+<a href="hardware.html" class="btn">Hardware</a>
+<a href="face.html" class="btn">Face Scan</a>
+<a href="trinity.html" class="btn">AI Trinity</a>
+<a href="login.html" class="btn">User Login</a>
+</div>
+</nav>
+
+<div class="container" style="padding:28px 0">
+<h1 style="font-family:Manrope;font-size:clamp(1.6rem,2.8vw,2.2rem)">Health Expert Connects - Connect with Health Experts & Fitness Person</h1>
+<p style="color:var(--muted);margin-top:6px">AI Trinity results reviewed by certified health experts. Research prototype - Not clinical diagnosis, requires clinical validation.</p>
+
+<div class="grid3" style="margin-top:16px">
+<div class="card">
+<div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#dcfce7,#a7f3d0);display:flex;align-items:center;justify-content:center;font-size:1.6rem">👨‍⚕️</div>
+<h3 style="margin-top:10px">Health Experts & Doctors</h3>
+<p style="font-size:0.86rem;color:var(--muted);margin-top:6px">AI Trinity results reviewed. Chat/video, second opinion, clinical validation. Connect via secure dashboard.</p>
+<div style="margin-top:10px"><span class="mono" style="font-size:0.7rem;background:#f0fdf4;padding:4px 8px;border-radius:999px">ONLINE: 12 Doctors</span></div>
+<button class="btn-green btn" style="margin-top:10px;width:100%;justify-content:center" onclick="connectExpert('Doctor')">Connect Now - Chat with Doctor</button>
+<div class="wave" style="margin-top:8px"><b></b><b style="height:12px"></b><b></b><b style="height:14px"></b></div>
+</div>
+
+<div class="card">
+<div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center;font-size:1.6rem">🏋️</div>
+<h3 style="margin-top:10px">Fitness Experts</h3>
+<p style="font-size:0.86rem;color:var(--muted);margin-top:6px">Personalized HIIT, resistance training, posture AI correction, circadian alignment. Based on musculoskeletal module: bone density, grip strength, muscle mass.</p>
+<div style="margin-top:10px"><span class="mono" style="font-size:0.7rem;background:#eff6ff;padding:4px 8px;border-radius:999px">ONLINE: 8 Coaches</span></div>
+<button class="btn btn-glow" style="margin-top:10px;width:100%;justify-content:center" onclick="connectExpert('Fitness Coach')">Connect Fitness Coach</button>
+<div class="wave" style="margin-top:8px"><b></b><b style="height:10px"></b><b></b><b style="height:16px"></b></div>
+</div>
+
+<div class="card" style="background:#f8fafc">
+<h3>🔬 Advantages</h3>
+<p style="font-size:0.84rem;color:var(--muted);margin-top:6px">Easy health-report understanding, AI-based extraction, Centralized analysis, Multi-domain profile, Visual analytics, Biological-age concept, Personalised education, User-centred evaluation, Scalable architecture, Future device integration.</p>
+<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+<span style="background:white;border:1px solid var(--border);padding:4px 8px;border-radius:999px;font-size:0.7rem">Organ Aging Wheel</span>
+<span style="background:white;border:1px solid var(--border);padding:4px 8px;border-radius:999px;font-size:0.7rem">Trajectory Graphs</span>
+<span style="background:white;border:1px solid var(--border);padding:4px 8px;border-radius:999px;font-size:0.7rem">Regeneration Progress</span>
+</div>
+<button class="btn btn-dark" style="margin-top:10px;width:100%;justify-content:center" onclick="location.href='login.html'">Login to Connect</button>
+</div>
+</div>
+
+<div class="card" style="margin-top:16px;background:#0f172a;color:white">
+<h3 style="color:white">How Expert Connect Works</h3>
+<p style="color:#94a3b8;font-size:0.86rem;margin-top:6px">1. User completes Hardware + Face Scan → AI Trinity generates output → 2. User clicks Connect Expert → 3. System matches with available doctor/fitness expert based on domain (Cardio, Brain, Metabolic) → 4. Secure chat/video + report sharing → 5. Expert provides educational guidance (not diagnosis) → 6. Future: Admin manages expert panel via Admin Login.</p>
+<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+<a href="login.html" class="btn" style="background:white;color:black">User Login to Connect</a>
+<a href="admin.html" class="btn" style="background:transparent;color:white;border-color:rgba(255,255,255,0.2)">Admin Panel</a>
+</div>
+</div>
+</div>
+
+<script>
+function connectExpert(type){ const d=document.getElementById('s_dashboard'); if(d) d.play().catch(()=>{}); alert(type+' Connect Initiated\n\n→ Matching with available '+type+'\n→ Secure chat opening...\n→ Your AI Trinity Report (Heart 45, Brain 42, Pancreas 50) shared\n\nFuture: Real WebRTC video + PostgreSQL expert allocation'); }
+function initFX(){
+const s=document.getElementById('stars'), n=document.getElementById('neural'); if(!s||!n) return;
+const sCtx=s.getContext('2d'), nCtx=n.getContext('2d');
+function resize(){ s.width=innerWidth; s.height=innerHeight; n.width=innerWidth; n.height=innerHeight; } resize(); addEventListener('resize',resize);
+const pts=[]; for(let i=0;i<55;i++) pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.2+0.2,vx:(Math.random()-0.5)*0.2,vy:(Math.random()-0.5)*0.2});
+(function aS(){ sCtx.clearRect(0,0,s.width,s.height); pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy; if(p.x<0||p.x>s.width)p.vx*=-1; if(p.y<0||p.y>s.height)p.vy*=-1; sCtx.beginPath(); sCtx.arc(p.x,p.y,p.r,0,Math.PI*2); sCtx.fillStyle='rgba(29,78,216,0.32)'; sCtx.fill();}); requestAnimationFrame(aS); })();
+const nodes=[]; for(let i=0;i<14;i++) nodes.push({x:Math.random()*n.width,y:Math.random()*n.height,vx:(Math.random()-0.5)*0.35,vy:(Math.random()-0.5)*0.35});
+(function aN(){ nCtx.clearRect(0,0,n.width,n.height); nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy; if(n.x<0||n.x>n.width)n.vx*=-1; if(n.y<0||n.y>n.height)n.vy*=-1;}); nodes.forEach((a,i)=>{nodes.slice(i+1).forEach(b=>{const d=Math.hypot(a.x-b.x,a.y-b.y); if(d<130){nCtx.beginPath(); nCtx.moveTo(a.x,a.y); nCtx.lineTo(b.x,b.y); nCtx.strokeStyle=`rgba(44,246,179,${0.12*(1-d/130)})`; nCtx.lineWidth=0.6; nCtx.stroke();}});}); requestAnimationFrame(aN); })();
+}
+window.addEventListener('load',()=>{ initFX(); document.body.addEventListener('click',()=>{ const d=document.getElementById('s_dashboard'); if(d) d.play().catch(()=>{}); },{once:true}); });
+</script>
+</body>
+</html>
