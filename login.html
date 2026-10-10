@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Login - BIO-REVIVE 360°</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Manrope:wght@700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--green:#0f9d4e;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--blue:#1d4ed8}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:radial-gradient(800px 600px at 20% 10%, rgba(44,246,179,0.18), transparent), linear-gradient(180deg,#f8fdf9,#eef2ff);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.panel{width:100%;max-width:440px;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:0 24px 80px rgba(0,0,0,0.12)}
+.input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);margin-top:10px;font-size:0.92rem}
+.btn{width:100%;padding:12px;border-radius:12px;border:none;font-weight:700;cursor:pointer;margin-top:12px;display:flex;justify-content:center;align-items:center;gap:8px;text-decoration:none}
+.btn-green{background:linear-gradient(135deg,var(--green),#059669);color:white;box-shadow:0 10px 28px rgba(16,157,78,0.28)}
+.btn-dark{background:var(--text);color:white}
+.mono{font-family:'JetBrains Mono',monospace}
+.fx{position:fixed;inset:0;pointer-events:none;z-index:0}#stars{opacity:0.35}#neural{opacity:0.22}
+</style>
+</head>
+<body>
+<canvas id="stars" class="fx"></canvas><canvas id="neural" class="fx"></canvas>
+<audio id="s_dashboard" src="sounds/dashboard.mp3" preload="auto" loop></audio>
+<audio id="s_boot" src="sounds/boot.mp3" preload="auto"></audio>
+
+<div class="panel">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div style="font-weight:800;display:flex;gap:8px;align-items:center"><span style="width:34px;height:34px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:10px;display:flex;align-items:center;justify-content:center;color:white">B</span> BIO-REVIVE 360°</div>
+<a href="index.html" style="font-size:0.8rem;color:var(--muted);text-decoration:none">← Home</a>
+</div>
+
+<h2 style="font-family:Manrope;margin-top:16px;font-size:1.5rem">👤 User Login</h2>
+<p style="font-size:0.86rem;color:var(--muted);margin-top:4px">Access Hardware Scan, Face Scan, AI Trinity results, Health Experts dashboard.</p>
+
+<div style="margin-top:16px">
+<label class="mono" style="font-size:0.72rem;color:var(--muted)">Email / Mobile</label>
+<input class="input" id="email" placeholder="you@jru.edu.in" value="">
+<label class="mono" style="font-size:0.72rem;color:var(--muted);margin-top:8px;display:block">Password</label>
+<input class="input" id="pass" type="password" placeholder="••••••••">
+<select id="voiceLang" class="input">
+<option value="en">🇬🇧 English Female Voice</option>
+<option value="hi">🇮🇳 Hindi Female Voice</option>
+<option value="bn">🇮🇳 Bengali Female</option>
+<option value="ta">🇮🇳 Tamil Female</option>
+<option value="fr">🇫🇷 French Female</option>
+<option value="es">🇪🇸 Spanish Female</option>
+</select>
+
+<button class="btn btn-green" onclick="loginUser()">Login as User → Dashboard</button>
+<button class="btn btn-dark" onclick="speakWelcome()">🔊 Play Welcome Voice</button>
+<a href="admin.html" class="btn" style="background:white;border:1px solid var(--border);color:var(--text)">Admin Login →</a>
+
+<p style="font-size:0.7rem;color:var(--muted);margin-top:10px;text-align:center">Demo: Any email/password works • Future: FastAPI + PostgreSQL Auth • Data saved in localStorage • Real human female voice with 12 languages</p>
+<div style="margin-top:10px;background:#0f172a;color:#cbd5e1;border-radius:12px;padding:10px;font-family:'JetBrains Mono';font-size:0.72rem">
+<div>> User Dashboard Includes:</div>
+<div>• Hardware Scan (Sensors → Cloud)</div>
+<div>• Face Scan (Real Age + Bio Age)</div>
+<div>• AI Trinity Output</div>
+<div>• Health Experts Connect</div>
+</div>
+</div>
+</div>
+
+<script>
+let audioCtx=null;
+function initAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); const d=document.getElementById('s_dashboard'); const b=document.getElementById('s_boot'); if(d) d.play().catch(()=>{}); }
+const msgs={en:"Welcome to Bio-Revive 360 User Dashboard. Access your hardware scan, face scan, AI Trinity results and health experts.",hi:"Bio-Revive 360 यूजर डैशबोर्ड में आपका स्वागत है। हार्डवेयर स्कैन, फेस स्कैन, AI ट्रिनिटी और हेल्थ एक्सपर्ट्स तक पहुँचें।",bn:"Bio-Revive 360 ইউজার ড্যাশবোর্ডে স্বাগতম।",ta:"Bio-Revive 360 பயனர் டாஷ்போர்டுக்கு வரவேற்கிறோம்।",fr:"Bienvenue au tableau de bord utilisateur Bio-Revive 360.",es:"Bienvenido al panel de usuario Bio-Revive 360."};
+function speakWelcome(){
+const lang=document.getElementById('voiceLang').value; const text=msgs[lang]||msgs.en;
+if('speechSynthesis' in window){
+speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.rate=0.92; u.pitch=1.12; u.volume=1; u.lang={en:'en-US',hi:'hi-IN',bn:'bn-IN',ta:'ta-IN',fr:'fr-FR',es:'es-ES'}[lang]||'en-US';
+const vs=speechSynthesis.getVoices(); let f=vs.find(v=>v.lang===u.lang && v.name.toLowerCase().includes('female')) || vs.find(v=>v.lang.startsWith(u.lang.split('-')[0])) || vs[0]; if(f) u.voice=f; speechSynthesis.speak(u);
+}
+initAudio();
+}
+function loginUser(){
+const email=document.getElementById('email').value||'demo@jru.edu.in';
+localStorage.setItem('biorevive_user', email);
+initAudio(); const b=document.getElementById('s_boot'); if(b){ b.currentTime=0; b.play().catch(()=>{}); }
+alert('User Login Success: '+email+'\n\n→ Redirecting to Dashboard\n• Hardware Scan\n• Face Scan (Age Detection)\n• AI Trinity\n• Health Experts Connect\n\nFuture: FastAPI Auth + PostgreSQL');
+setTimeout(()=>{ location.href='hardware.html'; }, 400);
+}
+function initFX(){
+const s=document.getElementById('stars'), n=document.getElementById('neural'); if(!s||!n) return;
+const sCtx=s.getContext('2d'), nCtx=n.getContext('2d');
+function resize(){ s.width=innerWidth; s.height=innerHeight; n.width=innerWidth; n.height=innerHeight; } resize(); addEventListener('resize',resize);
+const pts=[]; for(let i=0;i<50;i++) pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.2+0.2,vx:(Math.random()-0.5)*0.2,vy:(Math.random()-0.5)*0.2});
+(function aS(){ sCtx.clearRect(0,0,s.width,s.height); pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy; sCtx.beginPath(); sCtx.arc(p.x,p.y,p.r,0,Math.PI*2); sCtx.fillStyle='rgba(29,78,216,0.32)'; sCtx.fill();}); requestAnimationFrame(aS); })();
+}
+window.addEventListener('load',()=>{ initFX(); document.body.addEventListener('click',()=>initAudio(),{once:true}); if(speechSynthesis.getVoices().length===0) speechSynthesis.onvoiceschanged=()=>{}; });
+</script>
+</body>
+</html>
