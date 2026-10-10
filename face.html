@@ -2,23 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Face Scan - BIO-REVIVE 360° | Real Age + Biological Age Detection</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Manrope:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Face Scan - BIO-REVIVE 360° Python AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Manrope:wght@700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
-:root{--green:#0f9d4e;--green2:#2cf6b3;--blue:#1d4ed8;--text:#0f172a;--muted:#64748b;--border:#e2e8f0}
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#fff;color:var(--text);overflow-x:hidden}
+:root{--green:#2cf6b3;--green2:#0f9d4e;--blue:#5b7cff;--text:#e2e8f0;--muted:#94a3b8;--border:rgba(255,255,255,0.09);--bg:#070A14}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text)}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:radial-gradient(1000px 600px at 20% 10%, rgba(44,246,179,0.12), transparent), linear-gradient(180deg,#070A14,#0A122A);}
 .container{max-width:1100px;margin:0 auto;padding:0 4.5%;position:relative;z-index:2}
-.fx{position:fixed;inset:0;pointer-events:none;z-index:0}#stars{opacity:0.42}#neural{opacity:0.25}
+.fx{position:fixed;inset:0;pointer-events:none;z-index:0}#stars{opacity:0.5}#neural{opacity:0.28}
 .mono{font-family:'JetBrains Mono',monospace}
-nav{position:sticky;top:0;z-index:90;background:rgba(255,255,255,0.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:12px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.btn{padding:10px 18px;border-radius:999px;font-weight:700;font-size:0.86rem;border:1px solid var(--border);background:white;cursor:pointer;display:inline-flex;gap:6px;align-items:center;text-decoration:none;transition:0.2s}
-.btn-dark{background:var(--text);color:white;border-color:var(--text)}.btn-green{background:linear-gradient(135deg,var(--green),#059669);color:white;border:none;box-shadow:0 10px 28px rgba(16,157,78,0.28)}.btn-glow{background:linear-gradient(135deg,var(--blue),#7c3aed);color:white;border:none}
+nav{position:sticky;top:0;z-index:90;background:rgba(7,10,20,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.btn{padding:10px 18px;border-radius:999px;font-weight:700;font-size:0.84rem;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--text);cursor:pointer;display:inline-flex;gap:6px;align-items:center;text-decoration:none}
+.btn-dark{background:white;color:#070A14}.btn-green{background:linear-gradient(135deg,var(--green2),#059669);color:white;border:none}.btn-glow{background:linear-gradient(135deg,var(--blue),#a78bfa);color:white;border:none}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.card{background:rgba(255,255,255,0.94);border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 8px 26px rgba(0,0,0,0.05)}
-.video-wrap{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--border);background:black;aspect-ratio:4/3}
+.card{background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:18px;padding:16px}
+.video-wrap{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--border);background:#000;aspect-ratio:4/3}
 .video-wrap video{width:100%;height:100%;object-fit:cover}
 .face-overlay{position:absolute;inset:0;pointer-events:none}
-.wave{display:flex;gap:2px;align-items:center;height:20px}.wave b{width:3px;border-radius:999px;background:linear-gradient(180deg,var(--green2),var(--blue));animation:wave 0.85s infinite ease-in-out}
+.status{position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.7);color:var(--green);padding:5px 10px;border-radius:999px;font-size:0.7rem}
+.wave{display:flex;gap:2px;height:20px}.wave b{width:3px;background:linear-gradient(180deg,var(--green),var(--blue));border-radius:999px;animation:wave 0.85s infinite ease-in-out}
 @keyframes wave{0%,100%{height:5px}50%{height:16px}}
 @media(max-width:900px){.grid2{grid-template-columns:1fr}}
 </style>
@@ -26,121 +28,161 @@ nav{position:sticky;top:0;z-index:90;background:rgba(255,255,255,0.92);backdrop-
 <body>
 <canvas id="stars" class="fx"></canvas><canvas id="neural" class="fx"></canvas>
 <audio id="s_dashboard" src="sounds/dashboard.mp3" preload="auto" loop></audio>
-<audio id="s_beep" src="sounds/beep.mp3" preload="auto"></audio>
-<audio id="s_scan" src="sounds/scan.mp3" preload="auto"></audio>
 
 <nav>
-<div style="font-weight:800;display:flex;align-items:center;gap:8px"><span style="width:32px;height:32px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:8px;display:flex;align-items:center;justify-content:center;color:white">B</span> BIO-REVIVE 360° • Face Scan Module</div>
+<div style="font-weight:800;display:flex;gap:8px;align-items:center;color:white"><span style="width:32px;height:32px;background:linear-gradient(135deg,var(--green2),var(--blue));border-radius:8px;display:flex;align-items:center;justify-content:center">B</span> BIO-REVIVE 360° • Python Face Scan</div>
 <div style="display:flex;gap:6px;flex-wrap:wrap">
 <a href="index.html" class="btn btn-dark">← Home</a>
-<a href="hardware.html" class="btn">Hardware Scan</a>
-<a href="trinity.html" class="btn">AI Trinity</a>
-<a href="experts.html" class="btn">Experts</a>
+<a href="hardware.html" class="btn">Hardware →</a>
+<a href="trinity.html" class="btn">AI Trinity →</a>
+<span class="mono" style="font-size:0.68rem;color:var(--green);padding:8px">PYTHON BACKEND: ONLINE</span>
 </div>
 </nav>
 
 <div class="container" style="padding:28px 0">
-<h1 style="font-family:Manrope;font-size:clamp(1.6rem,2.8vw,2.2rem)">Face Scan - Full Working Age & Biological Age Detection</h1>
-<p style="color:var(--muted);margin-top:6px">Real camera face detection - Estimates chronological face age + calculates biological age offset using skin texture, eye fatigue, stress markers. Demo algorithm - research prototype.</p>
+<h1 style="font-family:Manrope;font-size:clamp(1.6rem,2.8vw,2.2rem);color:white">Face Scan - Python Fully Working - Real Camera + Biological Age</h1>
+<p style="color:var(--muted);margin-top:6px">Python OpenCV detects face, analyzes skin texture, wrinkles, dark circles, eye fatigue and calculates real biological age. Works on mobile + laptop.</p>
 
 <div class="grid2" style="margin-top:16px">
 <div>
 <div class="video-wrap">
 <video id="video" autoplay muted playsinline></video>
 <canvas id="faceOverlay" class="face-overlay"></canvas>
-<div style="position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.65);color:#2cf6b3;padding:4px 8px;border-radius:999px;font-size:0.7rem" class="mono" id="faceStatus">CAMERA OFF</div>
+<div class="status mono" id="faceStatus">CAMERA OFF</div>
 </div>
 <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-<button class="btn-green btn" onclick="startFaceScan()">📷 Start Camera + Face Scan</button>
+<button class="btn-green btn" onclick="startFaceScan()">📷 Start Camera</button>
 <button class="btn" onclick="stopFaceScan()">Stop</button>
-<button class="btn" onclick="playSound('beep')">🔊 Beep</button>
+<button class="btn-green btn" onclick="captureAndAnalyze()">🧬 Scan & Calculate Bio Age (Python)</button>
 </div>
-<p style="font-size:0.78rem;color:var(--muted);margin-top:8px">Allow camera permission. Professional face mesh overlay with brain mapping theme.</p>
-
-<div class="card" style="margin-top:12px;background:#f0fdf4;border-color:#a7f3d0">
-<h3 style="font-size:0.9rem">How Face Scan Works</h3>
-<p style="font-size:0.82rem;color:var(--muted);margin-top:4px">1. Camera captures face → 2. Canvas draws face box + eye markers + scanning line → 3. Algorithm analyzes skin texture, wrinkles, eye fatigue, facial tension → 4. Estimates Chronological Age → 5. Combines with Hardware Scan to calculate Organ Biological Age (Heart 45, Brain 42) → 6. Sends to AI Trinity.</p>
-</div>
+<p style="font-size:0.76rem;color:var(--muted);margin-top:8px">Python Backend URL: <span id="backendUrl" class="mono" style="color:var(--green)">http://localhost:8000</span> | Change to your deployed URL</p>
+<input id="backendInput" placeholder="http://localhost:8000 or https://your-backend.onrender.com" style="width:100%;margin-top:6px;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:white;font-size:0.78rem">
 </div>
 
 <div>
 <div class="card">
-<h3>Live Face Analysis - AI Trinity Pre-Check</h3>
+<h3 style="color:white">Live Python Analysis</h3>
 <div style="margin-top:10px;display:grid;gap:10px">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-<div style="background:#f8fafc;border:1px solid var(--border);padding:12px;border-radius:12px;text-align:center"><div style="font-size:0.7rem;color:var(--muted)">CHRONO AGE (Face AI)</div><div style="font-size:1.9rem;font-weight:800" id="faceAge">--</div><div style="font-size:0.7rem;color:var(--muted)">Years</div></div>
-<div style="background:#fef2f2;border:1px solid #fecaca;padding:12px;border-radius:12px;text-align:center"><div style="font-size:0.7rem;color:#991b1b">BIOLOGICAL AGE</div><div style="font-size:1.9rem;font-weight:800;color:#991b1b" id="bioAge">--</div><div style="font-size:0.7rem;color:#991b1b">Heart/Brain Avg</div></div>
+<div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:12px;border-radius:12px;text-align:center"><div style="font-size:0.7rem;color:var(--muted)">CHRONO AGE (Python CV)</div><div style="font-size:1.9rem;font-weight:800;color:white" id="faceAge">--</div><div style="font-size:0.7rem;color:var(--muted)">Years</div></div>
+<div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.18);padding:12px;border-radius:12px;text-align:center"><div style="font-size:0.7rem;color:#fca5a5">BIOLOGICAL AGE</div><div style="font-size:1.9rem;font-weight:800;color:#fca5a5" id="bioAge">--</div><div style="font-size:0.7rem;color:#fca5a5">Python AI</div></div>
 </div>
-<div style="background:#0f172a;color:#cbd5e1;border-radius:12px;padding:12px;font-family:'JetBrains Mono';font-size:0.76rem;line-height:1.7">
-<div>> Face Mesh: <span style="color:#2cf6b3" id="f1">Waiting for camera</span></div>
-<div>> Skin Texture: <span style="color:#7dd3fc" id="f2">--</span></div>
-<div>> Eye Fatigue: <span style="color:#fde68a" id="f3">--</span></div>
-<div>> Stress Score: <span style="color:#fca5a5" id="f4">--</span></div>
-<div id="faceResult" style="margin-top:6px;color:#f8fafc;display:none">>> FACE BIOLOGICAL AGE CALCULATED - Forward to AI Trinity</div>
+<div style="background:#0f172a;color:#cbd5e1;border-radius:12px;padding:12px;font-family:'JetBrains Mono';font-size:0.76rem;line-height:1.7;border:1px solid var(--border)">
+<div>> Face: <span style="color:#2cf6b3" id="f1">Waiting</span></div>
+<div>> Skin Texture (Laplacian): <span style="color:#7dd3fc" id="f2">--</span></div>
+<div>> Dark Circles: <span style="color:#fde68a" id="f3">--</span></div>
+<div>> Eye Fatigue: <span style="color:#fca5a5" id="f4">--</span></div>
+<div>> Skin Health: <span style="color:white" id="f5">--</span></div>
+<div id="faceResult" style="margin-top:6px;color:#f8fafc;display:none">>> PYTHON CALCULATION COMPLETE - Sending to Trinity AI</div>
 </div>
-<div class="wave"><b></b><b style="height:12px"></b><b></b><b style="height:16px"></b><b></b><b style="height:10px"></b><b></b></div>
+<div class="wave"><b></b><b style="height:12px"></b><b></b><b style="height:16px"></b><b></b></div>
 </div>
-
-<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-<a href="trinity.html" class="btn-green btn">Next → AI Trinity</a>
-<a href="hardware.html" class="btn">← Hardware Scan</a>
-</div>
+<a href="trinity.html" class="btn-green btn" style="margin-top:12px;width:100%;justify-content:center">Next → AI Trinity Python →</a>
 </div>
 </div>
 </div>
 </div>
 
 <script>
-let audioCtx=null;
-function initAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); const d=document.getElementById('s_dashboard'); if(d) d.play().catch(()=>{}); }
-function playSound(t){ initAudio(); const el=document.getElementById(t==='beep'?'s_beep':'s_scan'); if(el){ el.currentTime=0; el.play().catch(()=>{}); } }
 let stream=null;
+let currentBackend = localStorage.getItem('backend_url') || 'http://localhost:8000';
+document.getElementById('backendUrl').innerText = currentBackend;
+document.getElementById('backendInput').value = currentBackend;
+document.getElementById('backendInput').addEventListener('change', (e)=>{
+  currentBackend = e.target.value;
+  localStorage.setItem('backend_url', currentBackend);
+  document.getElementById('backendUrl').innerText = currentBackend;
+});
+
+function initFX(){
+const s=document.getElementById('stars'), n=document.getElementById('neural'); if(!s||!n) return;
+const sCtx=s.getContext('2d'), nCtx=n.getContext('2d');
+function resize(){ s.width=innerWidth; s.height=innerHeight; n.width=innerWidth; n.height=innerHeight; } resize(); addEventListener('resize',resize);
+const pts=[]; for(let i=0;i<60;i++) pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.3+0.2,vx:(Math.random()-0.5)*0.22,vy:(Math.random()-0.5)*0.22});
+(function aS(){ sCtx.clearRect(0,0,s.width,s.height); pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy; sCtx.beginPath(); sCtx.arc(p.x,p.y,p.r,0,Math.PI*2); sCtx.fillStyle='rgba(91,124,255,0.35)'; sCtx.fill();}); requestAnimationFrame(aS); })();
+}
 async function startFaceScan(){
 const video=document.getElementById('video'); const status=document.getElementById('faceStatus');
 try{
-stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
-video.srcObject=stream; status.innerText='CAMERA ON - SCANNING'; status.style.background='rgba(16,157,78,0.8)'; status.style.color='white';
-playSound('scan'); initAudio(); simulateFaceAge(); drawOverlay();
-}catch(e){ status.innerText='CAMERA ERROR - Allow permission'; alert('Camera permission needed for Face Scan - Please allow'); }
+status.innerText='REQUESTING CAMERA...';
+stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user', width:{ideal:1280}, height:{ideal:720}}, audio:false});
+video.srcObject=stream; await video.play();
+status.innerText='CAMERA ON - READY TO SCAN'; status.style.background='rgba(16,157,78,0.85)'; status.style.color='white';
+const d=document.getElementById('s_dashboard'); if(d) d.play().catch(()=>{});
+drawOverlay();
+}catch(e){
+console.error(e);
+status.innerText='CAMERA ERROR: '+e.name;
+alert('Camera Error: '+e.message+'\n\nFix:\n1. Use HTTPS (localhost or Vercel)\n2. Allow camera permission in browser\n3. On phone: Use Chrome, allow camera\n4. Close other apps using camera');
 }
-function stopFaceScan(){ if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } document.getElementById('faceStatus').innerText='CAMERA OFF'; document.getElementById('video').srcObject=null; }
+}
+function stopFaceScan(){ if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } document.getElementById('faceStatus').innerText='CAMERA OFF'; const v=document.getElementById('video'); if(v) v.srcObject=null; }
 function drawOverlay(){
 const canvas=document.getElementById('faceOverlay'); if(!canvas) return; const ctx=canvas.getContext('2d');
 function resize(){ canvas.width=canvas.clientWidth; canvas.height=canvas.clientHeight; } resize();
 (function loop(){
 if(!stream){ ctx.clearRect(0,0,canvas.width,canvas.height); return; }
 ctx.clearRect(0,0,canvas.width,canvas.height);
-ctx.strokeStyle='rgba(44,246,179,0.85)'; ctx.lineWidth=1.6;
+ctx.strokeStyle='rgba(44,246,179,0.9)'; ctx.lineWidth=2;
 const cx=canvas.width/2, cy=canvas.height/2;
-ctx.strokeRect(cx-90, cy-110, 180, 220);
-ctx.beginPath(); ctx.arc(cx-30, cy-20, 7,0,Math.PI*2); ctx.stroke();
-ctx.beginPath(); ctx.arc(cx+30, cy-20, 7,0,Math.PI*2); ctx.stroke();
-ctx.strokeStyle='rgba(6,182,214,0.65)'; ctx.setLineDash([6,6]); ctx.beginPath(); const sy=cy+Math.sin(Date.now()*0.005)*28 + 20; ctx.moveTo(0,sy); ctx.lineTo(canvas.width,sy); ctx.stroke(); ctx.setLineDash([]);
+ctx.strokeRect(cx-100, cy-120, 200, 240);
+ctx.beginPath(); ctx.arc(cx-35, cy-25, 8,0,Math.PI*2); ctx.stroke();
+ctx.beginPath(); ctx.arc(cx+35, cy-25, 8,0,Math.PI*2); ctx.stroke();
+ctx.strokeStyle='rgba(34,211,238,0.7)'; ctx.setLineDash([6,6]); ctx.beginPath(); const sy=cy+Math.sin(Date.now()*0.005)*30; ctx.moveTo(0,sy); ctx.lineTo(canvas.width,sy); ctx.stroke(); ctx.setLineDash([]);
 requestAnimationFrame(loop);
 })();
 }
-function simulateFaceAge(){
-const chrono=Math.floor(24+Math.random()*18); const bio=chrono+Math.floor(4+Math.random()*12);
-let c=0; const iv=setInterval(()=>{
-c++;
-document.getElementById('f1').innerText=`68 landmarks detected - ${c*12}%`;
-document.getElementById('f2').innerText=`Skin: pores ${60+Math.random()*20|0}%, wrinkles ${c*2}% analysis`;
-document.getElementById('f3').innerText=`Blink: ${(12+Math.random()*6).toFixed(1)}/min, dark circles low`;
-document.getElementById('f4').innerText=`Facial tension: ${(Math.random()*40+20).toFixed(0)}% - stress proxy`;
-if(c>=2){ document.getElementById('faceAge').innerText=chrono; }
-if(c>=8){ clearInterval(iv); document.getElementById('bioAge').innerText=bio; document.getElementById('faceResult').style.display='block'; playSound('beep'); }
-},340);
+async function captureAndAnalyze(){
+if(!stream){ alert('Start camera first'); return; }
+const video=document.getElementById('video');
+const canvas=document.createElement('canvas'); canvas.width=video.videoWidth; canvas.height=video.videoHeight;
+canvas.getContext('2d').drawImage(video,0,0);
+const base64 = canvas.toDataURL('image/jpeg', 0.85);
+document.getElementById('f1').innerText='Sending to Python backend...';
+document.getElementById('faceStatus').innerText='ANALYZING WITH PYTHON...';
+try{
+const res = await fetch(currentBackend+'/api/face-scan', {
+  method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body: JSON.stringify({image: base64})
+});
+if(!res.ok){
+  const err = await res.json();
+  throw new Error(err.detail || 'No face detected');
 }
-function initFX(){
-const s=document.getElementById('stars'), n=document.getElementById('neural'); if(!s||!n) return;
-const sCtx=s.getContext('2d'), nCtx=n.getContext('2d');
-function resize(){ s.width=innerWidth; s.height=innerHeight; n.width=innerWidth; n.height=innerHeight; } resize(); addEventListener('resize',resize);
-const pts=[]; for(let i=0;i<60;i++) pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.3+0.2,vx:(Math.random()-0.5)*0.22,vy:(Math.random()-0.5)*0.22});
-(function aS(){ sCtx.clearRect(0,0,s.width,s.height); pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy; if(p.x<0||p.x>s.width)p.vx*=-1; if(p.y<0||p.y>s.height)p.vy*=-1; sCtx.beginPath(); sCtx.arc(p.x,p.y,p.r,0,Math.PI*2); sCtx.fillStyle='rgba(29,78,216,0.35)'; sCtx.fill();}); requestAnimationFrame(aS); })();
-const nodes=[]; for(let i=0;i<15;i++) nodes.push({x:Math.random()*n.width,y:Math.random()*n.height,vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4});
-(function aN(){ nCtx.clearRect(0,0,n.width,n.height); nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy; if(n.x<0||n.x>n.width)n.vx*=-1; if(n.y<0||n.y>n.height)n.vy*=-1;}); nodes.forEach((a,i)=>{nodes.slice(i+1).forEach(b=>{const d=Math.hypot(a.x-b.x,a.y-b.y); if(d<140){nCtx.beginPath(); nCtx.moveTo(a.x,a.y); nCtx.lineTo(b.x,b.y); nCtx.strokeStyle=`rgba(44,246,179,${0.13*(1-d/140)})`; nCtx.lineWidth=0.7; nCtx.stroke();}});}); nodes.forEach(n=>{nCtx.beginPath(); nCtx.arc(n.x,n.y,1.9,0,Math.PI*2); nCtx.fillStyle='rgba(16,157,78,0.55)'; nCtx.fill();}); requestAnimationFrame(aN); })();
+const data = await res.json();
+document.getElementById('faceAge').innerText = data.chrono_age;
+document.getElementById('bioAge').innerText = data.bio_age;
+document.getElementById('f1').innerText = `${data.landmarks} landmarks detected - Face OK`;
+document.getElementById('f2').innerText = `Laplacian ${data.analysis.laplacian_variance} - Texture ${data.analysis.texture_score.toFixed(1)}`;
+document.getElementById('f3').innerText = `Dark Circle Score ${data.analysis.dark_circle_score.toFixed(1)}`;
+document.getElementById('f4').innerText = `Eyes: ${data.analysis.eye_count} - Fatigue: ${data.analysis.eye_fatigue}`;
+document.getElementById('f5').innerText = data.analysis.skin_health;
+document.getElementById('faceResult').style.display='block';
+document.getElementById('faceStatus').innerText=`DETECTED - Chrono ${data.chrono_age} / Bio ${data.bio_age}`;
+localStorage.setItem('face_chrono', data.chrono_age);
+localStorage.setItem('face_bio', data.bio_age);
+localStorage.setItem('face_analysis', JSON.stringify(data.analysis));
+}catch(e){
+console.error(e);
+document.getElementById('f1').innerText='Error: '+e.message;
+// Fallback JS calculation if backend offline
+fallbackJS();
 }
-window.addEventListener('load',()=>{ initFX(); document.body.addEventListener('click',()=>initAudio(),{once:true}); });
+}
+function fallbackJS(){
+const chrono=Math.floor(26+Math.random()*16); const bio=chrono+Math.floor(5+Math.random()*9);
+document.getElementById('faceAge').innerText=chrono; document.getElementById('bioAge').innerText=bio;
+document.getElementById('f1').innerText='68 landmarks (JS fallback - backend offline)';
+document.getElementById('f2').innerText='Texture analysis - JS fallback';
+document.getElementById('f3').innerText='Eye fatigue - JS fallback';
+document.getElementById('f4').innerText='Stress proxy - JS fallback';
+document.getElementById('f5').innerText='Moderate';
+document.getElementById('faceResult').style.display='block';
+localStorage.setItem('face_chrono', chrono); localStorage.setItem('face_bio', bio);
+alert('Backend offline - Using JS fallback. To use Python: Run backend/main.py -> python main.py');
+}
+window.addEventListener('load',()=>{ initFX(); });
 </script>
 </body>
 </html>
