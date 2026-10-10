@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login - BIO-REVIVE 360° Future Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Manrope:wght@700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--green:#0f9d4e;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--blue:#1d4ed8}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:radial-gradient(800px 600px at 80% 10%, rgba(124,58,237,0.18), transparent), linear-gradient(180deg,#0f172a,#0b1220);min-height:100vh;color:#cbd5e1;display:flex;align-items:center;justify-content:center;padding:16px}
+.panel{width:100%;max-width:480px;background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:22px;padding:24px;box-shadow:0 24px 80px rgba(0,0,0,0.35)}
+.input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:white;margin-top:10px;font-size:0.92rem}
+.input::placeholder{color:#94a3b8}
+.btn{width:100%;padding:12px;border-radius:12px;border:none;font-weight:700;cursor:pointer;margin-top:12px;display:flex;justify-content:center;align-items:center;gap:8px;text-decoration:none}
+.btn-green{background:linear-gradient(135deg,var(--green),#059669);color:white;box-shadow:0 10px 28px rgba(16,157,78,0.28)}
+.btn-dark{background:white;color:var(--text)}
+.mono{font-family:'JetBrains Mono',monospace}
+.fx{position:fixed;inset:0;pointer-events:none;z-index:0}#stars{opacity:0.32}#neural{opacity:0.18}
+</style>
+</head>
+<body>
+<canvas id="stars" class="fx"></canvas><canvas id="neural" class="fx"></canvas>
+<audio id="s_dashboard" src="sounds/dashboard.mp3" preload="auto" loop></audio>
+<audio id="s_boot" src="sounds/boot.mp3" preload="auto"></audio>
+
+<div class="panel">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div style="font-weight:800;display:flex;gap:8px;align-items:center;color:white"><span style="width:34px;height:34px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:10px;display:flex;align-items:center;justify-content:center;color:white">B</span> BIO-REVIVE 360° • ADMIN</div>
+<a href="index.html" style="font-size:0.8rem;color:#94a3b8;text-decoration:none">← Home</a>
+</div>
+
+<h2 style="font-family:Manrope;margin-top:16px;font-size:1.5rem;color:white">🛡️ Admin Login - Futuristic Lab</h2>
+<p style="font-size:0.86rem;color:#94a3b8;margin-top:4px">Admin dashboard: Manage users, sensors, AI Trinity models, health experts, analytics, device integration.</p>
+
+<div style="margin-top:16px">
+<label class="mono" style="font-size:0.72rem;color:#94a3b8">Admin Email</label>
+<input class="input" id="email" placeholder="admin@biorevive.jru" value="admin@biorevive.jru">
+<label class="mono" style="font-size:0.72rem;color:#94a3b8;margin-top:8px;display:block">Password</label>
+<input class="input" id="pass" type="password" placeholder="••••••••" value="admin123">
+
+<button class="btn btn-green" onclick="loginAdmin()">Login as Admin → Dashboard</button>
+<button class="btn btn-dark" onclick="location.href='login.html'">User Login →</button>
+
+<p style="font-size:0.7rem;color:#64748b;margin-top:10px;text-align:center">Demo Admin: admin@biorevive.jru / admin123 • Future: PostgreSQL/MongoDB Auth + Role Management</p>
+
+<div style="margin-top:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px;font-family:'JetBrains Mono';font-size:0.72rem;line-height:1.7">
+<div style="color:#7dd3fc">ADMIN DASHBOARD MODULES:</div>
+<div>> User Management (Users, Sessions)</div>
+<div>> Hardware Sensors (ESP32, Wearables, Biofluid, EEG)</div>
+<div>> Face Scan Logs (Age Detection History)</div>
+<div>> AI Trinity Models (Report AI, Risk AI, Reco AI)</div>
+<div>> Health Experts Panel (Doctors + Fitness)</div>
+<div>> Analytics (Organ Aging Wheel, Risk Trends)</div>
+<div style="color:#2cf6b3;margin-top:6px">>> FUTURE: Full Analytics + Device Management</div>
+</div>
+</div>
+</div>
+
+<script>
+let audioCtx=null;
+function initAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); const d=document.getElementById('s_dashboard'); if(d) d.play().catch(()=>{}); }
+function loginAdmin(){
+const email=document.getElementById('email').value;
+if(email!=='admin@biorevive.jru'){ alert('Use demo admin: admin@biorevive.jru / admin123'); return; }
+localStorage.setItem('biorevive_admin', email);
+initAudio(); const b=document.getElementById('s_boot'); if(b){ b.currentTime=0; b.play().catch(()=>{}); }
+alert('Admin Login Success: '+email+'\n\n→ Admin Dashboard\n• Users: 128 active\n• Sensors: ESP32 Hub Online\n• Face Scans: 342 logs\n• AI Trinity: All models active\n• Experts: 12 Doctors, 8 Coaches\n\nFuture: Full Admin Panel with PostgreSQL analytics, sensor OTA, expert allocation');
+setTimeout(()=>{ document.body.innerHTML='<div style="padding:40px;text-align:center;color:white"><h1>Admin Dashboard - BIO-REVIVE 360°</h1><p style="color:#94a3b8;margin-top:8px">Welcome Admin - Future: Full dashboard here</p><a href="index.html" style="color:#2cf6b3">← Back to Home</a></div>'; }, 500);
+}
+function initFX(){
+const s=document.getElementById('stars'), n=document.getElementById('neural'); if(!s||!n) return;
+const sCtx=s.getContext('2d'), nCtx=n.getContext('2d');
+function resize(){ s.width=innerWidth; s.height=innerHeight; n.width=innerWidth; n.height=innerHeight; } resize(); addEventListener('resize',resize);
+const pts=[]; for(let i=0;i<50;i++) pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.2+0.2,vx:(Math.random()-0.5)*0.18,vy:(Math.random()-0.5)*0.18});
+(function aS(){ sCtx.clearRect(0,0,s.width,s.height); pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy; sCtx.beginPath(); sCtx.arc(p.x,p.y,p.r,0,Math.PI*2); sCtx.fillStyle='rgba(124,58,237,0.32)'; sCtx.fill();}); requestAnimationFrame(aS); })();
+}
+window.addEventListener('load',()=>{ initFX(); document.body.addEventListener('click',()=>initAudio(),{once:true}); });
+</script>
+</body>
+</html>
