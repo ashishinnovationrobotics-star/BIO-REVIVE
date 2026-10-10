@@ -1,0 +1,15 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Hardware Scan - BIO-REVIVE 360°</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>:root{--green:#0f9d4e;--text:#0f172a;--muted:#64748b;--border:#e2e8f0}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;padding:20px}.container{max-width:900px;margin:0 auto}.card{border:1px solid var(--border);border-radius:18px;padding:18px;margin:12px 0}.btn{padding:10px 18px;border-radius:999px;background:var(--text);color:white;text-decoration:none;display:inline-block;margin:4px}.btn-green{background:var(--green)}</style>
+</head><body>
+<audio id="s_dashboard" src="sounds/dashboard.mp3" preload="auto" autoplay loop></audio>
+<div class="container">
+<a href="index.html" class="btn">← Home</a>
+<h1 style="margin-top:12px">Hardware Scan - All Health Sensors → Cloud → Results</h1>
+<p style="color:var(--muted)">Wearables · Biofluid analyzer · Brain interface · IoT hub (ESP32/ARM, edge AI) → Cloud PostgreSQL/MongoDB → Organ Aging Wheel, Trajectory Graphs</p>
+<div class="card"><h3>Sensor Hub - Fetching All Sensors</h3><p>⌚ Wearable - HR, SpO2, HRV - LIVE<br>💧 Biofluid Analyzer - Glucose, Lipids - LIVE<br>🧠 Brain Interface - EEG Headband - LIVE<br>📦 IoT Hub ESP32 - CONNECTING</p><button class="btn btn-green" onclick="alert('Hardware Scan Started - Cloud Sync 100% - Forward to AI Trinity'); document.getElementById('s_dashboard').play()">Start Scan + Cloud Sync</button></div>
+<div class="card" style="background:#0f172a;color:#2cf6b3;font-family:monospace"><p>> Cloud Sync - bio-revive-cloud.jru - ENCRYPTED</p><p>> HR: 78bpm, SpO2: 97%, HRV: 42ms - OK</p><p>> Glucose: 98 mg/dL - OK</p><p>> EEG Alpha 9.2Hz - OK</p><p>>> CLOUD ANALYSIS COMPLETE</p></div>
+<a href="trinity.html" class="btn btn-green">Next → AI Trinity</a>
+</div>
+<script>document.addEventListener('click',()=>{document.getElementById('s_dashboard').play().catch(()=>{});},{once:true});</script>
+</body></html>
