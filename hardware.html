@@ -1,15 +1,487 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Hardware Scan - BIO-REVIVE 360°</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
-<style>:root{--green:#0f9d4e;--text:#0f172a;--muted:#64748b;--border:#e2e8f0}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;padding:20px}.container{max-width:900px;margin:0 auto}.card{border:1px solid var(--border);border-radius:18px;padding:18px;margin:12px 0}.btn{padding:10px 18px;border-radius:999px;background:var(--text);color:white;text-decoration:none;display:inline-block;margin:4px}.btn-green{background:var(--green)}</style>
-</head><body>
-<audio id="s_dashboard" src="sounds/dashboard.mp3" preload="auto" autoplay loop></audio>
-<div class="container">
-<a href="index.html" class="btn">← Home</a>
-<h1 style="margin-top:12px">Hardware Scan - All Health Sensors → Cloud → Results</h1>
-<p style="color:var(--muted)">Wearables · Biofluid analyzer · Brain interface · IoT hub (ESP32/ARM, edge AI) → Cloud PostgreSQL/MongoDB → Organ Aging Wheel, Trajectory Graphs</p>
-<div class="card"><h3>Sensor Hub - Fetching All Sensors</h3><p>⌚ Wearable - HR, SpO2, HRV - LIVE<br>💧 Biofluid Analyzer - Glucose, Lipids - LIVE<br>🧠 Brain Interface - EEG Headband - LIVE<br>📦 IoT Hub ESP32 - CONNECTING</p><button class="btn btn-green" onclick="alert('Hardware Scan Started - Cloud Sync 100% - Forward to AI Trinity'); document.getElementById('s_dashboard').play()">Start Scan + Cloud Sync</button></div>
-<div class="card" style="background:#0f172a;color:#2cf6b3;font-family:monospace"><p>> Cloud Sync - bio-revive-cloud.jru - ENCRYPTED</p><p>> HR: 78bpm, SpO2: 97%, HRV: 42ms - OK</p><p>> Glucose: 98 mg/dL - OK</p><p>> EEG Alpha 9.2Hz - OK</p><p>>> CLOUD ANALYSIS COMPLETE</p></div>
-<a href="trinity.html" class="btn btn-green">Next → AI Trinity</a>
-</div>
-<script>document.addEventListener('click',()=>{document.getElementById('s_dashboard').play().catch(()=>{});},{once:true});</script>
-</body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NEURO-CARDIAC SENSOR LAB | Interactive Research Studio</title>
+<style>
+:root{--bg:#040a12;--pn:#09151f;--ln:#14425a;--tx:#d4f1ff;--mu:#6c9ab4;--ac:#22d3ee;--g:#34d399;--r:#f87171;--y:#fbbf24;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#e8f1f6;--pn:#fff;--ln:#9cc3d6;--tx:#0a2236;--mu:#4b6b80;--ac:#0e7490;--g:#047857;--r:#dc2626;--y:#b45309}}
+:root[data-theme="dark"]{--bg:#040a12;--pn:#09151f;--ln:#14425a;--tx:#d4f1ff;--mu:#6c9ab4}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background-image:linear-gradient(var(--ln) 1px,transparent 1px),linear-gradient(90deg,var(--ln) 1px,transparent 1px);background-size:44px 44px;background-attachment:fixed}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--pn);border-bottom:1px solid var(--ac);padding:8px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+h1{font-size:13px;margin:0;letter-spacing:2px;text-transform:uppercase;white-space:nowrap}h1 span{color:var(--ac)}
+#nav{display:flex;gap:5px;overflow-x:auto;max-width:100%;padding-bottom:2px}
+button,select,input{background:var(--pn);color:var(--tx);border:1px solid var(--ln);border-radius:4px;padding:5px 10px;font:inherit;cursor:pointer;white-space:nowrap}
+button:hover{border-color:var(--ac)}button.on{background:var(--ac);color:#021;font-weight:700;border-color:var(--ac)}
+.pg{display:none;padding:12px;max-width:1500px;margin:0 auto}.pg.on{display:block}
+.grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:12px}@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:color-mix(in srgb,var(--pn) 92%,transparent);border:1px solid var(--ln);border-radius:6px;padding:12px;box-shadow:0 0 20px rgba(34,211,238,.07)}
+h2{margin:0 0 8px;font-size:12px;color:var(--ac);text-transform:uppercase;letter-spacing:1.5px}h3{margin:10px 0 6px;font-size:12px;color:var(--y);text-transform:uppercase}
+.mu{color:var(--mu)}.row{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
+.chip{display:inline-block;padding:1px 8px;border:1px solid var(--ln);font-size:12px;margin:2px 4px 2px 0;border-radius:3px}
+.slot{height:70vh;min-height:430px}
+#stage{position:relative;height:100%;border:1px solid var(--ln);border-radius:6px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#0b2a3d,#030810)}
+#stage canvas{display:block;width:100%;height:100%;touch-action:none}
+.tb{position:absolute;top:8px;left:8px;right:8px;display:flex;flex-wrap:wrap;gap:5px;z-index:3}
+#tip{position:absolute;bottom:8px;left:10px;right:10px;color:var(--ac);font-size:12px;pointer-events:none;text-shadow:0 0 6px #000}
+#mks{position:absolute;inset:0;pointer-events:none;overflow:hidden}.mk{position:absolute;font-size:10px;color:#04212a;background:var(--ac);padding:0 4px;border-radius:2px;transform:translate(8px,-50%);white-space:nowrap}
+canvas.s{width:100%;display:block;background:#020812;border:1px solid var(--ln)}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}.gal .card{padding:8px;cursor:pointer}.gal .card:hover{border-color:var(--ac)}.gal svg{width:100%;display:block;background:#050e18;border-radius:4px}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:10px}.kp b{display:block;font-size:22px;color:var(--ac)}
+.dg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.sc{overflow-x:auto;border:1px solid var(--ln);background:#030a12}
+table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid var(--ln);padding:4px 8px;text-align:left;vertical-align:top}
+svg text{fill:var(--tx);font:11px ui-monospace,monospace}
+@keyframes fl{to{stroke-dashoffset:-24}}.w{stroke-dasharray:8 4;animation:fl .8s linear infinite}
+@keyframes bl{50%{opacity:.25}}.bk{animation:bl 1.2s infinite}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;display:none;align-items:center;justify-content:center;padding:12px}#modal.on{display:flex}
+#mbox{background:var(--pn);border:1px solid var(--ac);border-radius:8px;max-width:900px;width:100%;max-height:92vh;overflow:auto;padding:14px}
+#mv{width:100%;height:280px;display:block;background:radial-gradient(#0b2a3d,#030810);border:1px solid var(--ln);touch-action:none}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:700px){.two{grid-template-columns:1fr}}
+label.ck{display:block;padding:3px 0}
+
+/* Upgrade layer: responsive research-studio polish */
+:root{color-scheme:dark}
+body{background-image:radial-gradient(ellipse at 50% -10%,rgba(8,145,178,.18),transparent 55%),linear-gradient(var(--ln) 1px,transparent 1px),linear-gradient(90deg,var(--ln) 1px,transparent 1px);background-size:auto,44px 44px,44px 44px}
+header{backdrop-filter:blur(16px);box-shadow:0 8px 30px #0005}
+.card{backdrop-filter:blur(10px);transition:border-color .2s,transform .2s}
+.card:hover{border-color:color-mix(in srgb,var(--ac) 60%,var(--ln))}
+button{transition:transform .15s,border-color .15s,background .15s}
+button:active{transform:scale(.97)}
+#p-overview{padding-top:18px}
+.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:14px;align-items:stretch}
+.hero-art{position:relative;overflow:hidden;min-height:310px;border:1px solid var(--ln);border-radius:10px;background:#03101d}
+.hero-art img{width:100%;height:100%;min-height:310px;object-fit:cover;display:block;opacity:.92;animation:heroBreath 8s ease-in-out infinite alternate}
+.hero-copy{padding:clamp(18px,3vw,34px);display:flex;flex-direction:column;justify-content:center;background:linear-gradient(145deg,#0b2437ee,#07111cee)}
+.hero-copy h2{font-size:clamp(22px,3vw,38px);line-height:1.15;letter-spacing:-.7px;text-transform:none;color:#e6faff}
+.hero-copy p{color:var(--mu);font-size:14px}
+.live-pill{display:inline-flex;align-items:center;gap:8px;color:#86efac;border:1px solid #166534;border-radius:99px;padding:5px 10px;width:max-content}
+.live-pill:before{content:"";width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 12px #34d399;animation:bl 1.2s infinite}
+.overview-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}
+.overview-kpis .card{padding:13px}.overview-kpis b{display:block;color:var(--ac);font-size:clamp(20px,3vw,28px)}
+.overview-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
+.organ-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.organ-tile{border:1px solid var(--ln);border-radius:6px;padding:10px;background:#06121e;cursor:pointer}
+.organ-tile strong{display:block;color:var(--tx)}.organ-tile span{color:var(--mu);font-size:11px}
+.pulse-line{height:40px;width:100%;display:block}
+@keyframes heroBreath{from{transform:scale(1)}to{transform:scale(1.045)}}
+@media(max-width:900px){.hero,.overview-grid{grid-template-columns:1fr}.hero-art{min-height:230px}.hero-art img{min-height:230px}.overview-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}}
+
+.signal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}.signal-card canvas{height:145px}.signal-card .metric{color:var(--ac);font-size:18px}.feature-art{width:100%;max-height:280px;object-fit:cover;border:1px solid var(--ln);border-radius:6px;display:block}.signal-card{min-width:0}.tagline{color:var(--mu);font-size:11px}.audio-active{border-color:var(--g)!important;color:var(--g)!important}
+@media(max-width:600px){header{align-items:flex-start}#nav{order:3;width:100%}.signal-grid{grid-template-columns:1fr}}
+</style></head><body>
+<header><h1>Neuro<span>Cardiac</span> Sensor Lab</h1><nav id="nav"></nav><div class="row" style="margin:0 0 0 auto;align-items:center"><button id="soundToggle" title="Enable or pause lab sound">♫ Enable sound</button><label class="mu" for="soundVol">Vol</label><input id="soundVol" type="range" min="0" max="1" step="0.05" value="0.35" style="width:75px"><audio id="labAudio" src="assets/lab-startup.mp3" preload="auto" loop></audio></div></header>
+
+<section class="pg on" id="p-overview">
+ <div class="hero">
+  <div class="hero-art"><img src="assets/neuro-cardiac-dashboard.webp" alt="Neuro-Cardiac Sensor Lab futuristic anatomy and monitoring dashboard concept art" loading="eager"></div>
+  <div class="card hero-copy"><span class="live-pill">SIMULATION SYSTEM ONLINE</span>
+   <h2>Neuro-Cardiac Sensor Lab</h2>
+   <p>Interactive anatomy, biosignal visualization, sensor integration and electronics prototyping in one research workspace.</p>
+   <div class="row"><button class="on" onclick="show('anatomy')">Explore 3D Anatomy</button><button onclick="show('dash')">Open Live Monitor</button></div>
+   <div class="row"><span class="chip">3D Anatomy</span><span class="chip">36 Sensor Modules</span><span class="chip">Circuit + PCB</span><span class="chip">Signal Simulation</span></div>
+   <p style="font-size:11px">Research / education prototype · Synthetic values only · Not for diagnosis</p>
+  </div>
+ </div>
+ <div class="overview-kpis">
+  <div class="card"><span class="mu">Sensor modules</span><b>36</b><span class="mu">Searchable library</span></div>
+  <div class="card"><span class="mu">Signal channels</span><b>5</b><span class="mu">ECG · EEG · EMG · PPG · RESP</span></div>
+  <div class="card"><span class="mu">Board profiles</span><b>4</b><span class="mu">Uno · Mega · Pi · ESP32</span></div>
+  <div class="card"><span class="mu">Workspace modules</span><b>8</b><span class="mu">Anatomy to protocols</span></div>
+ </div>
+ <div class="overview-grid">
+  <div class="card"><h2>Explore research modules</h2><div class="organ-list">
+   <div class="organ-tile" onclick="show('anatomy')"><strong>◉ 3D Anatomy</strong><span>Rotate, zoom, inspect organs and sensor locations</span></div>
+   <div class="organ-tile" onclick="show('systems')"><strong>⌘ Body Systems</strong><span>Explore physiological system groupings</span></div>
+   <div class="organ-tile" onclick="show('sensors')"><strong>▦ Sensor Gallery</strong><span>Browse components and their interfaces</span></div>
+   <div class="organ-tile" onclick="show('lab')"><strong>⌁ Electronics Bench</strong><span>Choose sensor and microcontroller board</span></div>
+   <div class="organ-tile" onclick="show('circuit')"><strong>⌗ Circuit + PCB</strong><span>View illustrative wiring and BOM</span></div>
+   <div class="organ-tile" onclick="show('arch')"><strong>⇢ System Architecture</strong><span>Inspect data-flow and hub topology</span></div>
+  </div></div>
+  <div class="card"><h2>Signal preview · simulated ECG</h2><canvas class="s pulse-line" id="heroSignal" height="150"></canvas><div class="row"><button onclick="show('dash')">Open full dashboard →</button><button onclick="show('proto')">Lab protocols →</button></div><p class="mu">All live-looking readings are generated in the browser for demonstration. Connect validated hardware and a calibrated acquisition pipeline before interpreting real measurements.</p></div>
+ </div>
+</section>
+<section class="pg on" id="p-anatomy"><div class="grid"><div class="slot" id="s-anatomy"></div>
+ <aside><div class="card"><h2>Layers</h2><div class="row" id="lay"></div><div class="mu">Click an organ or a glowing sensor point.</div>
+ <h3>Explode view</h3><input type="range" id="ex" min="0" max="100" value="0" style="width:100%">
+ <h3>Cross-section (front to back)</h3><input type="range" id="cx" min="0" max="100" value="0" style="width:100%">
+ <h3>Load your own anatomy model (.glb / .gltf)</h3><input type="file" id="glb" accept=".glb,.gltf"><div class="mu" id="gm">Scaled to body height automatically. Not DRACO-compressed.</div>
+ <input type="range" id="uo" min="5" max="100" value="45" style="width:100%"></div>
+ <div class="card" style="margin-top:12px"><h2>Selection</h2><div id="ainfo" class="mu">Nothing selected.</div><canvas class="s" id="asig" height="110" style="margin-top:8px"></canvas></div></aside></div></section>
+
+<section class="pg" id="p-systems"><div class="grid"><div class="slot" id="s-systems"></div>
+ <aside><div class="card"><h2>Body systems</h2><div class="row" id="sysb"></div><div id="sysd"></div></div></aside></div></section>
+
+<section class="pg" id="p-sensors"><div class="card"><h2>Sensor library – 36 real modules</h2>
+ <div class="row"><select id="gc"></select><input id="gq" placeholder="search model, body site…"><span class="mu" id="gn"></span></div>
+ <div class="gal" id="gl"></div><div class="row" id="pgr" style="justify-content:center;margin-top:10px"></div></div></section>
+
+<section class="pg" id="p-lab"><div class="grid"><div class="slot" id="s-lab"></div>
+ <aside><div class="card"><h2>Electronics bench</h2><div class="row"><select class="selS"></select><select class="selB"></select></div><div id="linfo"></div></div>
+ <div class="card" style="margin-top:12px"><h2>Live signal</h2><canvas class="s" id="lsig" height="120"></canvas></div></aside></div></section>
+
+<section class="pg" id="p-circuit"><div class="card"><h2>Circuit schematic, PCB layout and bill of materials</h2>
+ <div class="row"><select class="selS"></select><select class="selB"></select></div>
+ <div class="dg"><div><div class="mu">SCHEMATIC (animated current flow)</div><div class="sc"><svg id="wsvg" width="700" height="360" viewBox="0 0 700 360"></svg></div></div>
+ <div><div class="mu">PCB TOP LAYER</div><div class="sc"><svg id="psvg" width="420" height="360" viewBox="0 0 420 360"></svg></div></div></div>
+ <div class="dg" style="margin-top:12px"><div><h3>Netlist</h3><table id="nt"></table></div><div><h3>Bill of materials</h3><table id="bom"></table></div></div></div></section>
+
+<section class="pg" id="p-arch"><div class="card"><h2>Pipeline architecture</h2><div class="sc"><svg id="asvg" width="900" height="380" viewBox="0 0 900 380"></svg></div><p id="ad" class="mu">Click a block.</p></div>
+ <div class="card" style="margin-top:12px"><h2>Multi-sensor hub topology</h2><div class="sc"><svg id="hsvg" width="900" height="360" viewBox="0 0 900 360"></svg></div></div></section>
+
+<section class="pg" id="p-dash"><div class="kp" id="kp"></div>
+ <div class="dg"><div class="card" style="grid-column:1/-1"><h2>Patient monitor – 5 channels (simulated)</h2><canvas class="s" id="mon" height="330"></canvas></div>
+ <div class="card"><h2>EEG band power</h2><canvas class="s" id="bands" height="220"></canvas></div>
+ <div class="card"><h2>Heart-rate trend</h2><canvas class="s" id="trend" height="220"></canvas></div>
+ <div class="card"><h2>Sensor library by interface</h2><canvas class="s" id="dn" height="220"></canvas></div></div></section>
+
+<section class="pg" id="p-signals"><div class="card"><h2>Signal Observatory · Independent Graphs</h2><p class="mu">Each channel is rendered separately from a deterministic synthetic research signal. These are demonstrations, not live patient measurements.</p><div class="row"><button onclick="signalPause=!signalPause" id="sigPause">Pause graphs</button><button onclick="show('dash')">Open summary dashboard</button></div></div><div class="signal-grid" style="margin-top:12px">
+<div class="card signal-card"><h2>ECG · Electrocardiogram</h2><div class="metric">~72 bpm <span class="live-pill">SIMULATED</span></div><canvas class="s extra-sig" id="sig-ecg" height="145"></canvas><p class="tagline">Illustrative cardiac electrical waveform · not diagnostic.</p></div>
+<div class="card signal-card"><h2>EEG · Brain activity</h2><div class="metric">Alpha / mixed bands</div><canvas class="s extra-sig" id="sig-eeg" height="145"></canvas><p class="tagline">Synthetic mixed-frequency waveform.</p></div>
+<div class="card signal-card"><h2>PPG · Optical pulse</h2><div class="metric">Pulse waveform</div><canvas class="s extra-sig" id="sig-ppg" height="145"></canvas><p class="tagline">Demonstration pulse signal; no SpO₂ is calculated.</p></div>
+<div class="card signal-card"><h2>EMG · Muscle activity</h2><div class="metric">Muscle activation</div><canvas class="s extra-sig" id="sig-emg" height="145"></canvas><p class="tagline">Synthetic activation envelope.</p></div>
+<div class="card signal-card"><h2>Respiration</h2><div class="metric">Breathing cycle</div><canvas class="s extra-sig" id="sig-res" height="145"></canvas><p class="tagline">Illustrative respiratory belt signal.</p></div>
+<div class="card signal-card"><h2>EOG · Eye movement</h2><div class="metric">Movement trace</div><canvas class="s extra-sig" id="sig-eog" height="145"></canvas><p class="tagline">Synthetic eye-movement trace.</p></div></div></section>
+<section class="pg" id="p-models"><div class="card"><h2>3D Models & Research Gallery</h2><p class="mu">Open the interactive anatomy viewer for a rotatable procedural 3D human model. Images below are high-resolution concept visuals; they are not individual downloadable medical 3D meshes.</p><img class="feature-art" src="assets/anatomy-dashboard-concept.png" alt="Futuristic anatomy and sensor dashboard concept image"><div class="row"><button onclick="show('anatomy')">Open interactive 3D anatomy</button><button onclick="show('systems')">Explore body systems</button><button onclick="show('sensors')">Explore sensor models</button></div></div><div class="overview-kpis"><div class="card"><h2>Human model</h2><p>Procedural 3D anatomy with selectable organs and sensor points.</p><button onclick="show('anatomy')">Open model</button></div><div class="card"><h2>Organ systems</h2><p>System groupings and linked sensors.</p><button onclick="show('systems')">Open systems</button></div><div class="card"><h2>Sensor component models</h2><p>Searchable sensor library with component details and miniature 3D board view.</p><button onclick="show('sensors')">Open gallery</button></div></div><div class="card"><h2>Research command environment</h2><img class="feature-art" src="assets/research-lab-concept.png" alt="Neuro-Cardiac research lab interface concept image"><div class="row"><button onclick="show('lab')">Electronics bench</button><button onclick="show('circuit')">Circuits & PCB</button><button onclick="show('arch')">System architecture</button><button onclick="show('proto')">Protocols & safety</button></div></div></section>
+<section class="pg" id="p-proto"><div class="dg" id="pr"></div></section>
+
+<div id="modal"><div id="mbox"></div></div>
+<div id="stage"><div id="mks"></div><div class="tb"><button id="ar">Auto-rotate</button><button id="zi">+</button><button id="zo">−</button><button id="rs2">Reset</button><button id="sk">Solid skin</button></div><div id="tip">Drag = rotate · wheel / pinch = zoom</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],hx=c=>'#'+c.toString(16).padStart(6,'0');
+// id,name,model,category,iface,voltage,spec,rate,site,form,signal
+const SN=[
+['eeg','BioAmp EXG Pack','Upside Down Labs','Neuro','A','3.3–5 V','±2 mV input, gain 2420','250–1000 Hz','Scalp Fp1, Fp2, Oz',0,'eeg'],
+['openbci','OpenBCI Cyton','8-channel board','Neuro','SPI','5–6 V','8 ch, 24-bit ADS1299','250 Hz','Scalp 10-20 system',6,'eeg'],
+['ads1299','ADS1299 EEG AFE','TI front-end','Neuro','SPI','3.3 V','8 ch, 24-bit, CMRR 110 dB','250–16k SPS','Scalp electrodes',3,'eeg'],
+['ad8232','AD8232 ECG','SparkFun / Analog Devices','Cardiac','A','3.3 V','0.5–40 Hz, leads-off detect','250–500 Hz','Chest RA, LA, LL',0,'ecg'],
+['ads1292','ADS1292R ECG+Resp','TI front-end','Cardiac','SPI','3.3 V','2 ch, 24-bit, resp impedance','125–8k SPS','Chest V1–V6',3,'ecg'],
+['max30102','MAX30102','Maxim pulse oximeter','Cardiac','I2C','1.8/3.3 V','Red + IR LED, 18-bit ADC','100–400 Hz','Fingertip, earlobe',1,'ppg'],
+['max30100','MAX30100','Maxim pulse oximeter','Cardiac','I2C','1.8/3.3 V','Red + IR, 16-bit ADC','100 Hz','Fingertip',1,'ppg'],
+['pulse','Pulse Sensor Amped','World Famous Electronics','Cardiac','A','3–5 V','Green LED reflectance PPG','500 Hz','Finger, earlobe',1,'ppg'],
+['max86150','MAX86150','PPG + ECG module','Cardiac','I2C','1.8/3.3 V','PPG + single-lead ECG','200 Hz','Finger',1,'ppg'],
+['mpx','MPX5050DP','NXP pressure sensor','Cardiac','A','5 V','0–50 kPa differential','100 Hz','Upper-arm cuff (oscillometric)',2,'slow'],
+['pcg','MAX9814 Mic','Electret + AGC amp','Cardiac','A','3.3–5 V','20 Hz–20 kHz, AGC 40–60 dB','2 kHz','Chest (heart sounds)',5,'ecg'],
+['myoware','MyoWare 2.0','Advancer Technologies','Muscle','A','3.3–5 V','Enveloped EMG 0–Vcc','1 kHz','Biceps, quadriceps',0,'emg'],
+['gravemg','Gravity Analog EMG','OYMotion / DFRobot','Muscle','A','3.3–5 V','Raw + filtered EMG','1 kHz','Forearm, quadriceps',0,'emg'],
+['ncs','AD620 Nerve AFE','Instrumentation amp','Nerve','A','±2.3–18 V','Gain 1–1000 (1 resistor)','2 kHz','Median nerve, wrist',0,'nrv'],
+['eog','AD620 EOG 2-ch','Eye movement','Eye','A','±5 V','Horizontal / vertical EOG','250 Hz','Periorbital',0,'eog'],
+['resp','Piezo Resp Belt','Chest-expansion belt','Respiratory','A','3.3 V','0–3.3 V analog','50 Hz','Chest / abdomen',4,'res'],
+['sdp810','SDP810-500Pa','Sensirion differential pressure','Respiratory','I2C','3.3 V','±500 Pa, 16-bit','2 kHz','Mask / airway',3,'res'],
+['scd30','SCD30 CO2','Sensirion NDIR','Respiratory','I2C','3.3–5.5 V','400–10000 ppm','0.5 Hz','Breath / ambient',3,'res'],
+['vl53','VL53L0X ToF','ST laser ranging','Respiratory','I2C','2.8–5 V','30–1200 mm','50 Hz','Chest displacement',3,'res'],
+['mlx90614','MLX90614','Melexis IR thermometer','Thermal','I2C','3.3 V','−70 to 380 °C, ±0.5 °C','2 Hz','Forehead, wrist',7,'slow'],
+['ds18','DS18B20','Maxim 1-Wire probe','Thermal','1W','3–5.5 V','−55 to 125 °C, ±0.5 °C','1 Hz','Axilla (skin contact)',4,'slow'],
+['max30205','MAX30205','Maxim body temp','Thermal','I2C','2.7–3.3 V','±0.1 °C, 16-bit','1 Hz','Skin contact',3,'slow'],
+['mlx90640','MLX90640','32×24 thermal camera','Thermal','I2C','3.3 V','−40 to 300 °C array','8 Hz','Whole body thermography',7,'slow'],
+['ntc','NTC 10k Thermistor','Skin temperature','Thermal','A','3.3–5 V','10 kΩ @ 25 °C','10 Hz','Skin patch',4,'slow'],
+['gsr','Grove GSR','Seeed Studio','Skin','A','3.3–5 V','Skin conductance','100 Hz','Index/middle finger',4,'gsr'],
+['ad5940','AD5940 EDA/BIA','Analog Devices wearable AFE','Skin','SPI','1.8–3.3 V','EDA, bioimpedance','1 kHz','Wrist, fingers',3,'gsr'],
+['dht22','DHT22','Aosong humidity/temp','Skin','D','3.3–6 V','0–100 %RH, ±0.5 °C','0.5 Hz','Skin microclimate',5,'slow'],
+['mpu','MPU-6050','InvenSense 6-axis IMU','Motion','I2C','3.3–5 V','±2–16 g, ±250–2000 °/s','100–1000 Hz','Limbs, shin, wrist',3,'imu'],
+['bno','BNO055','Bosch 9-axis fusion IMU','Motion','I2C','3.3–5 V','Quaternion output','100 Hz','Head, trunk',3,'imu'],
+['flex','Flex Sensor 4.5"','Spectra Symbol','Motion','A','3.3–5 V','10–40 kΩ bend','100 Hz','Finger, elbow, knee',4,'imu'],
+['fsr','FSR 402','Interlink force-sensing','Motion','A','3.3–5 V','0.2–20 N','100 Hz','Foot pressure, grip',4,'imu'],
+['hx711','HX711 Load Cell','24-bit bridge ADC','Motion','D','2.6–5.5 V','Up to 200 kg cell','10–80 Hz','Force plate, posture',3,'imu'],
+['ad5933','AD5933','Impedance converter','Body comp','I2C','2.7–5.5 V','1–100 kHz sweep','1 kHz','Abdomen, limbs',3,'imp'],
+['inmp','INMP441','I²S MEMS microphone','Acoustic','I2S','1.8–3.3 V','60 dB SNR, 24-bit','16 kHz','Chest, trachea',5,'ecg'],
+['hcsr04','HC-SR04','Ultrasonic ranger','Motion','D','5 V','2–400 cm','20 Hz','Abdominal excursion',5,'res'],
+['tmp117','TMP117','TI precision temp','Thermal','I2C','1.8–5.5 V','±0.1 °C','8 Hz','Skin contact',3,'slow']
+].map((a,i)=>({id:a[0],n:a[1],m:a[2],cat:a[3],i:a[4],v:a[5],sp:a[6],hz:a[7],site:a[8],f:a[9],sg:a[10],h:(i*47)%360}));
+const B={
+uno:{n:'Arduino Uno R3',w:6.8,d:5.3,col:0x0a7d8c,v:5,vcc:'5V',gnd:'GND',ana:'A0',sda:'A4',scl:'A5',d1:'D2',d2:'D3',mosi:'D11',miso:'D12',sck:'D13',cs:'D10',t:['D13','D12','D11','D10','D9','D8','D7','D6','D5','D4','D3','D2','D1','D0'],b:['3V3','5V','GND','GND','VIN','A0','A1','A2','A3','A4','A5']},
+mega:{n:'Arduino Mega 2560',w:10.2,d:5.3,col:0x0a7d8c,v:5,vcc:'5V',gnd:'GND',ana:'A0',sda:'D20',scl:'D21',d1:'D2',d2:'D3',mosi:'D51',miso:'D50',sck:'D52',cs:'D53',t:['D53','D52','D51','D50','D49','D48','D47','D46','D45','D44','D3','D2','D1','D0','D20','D21'],b:['3V3','5V','GND','GND','VIN','A0','A1','A2','A3','A4','A5','A6','A7','A8','A9','A10','A11','A12','A13','A14','A15']},
+rpi:{n:'Raspberry Pi 4B',w:8.5,d:5.6,col:0x15803d,v:3.3,vcc:'3V3',gnd:'GND',ana:'ADS1115-A0',sda:'GPIO2',scl:'GPIO3',d1:'GPIO17',d2:'GPIO27',mosi:'GPIO10',miso:'GPIO9',sck:'GPIO11',cs:'GPIO8',t:['3V3','GPIO2','GPIO3','GPIO4','GND','GPIO17','GPIO27','GPIO22','3V3','GPIO10','GPIO9','GPIO11','GND','GPIO0','GPIO5','GPIO6','GPIO13','GPIO19','GPIO26','GND'],b:['5V','5V','GND','GPIO14','GPIO15','GPIO18','GND','GPIO23','GPIO24','GND','GPIO25','GPIO8','GPIO7','GPIO1','GND','GPIO12','GND','GPIO16','GPIO20','GPIO21']},
+esp:{n:'ESP32 DevKit',w:6.4,d:2.8,col:0x1f2937,v:3.3,vcc:'3V3',gnd:'GND',ana:'GPIO34',sda:'GPIO21',scl:'GPIO22',d1:'GPIO27',d2:'GPIO26',mosi:'GPIO23',miso:'GPIO19',sck:'GPIO18',cs:'GPIO5',t:['3V3','EN','GPIO36','GPIO39','GPIO34','GPIO35','GPIO32','GPIO33','GPIO25','GPIO26','GPIO27','GPIO14','GPIO12','GND','GPIO13'],b:['VIN','GND','GPIO23','GPIO22','TX','RX','GPIO21','GND','GPIO19','GPIO18','GPIO5','GPIO17','GPIO16','GPIO4','GPIO2']}};
+let cur=SN[3],bd='uno',page='anatomy';
+const sensor=id=>SN.find(s=>s.id==id);
+const P0=[['VCC','VCC'],['GND','GND']],PIN={A:[...P0,['OUT','ANA']],I2C:[...P0,['SDA','SDA'],['SCL','SCL']],SPI:[...P0,['MOSI','MOSI'],['MISO','MISO'],['SCK','SCK'],['CS','CS']],D:[...P0,['DATA','D']],'1W':[...P0,['DQ','D']],I2S:[...P0,['SD','MISO'],['WS','CS'],['SCK','SCK']]};
+const rl=(b,r)=>({VCC:b.vcc,GND:b.gnd,ANA:b.ana,SDA:b.sda,SCL:b.scl,D:b.d1,MOSI:b.mosi,MISO:b.miso,SCK:b.sck,CS:b.cs})[r];
+// signals
+const fr=x=>{x=Math.sin(x*127.1)*43758.5453;return x-Math.floor(x)},g=(x,c,w)=>Math.exp(-((x-c)**2)/w);
+const F={ecg:t=>{const p=(t*1.2)%1;return .12*g(p,.1,.002)+g(p,.3,.00015)-.2*g(p,.33,.0003)+.25*g(p,.55,.008)},
+eeg:t=>.5*Math.sin(62.83*t)+.3*Math.sin(138.2*t+1)+.2*Math.sin(25.1*t)+.3*(fr(Math.floor(t*200))-.5),
+ppg:t=>.6*Math.sin(7.54*t)+.2*Math.sin(15.08*t+1),nrv:t=>{const p=(t*6)%1;return .9*g(p,.5,.003)-.3*g(p,.6,.004)+.1*(fr(Math.floor(t*300))-.5)},
+emg:t=>(Math.sin(3.14*t)>.2?1:.12)*(fr(Math.floor(t*400))*2-1)*.8,res:t=>Math.sin(1.57*t),imp:t=>.5*Math.sin(.63*t)+.15*Math.sin(2.3*t),
+gsr:t=>.1+.3*Math.sin(.4*t)+.6*g((t*.2)%1,.3,.01),slow:t=>.4*Math.sin(.5*t)+.05*(fr(Math.floor(t*20))-.5),imu:t=>.7*Math.sin(4*t)+.3*Math.sin(11*t)+.1*(fr(Math.floor(t*100))-.5),eog:t=>(Math.sin(1.1*t)>0?.55:-.55)+.1*(fr(Math.floor(t*200))-.5)};
+function fit(c){const w=c.clientWidth||300;if(c.width!==w)c.width=w;return w}
+function plot(c,f,col,y0,h,w,sc=.4){const x=c.getContext('2d'),t=performance.now()/1e3;x.beginPath();x.strokeStyle=col;x.lineWidth=1.6;x.shadowColor=col;x.shadowBlur=5;for(let i=0;i<w;i++){const v=f(t-(w-i)*.008);i?x.lineTo(i,y0+h/2-v*h*sc):x.moveTo(i,y0+h/2-v*h*sc)}x.stroke();x.shadowBlur=0}
+function grid(x,w,h){x.fillStyle='#020812';x.fillRect(0,0,w,h);x.strokeStyle='rgba(34,211,238,.12)';x.lineWidth=1;for(let i=0;i<w;i+=20){x.beginPath();x.moveTo(i,0);x.lineTo(i,h);x.stroke()}for(let j=0;j<h;j+=20){x.beginPath();x.moveTo(0,j);x.lineTo(w,j);x.stroke()}}
+// ---------- sensor images ----------
+function sImg(s){const h=s.h,c1=`hsl(${h},55%,30%)`,c2=`hsl(${h},55%,14%)`,ac=`hsl(${h},90%,65%)`,u='g'+s.id;
+ let o=`<svg viewBox="0 0 200 130"><defs><linearGradient id="${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient><linearGradient id="${u}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4e7a8"/><stop offset="1" stop-color="#a8861f"/></linearGradient><radialGradient id="${u}l"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${ac}" stop-opacity="0"/></radialGradient><linearGradient id="${u}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e5e7eb"/><stop offset="1" stop-color="#6b7280"/></linearGradient></defs>`;
+ const pcb=(x,y,w,hh)=>`<rect x="${x}" y="${y}" width="${w}" height="${hh}" rx="5" fill="url(#${u})" stroke="${ac}" stroke-opacity=".7"/><circle cx="${x+7}" cy="${y+7}" r="3" fill="#040a12"/><circle cx="${x+w-7}" cy="${y+7}" r="3" fill="#040a12"/>`;
+ const chip=(x,y,w,hh,t)=>`<rect x="${x}" y="${y}" width="${w}" height="${hh}" rx="2" fill="#0d1117" stroke="#555"/><text x="${x+w/2}" y="${y+hh/2+3}" text-anchor="middle" style="fill:#9aa;font-size:6.5px">${t}</text>`;
+ const pins=(x,y,n)=>Array.from({length:n},(_,i)=>`<rect x="${x+i*8}" y="${y}" width="4.5" height="11" fill="url(#${u}m)"/>`).join('');
+ const sil=(x,y,t)=>`<text x="${x}" y="${y}" style="fill:#e2e8f0;font-size:7px">${t}</text>`;const m=s.m.length>14?s.id.toUpperCase():s.m;
+ const f=s.f;
+ if(f==0)o+=pcb(12,14,126,86)+chip(36,28,36,22,s.id.toUpperCase().slice(0,7))+sil(20,66,s.n.slice(0,22))+[28,62,96].map(x=>`<circle cx="${x}" cy="86" r="7" fill="url(#${u}s)" stroke="#333"/><circle cx="${x}" cy="86" r="2" fill="#555"/>`).join('')+`<rect x="100" y="30" width="10" height="6" fill="#d9a441"/><rect x="114" y="30" width="10" height="6" fill="#d9a441"/>`+pins(26,100,6)+`<path d="M138 60C160 60 150 100 172 96" stroke="#aaa" stroke-width="3" fill="none"/><circle cx="176" cy="94" r="17" fill="#d1d5db" stroke="#9ca3af"/><circle cx="176" cy="94" r="6" fill="url(#${u}s)"/>`;
+ else if(f==1)o+=pcb(48,14,100,94)+`<rect x="82" y="34" width="32" height="30" rx="3" fill="#050505" stroke="#444"/><circle cx="92" cy="46" r="5" fill="#ef4444"/><circle cx="104" cy="46" r="5" fill="#7c3aed"/><circle cx="98" cy="56" r="3" fill="#1f2937"/><circle cx="92" cy="46" r="12" class="bk" fill="url(#${u}l)"/>`+chip(60,76,24,14,'MAX')+sil(60,100,m)+pins(64,108,5);
+ else if(f==2)o+=`<rect x="34" y="38" width="110" height="52" rx="6" fill="#101418" stroke="#666"/><circle cx="62" cy="64" r="15" fill="url(#${u}s)" stroke="#333"/><circle cx="62" cy="64" r="6" fill="#111"/><path d="M144 64H178" stroke="${ac}" stroke-width="8" stroke-linecap="round"/>`+sil(82,60,s.id.toUpperCase())+sil(82,72,'0-50 kPa')+[0,1,2,3,4,5].map(i=>`<rect x="${52+i*13}" y="90" width="5" height="16" fill="url(#${u}m)"/>`).join('');
+ else if(f==3)o+=pcb(34,16,92,92)+chip(56,36,40,32,s.id.toUpperCase().slice(0,8))+`<rect x="102" y="40" width="14" height="8" fill="#c9a227"/><rect x="102" y="54" width="14" height="8" fill="#374151"/>`+sil(42,84,m)+pins(46,108,5)+`<text x="46" y="104" style="fill:#fde68a;font-size:5px">${PIN[s.i=='I2S'?'SPI':s.i]?PIN[s.i=='I2S'?'SPI':s.i].slice(0,5).map(p=>p[0]).join('  '):''}</text>`;
+ else if(f==4){o+=s.id=='fsr'?`<circle cx="100" cy="46" r="30" fill="#1f2937" stroke="#9ca3af" stroke-width="3"/><circle cx="100" cy="46" r="20" fill="none" stroke="${ac}" stroke-dasharray="4 3"/><rect x="92" y="76" width="16" height="42" fill="#c9a227" opacity=".85"/>`:`<rect x="20" y="48" width="140" height="22" rx="10" fill="#111827" stroke="${ac}"/><path d="M26 59H154" stroke="${ac}" stroke-opacity=".5" stroke-dasharray="3 3"/><rect x="160" y="52" width="28" height="14" fill="url(#${u}m)"/>`+sil(34,84,s.n.slice(0,24))}
+ else if(f==5)o+=s.id=='hcsr04'?pcb(24,24,152,76)+[58,142].map(x=>`<circle cx="${x}" cy="60" r="23" fill="url(#${u}s)" stroke="#222" stroke-width="3"/><circle cx="${x}" cy="60" r="14" fill="none" stroke="#333" stroke-dasharray="2 2"/>`).join('')+chip(88,50,24,16,'US')+pins(66,100,4):pcb(52,18,96,92)+`<circle cx="100" cy="52" r="20" fill="url(#${u}s)" stroke="#333" stroke-width="2"/><circle cx="100" cy="52" r="7" fill="#050505"/>`+chip(76,78,24,14,'MIC')+sil(66,102,m)+pins(70,108,5);
+ else if(f==6)o+=pcb(12,22,176,82)+chip(24,34,40,28,'PIC32')+chip(74,34,36,28,'ADS1299')+chip(120,34,30,20,'RFD22')+pins(16,104,18)+[0,1,2,3].map(i=>`<circle cx="${40+i*40}" cy="84" r="8" fill="url(#${u}s)" stroke="#333"/>`).join('')+sil(24,76,'OPENBCI CYTON');
+ else o+=pcb(34,24,60,60)+`<circle cx="110" cy="62" r="34" fill="url(#${u}s)" stroke="#333" stroke-width="3"/><circle cx="110" cy="62" r="20" fill="#06080c"/><circle cx="110" cy="62" r="9" fill="#1e293b"/><circle cx="104" cy="56" r="3" fill="#fff" opacity=".5"/>`+sil(40,96,m);
+ return o+`<circle cx="190" cy="10" r="3" class="bk" fill="#34d399"/></svg>`}
+// ---------- gallery ----------
+let gp=0;const PER=12;
+$('#gc').innerHTML='<option value="">All categories</option>'+[...new Set(SN.map(s=>s.cat))].map(c=>`<option>${c}</option>`).join('');
+$('#gc').onchange=$('#gq').oninput=()=>{gp=0;renderGal()};
+function renderGal(){const c=$('#gc').value,q=$('#gq').value.toLowerCase(),L=SN.filter(s=>(!c||s.cat==c)&&(!q||(s.n+s.m+s.site+s.cat).toLowerCase().includes(q))),pc=Math.max(1,Math.ceil(L.length/PER));gp=Math.min(gp,pc-1);
+ $('#gn').textContent=L.length+' sensors';$('#gl').innerHTML=L.slice(gp*PER,gp*PER+PER).map(s=>`<div class="card" data-id="${s.id}">${sImg(s)}<b>${s.n}</b><div class="mu">${s.m}</div><span class="chip">${s.cat}</span><span class="chip">${s.i}</span><span class="chip">${s.v}</span></div>`).join('');
+ $$('#gl .card').forEach(e=>e.onclick=()=>openSensor(e.dataset.id));
+ $('#pgr').innerHTML=Array.from({length:pc},(_,i)=>`<button class="${i==gp?'on':''}" data-p="${i}">Page ${i+1}</button>`).join('');$$('#pgr button').forEach(b=>b.onclick=()=>{gp=+b.dataset.p;renderGal()})}
+// ---------- selection plumbing ----------
+let onSel=()=>{};
+$$('.selS').forEach(e=>SN.forEach(s=>e.add(new Option(s.n+' ('+s.i+')',s.id))));$$('.selB').forEach(e=>Object.keys(B).forEach(k=>e.add(new Option(B[k].n,k))));
+$$('.selS').forEach(e=>e.onchange=()=>setSensor(e.value));$$('.selB').forEach(e=>e.onchange=()=>setBoard(e.value));
+function setSensor(id){cur=sensor(id);$$('.selS').forEach(e=>e.value=id);refresh()}
+function setBoard(k){bd=k;$$('.selB').forEach(e=>e.value=k);refresh()}
+function pins(){return PIN[cur.i]}
+function refresh(){const b=B[bd],lv=!/3\.3|1\.8|2\.[678]|3V|3–/.test(cur.v)&&b.v<4;
+ $('#linfo').innerHTML=`<b>${cur.n}</b> <span class="mu">${cur.m}</span><p>${cur.cat} · ${cur.sp} · ${cur.hz}<br>Site: ${cur.site}</p>`+pins().map(q=>`<span class="chip">${q[0]} → ${rl(b,q[1])}</span>`).join('')+(lv?`<p style="color:var(--y)">Warning: sensor needs ${cur.v}; ${b.n} is 3.3 V logic – add a level shifter.</p>`:'')+'<p class="mu">Educational simulation – not a medical device.</p>';
+ wiring();onSel()}
+// ---------- circuits ----------
+function wiring(){const b=B[bd],P=pins(),n=P.length,H=70+n*36,col=r=>r=='VCC'?'#f87171':r=='GND'?'#9ca3af':r=='ANA'?'#22d3ee':r=='SDA'?'#34d399':r=='SCL'?'#facc15':'#c084fc';
+ const rz=(x,y)=>`<path d="M${x} ${y}h6l3-8 6 16 6-16 6 16 6-16 3 8h6" fill="none" stroke="#fbbf24" stroke-width="2"/>`;
+ let o=`<rect x="30" y="34" width="170" height="${H-20}" fill="none" stroke="#22d3ee" stroke-width="2"/><text x="115" y="52" text-anchor="middle" font-weight="700">${cur.m.length>20?cur.id.toUpperCase():cur.m}</text><rect x="500" y="34" width="170" height="${H-20}" fill="none" stroke="#34d399" stroke-width="2"/><text x="585" y="52" text-anchor="middle" font-weight="700">${b.n}</text>`;
+ let rows='<tr><th>Sensor pin</th><th>Board pin</th></tr>',pc=`<defs><pattern id="hp" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 8L8 0" stroke="#10b981" stroke-opacity=".22"/></pattern></defs><rect x="8" y="8" width="404" height="344" rx="10" fill="#064e3b" stroke="#34d399" stroke-width="3"/><rect x="14" y="14" width="392" height="332" fill="url(#hp)"/>`+[[26,26],[394,26],[26,334],[394,334]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="#022c22"/>`).join('')+`<text x="210" y="338" text-anchor="middle" style="fill:#a7f3d0">${cur.id.toUpperCase()} → ${b.n}  REV A</text>`;
+ const yv=P.findIndex(p=>p[1]=='VCC'),yg=P.findIndex(p=>p[1]=='GND');
+ P.forEach((q,i)=>{const y=80+i*36,c=col(q[1]),bp=rl(b,q[1]),py=48+i*(270/n);
+  o+=`<text x="38" y="${y+4}">${q[0]}</text><circle cx="200" cy="${y}" r="3" fill="${c}"/><circle cx="500" cy="${y}" r="3" fill="${c}"/><path class="w" d="M200 ${y}H500" fill="none" stroke="${c}" stroke-width="2.5"/><text x="508" y="${y+4}">${bp}</text>`;
+  rows+=`<tr><td>${q[0]}</td><td>${bp}</td></tr>`;
+  pc+=`<circle cx="38" cy="${py}" r="7" fill="#d4af37"/><circle cx="382" cy="${py+14}" r="7" fill="#d4af37"/><path d="M38 ${py}H130L160 ${py+14}H382" fill="none" stroke="${c}" stroke-width="${q[1]=='VCC'||q[1]=='GND'?5:3}"/><text x="50" y="${py-9}" style="fill:#a7f3d0">${q[0]}</text><text x="318" y="${py+34}" style="fill:#a7f3d0">${bp}</text>`});
+ const bom=[['1','Sensor: '+cur.n+' ('+cur.m+')'],['1',b.n],['1','C1 100 nF decoupling cap (VCC–GND)']];
+ const y1=80+yv*36,y2=80+yg*36;o+=`<path d="M260 ${y1}V${y2}" stroke="#7dd3fc" stroke-width="2"/><path d="M250 ${(y1+y2)/2-3}h20M250 ${(y1+y2)/2+3}h20" stroke="#7dd3fc" stroke-width="2"/><text x="274" y="${(y1+y2)/2+4}">C1 100n</text>`;
+ pc+=`<rect x="190" y="${48+yv*(270/n)+4}" width="26" height="12" fill="#e5e7eb"/><text x="190" y="${48+yv*(270/n)+28}" style="fill:#a7f3d0">C1</text>`;
+ const rv=(x,y)=>`<path d="M${x} ${y}v4l-5 3 10 5-10 5 10 5-10 5 5 3v4" fill="none" stroke="#fbbf24" stroke-width="2"/>`;
+ if(cur.i=='I2C'||cur.i=='1W'){const ys=P.findIndex(p=>p[1]==(cur.i=='I2C'?'SDA':'D')),yc=P.findIndex(p=>p[1]=='SCL'),ls=cur.i=='I2C'?[ys,yc]:[ys];ls.forEach((k,j)=>{const x=340+j*50,yy=80+k*36;o+=`<path d="M${x} ${y1}V${yy-34}" stroke="#f87171" stroke-width="2"/>${rv(x,yy-34)}<circle cx="${x}" cy="${y1}" r="3" fill="#f87171"/><circle cx="${x}" cy="${yy}" r="3" fill="#fbbf24"/><text x="${x+10}" y="${yy-14}">R${j+1} 4.7k</text>`;bom.push(['1','R'+(j+1)+' 4.7 kΩ pull-up to '+b.vcc])})}
+ if(cur.i=='A'){const ya=P.findIndex(p=>p[1]=='ANA'),yy=80+ya*36;o+=`<rect x="300" y="${yy-6}" width="52" height="12" fill="#030a12"/>${rz(300,yy)}<path d="M380 ${yy}V${y2-0}" stroke="#7dd3fc" stroke-width="2" stroke-dasharray="3 2"/><text x="300" y="${yy-12}">R 1k</text><text x="388" y="${yy+16}">C 100n</text>`;bom.push(['1','R 1 kΩ + C 100 nF anti-alias low-pass'])}
+ if(!/3\.3|1\.8|2\.[678]|3V|3–/.test(cur.v)&&b.v<4)bom.push(['1','Bidirectional level shifter 3.3↔5 V']);
+ bom.push([String(n),'Dupont jumper wires']);
+ if(bd=='rpi'&&cur.i=='A')bom.push(['1','ADS1115 16-bit ADC (Pi has no analog input)']);
+ $('#wsvg').setAttribute('viewBox',`0 0 700 ${H+30}`);$('#wsvg').setAttribute('height',H+30);$('#wsvg').innerHTML=o;$('#psvg').innerHTML=pc;$('#nt').innerHTML=rows;$('#bom').innerHTML='<tr><th>Qty</th><th>Part</th></tr>'+bom.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}
+// ---------- architecture ----------
+const N=[['Sensor','Electrodes, optical, piezo or MEMS element converts physiology to a signal.',30,30],['Conditioning','Instrumentation amp, filters, 50/60 Hz notch, isolation.',200,30],['ADC / MCU','Arduino, ESP32 or Pi samples at 250–1000 Hz.',370,30],['Wi-Fi / MQTT','JSON packets published to a broker.',540,30],['Cloud DB','Time-series storage.',710,30],['Power BI','Streaming dataset drives the live dashboard.',710,150]];
+let ah=N.map(n=>`<g style="cursor:pointer" onclick="document.getElementById('ad').textContent='${n[0]}: ${n[1]}'"><rect x="${n[2]}" y="${n[3]}" width="100" height="56" rx="6" fill="var(--pn)" stroke="var(--ac)" stroke-width="2"/><text x="${n[2]+50}" y="${n[3]+32}" text-anchor="middle">${n[0]}</text></g>`).join('');
+ah+=`<path class="w" d="M130 58H200M300 58H370M470 58H540M640 58H710M760 86V150" fill="none" stroke="#22d3ee" stroke-width="2.5"/>`;
+[0,1.3,2.6].forEach(d=>ah+=`<circle r="5" fill="#facc15"><animateMotion dur="4s" begin="${d}s" repeatCount="indefinite" path="M130 58H200M300 58H370M470 58H540M640 58H710"/></circle>`);
+ah+=`<text x="30" y="160" font-weight="700">FIRMWARE FLOWCHART</text>`;
+['Start','Read ADC','Valid?','Filter','Over limit?','Publish'].forEach((l,i)=>{const x=30+i*110,y=185,d=i==2||i==4;ah+=d?`<polygon points="${x+40},${y} ${x+80},${y+25} ${x+40},${y+50} ${x},${y+25}" fill="none" stroke="#34d399" stroke-width="2"/>`:`<rect x="${x}" y="${y}" width="80" height="50" rx="${i?6:25}" fill="none" stroke="#34d399" stroke-width="2"/>`;ah+=`<text x="${x+40}" y="${y+29}" text-anchor="middle">${l}</text>`;if(i<5)ah+=`<path d="M${x+80} ${y+25}H${x+110}" stroke="#6c9ab4" stroke-width="2"/>`});
+ah+=`<path d="M290 235V280H170V235" fill="none" stroke="#f87171" stroke-width="2"/><text x="190" y="298" fill="#f87171">No: retry</text><path d="M510 235V320H620V235" fill="none" stroke="#f87171" stroke-width="2"/><text x="520" y="338">Yes: alert buzzer</text>`;$('#asvg').innerHTML=ah;
+let hh='',hs=['EEG','ECG','EMG','PPG','Resp','Temp'];hs.forEach((s,i)=>{const y=30+i*55;hh+=`<rect x="30" y="${y}" width="90" height="36" rx="5" fill="var(--pn)" stroke="#22d3ee" stroke-width="2"/><text x="75" y="${y+22}" text-anchor="middle">${s}</text><path class="w" d="M120 ${y+18}C220 ${y+18},240 180,330 180" fill="none" stroke="#22d3ee" stroke-width="2"/>`});
+hh+=`<rect x="330" y="140" width="130" height="80" rx="8" fill="var(--pn)" stroke="#34d399" stroke-width="2.5"/><text x="395" y="176" text-anchor="middle" font-weight="700">ESP32 HUB</text><text x="395" y="194" text-anchor="middle">I2C · SPI · ADC</text><path class="w" d="M460 180H560" stroke="#facc15" stroke-width="3"/><rect x="560" y="150" width="110" height="60" rx="8" fill="var(--pn)" stroke="#facc15" stroke-width="2"/><text x="615" y="185" text-anchor="middle">MQTT Broker</text><path class="w" d="M670 180H730" stroke="#c084fc" stroke-width="3"/><rect x="730" y="150" width="130" height="60" rx="8" fill="var(--pn)" stroke="#c084fc" stroke-width="2"/><text x="795" y="185" text-anchor="middle">Power BI / DB</text>`;
+[0,1,2].forEach(d=>hh+=`<circle r="5" fill="#fff"><animateMotion dur="3s" begin="${d}s" repeatCount="indefinite" path="M120 48C220 48,240 180,330 180L460 180L560 180L730 180"/></circle>`);$('#hsvg').innerHTML=hh;
+// ---------- dashboard ----------
+const K=['Heart rate','SpO2','Skin temp','Resp rate','GSR','EEG alpha'];$('#kp').innerHTML=K.map((k,i)=>`<div class="card"><span class="mu">${k}</span><b id="k${i}">-</b></div>`).join('');const hr=[];let lastS=0;
+function dash(t){if(t-lastS>1){lastS=t;hr.push(72+4*Math.sin(t*.3)+Math.random()*2);if(hr.length>60)hr.shift()}
+ [Math.round(hr[hr.length-1]||72)+' bpm',97+Math.round(Math.sin(t*.2))+' %',(36.6+.2*Math.sin(t*.1)).toFixed(1)+' °C',15+Math.round(Math.sin(t*.1)*2)+' /min',(2.1+.6*Math.sin(t*.4)).toFixed(1)+' µS',(10+Math.sin(t*.5)).toFixed(1)+' Hz'].forEach((v,i)=>$('#k'+i).textContent=v);
+ let c=$('#mon'),w=fit(c),x=c.getContext('2d');grid(x,w,330);[['ECG II','ecg','#34d399'],['EEG Fp1','eeg','#a78bfa'],['EMG biceps','emg','#fbbf24'],['PPG','ppg','#f87171'],['RESP','res','#60a5fa']].forEach(([l,k,col],i)=>{plot(c,F[k],col,i*66,66,w);x.fillStyle=col;x.font='11px monospace';x.fillText(l,6,i*66+13)});
+ c=$('#bands');w=fit(c);x=c.getContext('2d');grid(x,w,220);['δ','θ','α','β','γ'].forEach((l,i)=>{const v=30+60*Math.abs(Math.sin(t*(.3+i*.17)+i)),bw=w/5;x.fillStyle=['#60a5fa','#34d399','#facc15','#fb923c','#f87171'][i];x.fillRect(i*bw+10,200-v*1.7,bw-20,v*1.7);x.fillStyle='#d4f1ff';x.fillText(l,i*bw+bw/2-3,214)});
+ c=$('#trend');w=fit(c);x=c.getContext('2d');grid(x,w,220);x.beginPath();x.strokeStyle='#f87171';x.lineWidth=2;hr.forEach((v,i)=>{const px=i/59*w,py=220-(v-60)*5;i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke();
+ c=$('#dn');w=fit(c);x=c.getContext('2d');grid(x,w,220);const ifs=['A','I2C','SPI','D','1W','I2S'];let s0=-1.57;ifs.forEach((k,i)=>{const q=SN.filter(s=>s.i==k).length,e=s0+q/SN.length*6.283;x.beginPath();x.arc(w/2-40,110,70,s0,e);x.lineWidth=28;x.strokeStyle=`hsl(${i*55},80%,60%)`;x.stroke();x.fillStyle=x.strokeStyle;x.fillText(k+' '+q,w-80,30+i*16);s0=e})}
+// ---------- protocols ----------
+const PR=[['ECG (3-lead)','AD8232 · 250–500 Hz · band 0.5–40 Hz',['Clean skin, apply Ag/AgCl electrodes','RA right chest, LA left chest, RL right lower','Check leads-off pins LO+ / LO−','Record 60 s resting, then breathing task','Detect R-peaks, compute HR and HRV']],
+['EEG (10-20 subset)','BioAmp / ADS1299 · 250 Hz · 0.5–45 Hz + 50 Hz notch',['Measure nasion-inion, mark Cz','Place Fp1, Fp2, Oz; reference mastoid','Keep impedance under 10 kΩ','Eyes-closed then eyes-open 60 s each','Compute alpha (8–12 Hz) band power']],
+['EMG','MyoWare · 1 kHz · 20–450 Hz',['Shave and clean over muscle belly','Electrodes 2 cm apart along fibres, reference on bone','Record MVC for normalisation','Rectify and envelope (RMS 100 ms)']],
+['PPG / SpO2','MAX30102 · 100–400 Hz',['Keep finger still, moderate pressure','Shield from ambient light','Band-pass 0.5–5 Hz','Peak-to-peak for HR; red/IR ratio for SpO2 (needs calibration)']],
+['Respiration','Piezo belt / SDP810 · 50 Hz',['Belt snug at lower ribs','Record 3 min quiet breathing','Low-pass 1 Hz, count peaks per minute']],
+['Safety and ethics','All experiments',['Battery or medically isolated supply only; never mains-connected electrodes','Informed consent and institutional approval for human data','This lab is educational – not for diagnosis','Store data anonymised']]];
+let done={};try{done=JSON.parse(localStorage.getItem('pdone')||'{}')}catch(e){}
+$('#pr').innerHTML=PR.map((p,i)=>`<div class="card"><h2>${p[0]}</h2><div class="mu">${p[1]}</div>${p[2].map((s,j)=>`<label class="ck"><input type="checkbox" data-k="${i}-${j}" ${done[i+'-'+j]?'checked':''}> ${s}</label>`).join('')}</div>`).join('');
+$$('#pr input').forEach(e=>e.onchange=()=>{done[e.dataset.k]=e.checked;try{localStorage.setItem('pdone',JSON.stringify(done))}catch(_){}});
+// ---------- nav ----------
+let setWorld=()=>{},fitR=()=>{};
+[['overview','Overview'],['anatomy','Anatomy 3D'],['systems','Body Systems'],['sensors','Sensor Gallery'],['signals','Signal Graphs'],['models','Models & Research'],['lab','Electronics Lab'],['circuit','Circuits & PCB'],['arch','Architecture'],['dash','Dashboard'],['proto','Protocols']].forEach(([id,l])=>{const b=document.createElement('button');b.textContent=l;b.dataset.p=id;b.onclick=()=>show(id);$('#nav').appendChild(b)});
+function show(id){page=id;$$('.pg').forEach(p=>p.classList.toggle('on',p.id=='p-'+id));$$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p==id));const sl=$('#s-'+id);if(sl){$('#stage').style.display='block';sl.appendChild($('#stage'));setWorld(id=='lab'?'board':'body')}else{$('#stage').style.display='none'}if(id=='sensors')renderGal();try{history.replaceState(null,'','#'+id)}catch(e){}setTimeout(fitR,30);scrollTo(0,0)}
+// ---------- sensor modal (mini 3D) ----------
+let mini=null;
+function openSensor(id){const s=sensor(id);cur=s;setSensor(id);$('#mbox').innerHTML=`<div class="row" style="justify-content:space-between"><h2>${s.n}</h2><button id="mx">Close</button></div><div class="two"><div><canvas id="mv"></canvas><div class="mu">Drag to rotate · live 3D model</div></div><div><table><tr><td>Model</td><td>${s.m}</td></tr><tr><td>Category</td><td>${s.cat}</td></tr><tr><td>Interface</td><td>${s.i}</td></tr><tr><td>Supply</td><td>${s.v}</td></tr><tr><td>Spec</td><td>${s.sp}</td></tr><tr><td>Sample rate</td><td>${s.hz}</td></tr><tr><td>Body site</td><td>${s.site}</td></tr></table><h3>Wiring to ${B[bd].n}</h3>${pins().map(q=>`<span class="chip">${q[0]} → ${rl(B[bd],q[1])}</span>`).join('')}<div class="row"><button id="mlab">Open in Electronics Lab</button><button id="mck">Circuit + PCB</button></div></div></div><h3>Live signal</h3><canvas class="s" id="msig" height="90"></canvas>`;
+ $('#modal').classList.add('on');$('#mx').onclick=()=>{$('#modal').classList.remove('on');mini=null};$('#mlab').onclick=()=>{$('#mx').click();show('lab')};$('#mck').onclick=()=>{$('#mx').click();show('circuit')};
+ try{buildMini(s)}catch(e){$('#mv').replaceWith(Object.assign(document.createElement('pre'),{textContent:'3D unavailable: '+e.message}))}}
+$('#modal').onclick=e=>{if(e.target.id=='modal'){$('#mx').click()}};
+function buildMini(s){const T=THREE,cv=$('#mv'),R=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true}),sc=new T.Scene(),cam=new T.PerspectiveCamera(40,1,.1,50);sc.add(new T.AmbientLight(0xffffff,.8));const L=new T.DirectionalLight(0xffffff,1);L.position.set(2,4,3);sc.add(L);
+ const gr=new T.Group();sc.add(gr);const M=(c,e=.1,r=.5,m=.2)=>new T.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:e,roughness:r,metalness:m});const bx=(w,h,d,x,y,z,mm)=>{const m=new T.Mesh(new T.BoxGeometry(w,h,d),mm);m.position.set(x,y,z);gr.add(m);return m},cy=(r,h,x,y,z,mm,rz=0)=>{const m=new T.Mesh(new T.CylinderGeometry(r,r,h,24),mm);m.position.set(x,y,z);m.rotation.x=rz;gr.add(m);return m};
+ const hc=new T.Color(`hsl(${s.h},60%,28%)`).getHex(),pcbm=M(hc,.08,.6),blk=M(0x0d1117,0,.4),gold=M(0xd4af37,.2,.3,.9),slv=M(0xcbd5e1,.1,.3,.9),f=s.f,np=pins().length;
+ const pinsRow=(x,z)=>{for(let i=0;i<np;i++)bx(.1,.35,.1,x+i*.22,-.1,z,gold)};
+ if(f==0){bx(3.4,.12,2.2,0,0,0,pcbm);bx(.8,.14,.6,-.8,.12,-.3,blk);[ -1,0,1].forEach(i=>cy(.22,.2,i*.9,.15,.7,slv));pinsRow(-.5,1.0);const c=new T.CatmullRomCurve3([V(1.7,.1,0),V(2.4,.1,.8),V(3,.1,.2)]);gr.add(new T.Mesh(new T.TubeGeometry(c,20,.04,6),M(0x888888)));cy(.45,.06,3,.1,.1,M(0xe5e7eb))}
+ else if(f==1){bx(2.4,.12,2.4,0,0,0,pcbm);bx(.9,.14,.9,0,.12,-.3,blk);[[-.2,M(0xef4444,1)],[.2,M(0x8b5cf6,1)]].forEach(a=>{const m=new T.Mesh(new T.SphereGeometry(.12),a[1]);m.position.set(a[0],.2,-.3);gr.add(m)});pinsRow(-.5,1.0)}
+ else if(f==2){bx(2.6,.5,1.2,0,.25,0,blk);cy(.35,.4,-.7,.6,0,slv);const c=new T.CatmullRomCurve3([V(1.3,.4,0),V(2,.4,.4),V(2.6,.8,.2)]);gr.add(new T.Mesh(new T.TubeGeometry(c,20,.08,6),M(0x22d3ee)));pinsRow(-.8,.8)}
+ else if(f==3){bx(2.2,.12,2.2,0,0,0,pcbm);bx(.9,.16,.8,-.2,.14,-.2,blk);bx(.3,.14,.2,.7,.12,-.5,gold);pinsRow(-.6,1.0)}
+ else if(f==4){if(s.id=='fsr'){cy(.8,.06,0,0,0,blk);bx(.3,.04,1.8,0,0,1.4,gold)}else bx(3.6,.08,.5,0,0,0,M(0x111827,.2));bx(.6,.04,.4,2,0,0,gold)}
+ else if(f==5){bx(3.2,.12,1.6,0,0,0,pcbm);cy(.5,.4,-.9,.25,0,slv,Math.PI/2);cy(.5,.4,.9,.25,0,slv,Math.PI/2);pinsRow(-.4,.9)}
+ else if(f==6){bx(4,.12,2.4,0,0,0,pcbm);[-1.2,0,1.2].forEach(x=>bx(.8,.14,.6,x,.12,-.3,blk));pinsRow(-1.8,1.1);[-1,0,1,2].forEach(i=>cy(.25,.08,i*.9-.4,.1,-.9,slv))}
+ else{bx(1.8,.12,1.8,-1,0,0,pcbm);cy(.8,.5,.8,.25,0,slv,Math.PI/2);cy(.45,.1,.8,.55,0,blk,Math.PI/2)}
+ cam.position.set(0,3,6);cam.lookAt(0,0,0);let th=0,dr=false,lx=0;cv.onpointerdown=e=>{dr=true;lx=e.clientX};cv.onpointerup=()=>dr=false;cv.onpointermove=e=>{if(dr){th+=(e.clientX-lx)*.01;lx=e.clientX}};
+ mini=R;(function lp(){if(mini!==R){R.dispose();return}requestAnimationFrame(lp);const w=cv.clientWidth,h=cv.clientHeight;if(cv.width!==w||cv.height!==h){R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}if(!dr)th+=.01;gr.rotation.y=th;gr.rotation.x=.25*Math.sin(performance.now()/1500);R.render(sc,cam);const c=$('#msig');if(c){const ww=fit(c),x=c.getContext('2d');grid(x,ww,90);plot(c,F[s.sg],hx(new T.Color(`hsl(${s.h},90%,65%)`).getHex()),0,90,ww)}})()}
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+// ---------- main 3D ----------
+const SYS={skeletal:['Skeletal','206 bones give structure and protect organs; sensors such as IMUs mount on limbs.'],muscular:['Muscular','Skeletal muscle generates movement; surface EMG records its electrical activity.'],circulatory:['Circulatory','Heart pumps blood through arteries (red) and veins (blue); ECG and PPG measure it.'],nervous:['Nervous','Brain, spinal cord and nerves; EEG, EOG and nerve-conduction studies record it.'],respiratory:['Respiratory','Lungs and diaphragm move air; belts, spirometry and CO₂ sensors measure breathing.'],digestive:['Digestive','Stomach, liver, pancreas and intestines; bioimpedance gives indirect abdominal trends.'],urinary:['Urinary','Kidneys filter blood into urine stored in the bladder; hydration trends via impedance.'],endocrine:['Endocrine','Thyroid and adrenal glands release hormones; no direct wearable sensors.']};
+let sysSel='circulatory';const lay={skin:1,skeletal:1,muscular:0,circulatory:1,nervous:1,respiratory:1,digestive:1,urinary:1,endocrine:1,labels:1};
+function init3D(){
+ if(typeof THREE=='undefined')throw new Error('three.js did not load (check connection)');
+ const T=THREE,st=$('#stage'),R=new T.WebGLRenderer({antialias:true,alpha:true});R.setPixelRatio(Math.min(devicePixelRatio||1,2));st.prepend(R.domElement);
+ const sc=new T.Scene(),cam=new T.PerspectiveCamera(42,1,.05,100);sc.add(new T.AmbientLight(0xffffff,.65));const dl=new T.DirectionalLight(0xffffff,1);dl.position.set(2,4,3);sc.add(dl);const bl=new T.PointLight(0x22d3ee,.8,10);bl.position.set(-2,1,-2);sc.add(bl);
+ const gridH=new T.GridHelper(6,60,0x22d3ee,0x164e63);sc.add(gridH);
+ const cs={th:.6,ph:1.45,r:3.4,t:V(0,.95,0)};let auto=false,world='body';
+ const place=()=>{cam.position.set(cs.t.x+cs.r*Math.sin(cs.ph)*Math.sin(cs.th),cs.t.y+cs.r*Math.cos(cs.ph),cs.t.z+cs.r*Math.sin(cs.ph)*Math.cos(cs.th));cam.lookAt(cs.t)};
+ fitR=()=>{const w=st.clientWidth,h=st.clientHeight;if(!w||!h)return;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()};new ResizeObserver(fitR).observe(st);
+ const mat=(c,o=1,e=.15,r=.5)=>new T.MeshStandardMaterial({color:c,roughness:r,emissive:c,emissiveIntensity:e,transparent:o<1,opacity:o,depthWrite:o>=1});
+ const body=new T.Group(),brd=new T.Group();sc.add(body,brd);brd.visible=false;
+ const skin=new T.Group(),mkG=new T.Group();body.add(skin,mkG);const sysG={};Object.keys(SYS).forEach(k=>{sysG[k]=new T.Group();body.add(sysG[k])});
+ const SP=new T.SphereGeometry(1,24,16),pk=[];
+ const seg=(g,a,b,r1,r2,m)=>{const d=b.clone().sub(a),mm=new T.Mesh(new T.CylinderGeometry(r2,r1,d.length(),14),m);mm.position.copy(a).add(b).multiplyScalar(.5);mm.quaternion.setFromUnitVectors(V(0,1,0),d.normalize());g.add(mm);return mm};
+ const ell=(g,x,y,z,sx,sy,sz,m)=>{const mm=new T.Mesh(SP,m);mm.position.set(x,y,z);mm.scale.set(sx,sy,sz);g.add(mm);return mm};
+ const mus=(g,a,b,r,m)=>{const d=b.clone().sub(a),mm=new T.Mesh(SP,m);mm.position.copy(a).add(b).multiplyScalar(.5);mm.scale.set(r,d.length()*.5,r*.85);mm.quaternion.setFromUnitVectors(V(0,1,0),d.normalize());g.add(mm);return mm};
+ const tube=(g,pts,r,m,seg_=40)=>{const c=new T.CatmullRomCurve3(pts);g.add(new T.Mesh(new T.TubeGeometry(c,seg_,r,8),m));return c};
+ const org=(sys,name,d,k,mesh)=>{mesh.userData=Object.assign(mesh.userData||{},{name,d,k,sys});if(!mesh.parent)sysG[sys].add(mesh);pk.push(mesh);return mesh};
+ // ===== MATERIALS =====
+ const pm=c=>mat(c,.95,.22,.45),bm=mat(0xe9e2cf,1,.1,.6),whiteM=mat(0xf8fafc,1,.1,.4),darkM=mat(0x0b0f14,1,0,.8),tdM=mat(0xe8d8c0,.95,.05,.6);
+ const stri=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');x.fillStyle='#8b1a1f';x.fillRect(0,0,64,64);for(let i=0;i<64;i+=4){x.fillStyle=i%8?'#b02a30':'#6e1216';x.fillRect(i,0,2,64)}const t=new T.CanvasTexture(c);t.wrapS=t.wrapT=T.RepeatWrapping;t.repeat.set(3,1);return t})();
+ const muM=new T.MeshStandardMaterial({map:stri,color:0xffffff,roughness:.55,transparent:true,opacity:.78,emissive:0x400808,emissiveIntensity:.35});
+ const musT=(a,b,r)=>{const d=b.clone().sub(a),a2=a.clone().addScaledVector(d,.2),b2=b.clone().addScaledVector(d,-.2);mus(sysG.muscular,a2,b2,r,muM);seg(sysG.muscular,a,a2,r*.18,r*.35,tdM);seg(sysG.muscular,b2,b,r*.35,r*.18,tdM)};
+ // ===== SKIN (glass or solid) =====
+ const skinM=new T.MeshPhysicalMaterial({color:0x7dd3fc,transparent:true,opacity:.15,roughness:.15,clearcoat:1,emissive:0x0e7490,emissiveIntensity:.25,depthWrite:false}),solidM=new T.MeshPhysicalMaterial({color:0xd9a98f,roughness:.62,clearcoat:.2,clearcoatRoughness:.6}),hairM=new T.MeshStandardMaterial({color:0x2a1a10,roughness:.8}),skinMs=[],hairG=new T.Group();skin.add(hairG);hairG.visible=false;
+ const sseg=(a,b,r1,r2)=>{const m=seg(skin,a,b,r1,r2,skinM);skinMs.push(m);return m},sell=(x,y,z,sx,sy,sz)=>{const m=ell(skin,x,y,z,sx,sy,sz,skinM);skinMs.push(m);return m};
+ const prof=[[.052,1.58],[.056,1.52],[.075,1.47],[.13,1.445],[.185,1.41],[.2,1.35],[.19,1.25],[.175,1.15],[.16,1.05],[.158,.98],[.17,.92],[.178,.86],[.12,.81],[.05,.79]].map(p=>new T.Vector2(p[0],p[1]));
+ const tor=new T.Mesh(new T.LatheGeometry(prof,40),skinM);tor.scale.z=.62;skin.add(tor);skinMs.push(tor);
+ sell(0,1.67,0,.09,.105,.1);sell(0,1.6,.045,.062,.05,.065);sell(0,1.655,.1,.012,.022,.015);sell(0,1.6,.093,.028,.008,.012);sell(-.092,1.66,0,.01,.028,.018);sell(.092,1.66,0,.01,.028,.018);sseg(V(0,1.58,0),V(0,1.46,0),.048,.06);
+ [-1,1].forEach(s=>sell(.03*s,1.69,.088,.016,.006,.01));
+ const hair=new T.Mesh(SP,hairM);hair.position.set(0,1.7,-.012);hair.scale.set(.095,.09,.103);hairG.add(hair);const bang=new T.Mesh(SP,hairM);bang.position.set(0,1.745,.055);bang.scale.set(.088,.03,.05);hairG.add(bang);
+ const bg=sysG.skeletal,mg=sysG.muscular,HF=[.045,.062,.067,.06,.048];
+ [1,-1].forEach(s=>{const S=V(.2*s,1.4,0),E=V(.27*s,1.14,0),W=V(.31*s,.88,.01),Hp=V(.09*s,.88,0),K=V(.095*s,.48,.01),A=V(.09*s,.09,0);
+  // skin limbs, hands, feet
+  sell(.075*s,1.34,.08,.085,.05,.024);sell(S.x+.015*s,1.39,0,.052,.056,.052);sseg(S,E,.05,.04);sseg(E,W,.04,.03);sell(E.x,E.y,0,.042,.042,.042);sell(.318*s,.82,.012,.03,.045,.016);
+  HF.forEach((L,f)=>{const x=(.318+(f-2)*.0105)*s;sseg(V(x,.785,.012),V(x,.785-L*.5,.014),.0075,.0065);sseg(V(x,.785-L*.5,.014),V(x,.785-L,.016),.0065,.005)});
+  sseg(Hp,K,.088,.056);sseg(K,A,.056,.034);sell(K.x,K.y,K.z,.056,.056,.056);sell(.08*s,.86,-.07,.075,.06,.05);sell(.09*s,.03,.04,.036,.03,.08);[0,1,2,3,4].forEach(f=>sell((.09+(f-2)*.0135)*s,.012,.115-Math.abs(f-2)*.006,.008,.008,.012));
+  // bones
+  seg(bg,S,E,.012,.01,bm);ell(bg,S.x,S.y,0,.02,.02,.02,bm);ell(bg,E.x,E.y,0,.016,.016,.016,bm);seg(bg,E.clone().add(V(.008*s,0,.008)),W.clone().add(V(.01*s,0,.008)),.007,.006,bm);seg(bg,E.clone().add(V(-.008*s,0,-.008)),W.clone().add(V(-.01*s,0,-.008)),.007,.006,bm);
+  HF.forEach((L,f)=>{const x=(.318+(f-2)*.0105)*s;seg(bg,W,V(x,.78,.012),.004,.0035,bm);seg(bg,V(x,.78,.012),V(x,.78-L*.5,.014),.0035,.003,bm);seg(bg,V(x,.78-L*.5,.014),V(x,.78-L,.016),.003,.0025,bm)});
+  seg(bg,Hp,K,.018,.014,bm);ell(bg,.06*s,.88,0,.022,.022,.022,bm);ell(bg,K.x,K.y,K.z,.022,.02,.02,bm);ell(bg,K.x,K.y,K.z+.025,.012,.016,.006,bm);seg(bg,K,A,.014,.01,bm);seg(bg,K.clone().add(V(.015*s,0,0)),A.clone().add(V(.015*s,0,0)),.006,.005,bm);ell(bg,A.x,.05,.01,.014,.02,.02,bm);ell(bg,.09*s,.03,.05,.02,.016,.045,bm);[0,1,2,3,4].forEach(f=>seg(bg,V((.09+(f-2)*.0135)*s,.025,.07),V((.09+(f-2)*.0135)*s,.012,.115-Math.abs(f-2)*.006),.004,.003,bm));
+  seg(bg,V(0,1.44,.07),V(.19*s,1.42,.03),.007,.006,bm);ell(bg,.1*s,1.35,-.075,.045,.06,.008,bm);ell(bg,.085*s,.9,-.01,.065,.06,.022,bm);
+  // muscles
+  ell(mg,.075*s,1.335,.082,.085,.05,.022,muM);ell(mg,S.x+.015*s,1.39,0,.05,.054,.05,muM);musT(V(.215*s,1.37,.022),V(.262*s,1.17,.026),.032);musT(V(.21*s,1.36,-.022),V(.265*s,1.16,-.022),.03);musT(V(.275*s,1.12,.014),V(.308*s,.9,.016),.027);musT(V(.275*s,1.12,-.014),V(.308*s,.9,-.012),.024);
+  ell(mg,.105*s,1.2,-.068,.085,.13,.02,muM);ell(mg,.15*s,1.05,.055,.04,.09,.03,muM);musT(V(.09*s,.84,.035),V(.095*s,.52,.032),.058);musT(V(.12*s,.8,.02),V(.12*s,.5,.015),.04);musT(V(.09*s,.84,-.035),V(.095*s,.52,-.03),.05);musT(V(.09*s,.46,-.03),V(.09*s,.2,-.02),.04);musT(V(.098*s,.46,.03),V(.09*s,.14,.03),.025);ell(mg,.08*s,.87,-.075,.075,.06,.05,muM);musT(V(.03*s,1.62,.02),V(.02*s,1.46,.05),.014)});
+ ell(mg,0,1.45,-.055,.12,.07,.02,muM);[0,1,2].forEach(i=>[-1,1].forEach(s=>ell(mg,.03*s,1.15-i*.06,.096,.026,.025,.01,muM)));
+ // skeleton: skull, jaw, teeth, spine, ribs, sternum, pelvis
+ ell(bg,0,1.67,0,.085,.1,.095,bm);ell(bg,0,1.625,.07,.04,.025,.03,bm);[-1,1].forEach(s=>{ell(bg,.03*s,1.675,.082,.018,.016,.01,darkM);ell(bg,.065*s,1.64,.05,.015,.012,.02,bm)});ell(bg,0,1.65,.095,.007,.014,.006,darkM);
+ tube(bg,[V(-.06,1.65,0),V(-.048,1.59,.045),V(0,1.572,.078),V(.048,1.59,.045),V(.06,1.65,0)],.007,bm,24);
+ for(let i=0;i<12;i++){const a=(i-5.5)/5.5,x=a*.035,z=.085-Math.abs(a)*.02;ell(bg,x,1.605,z,.0045,.007,.004,whiteM);ell(bg,x,1.585,z-.003,.0045,.007,.004,whiteM)}
+ for(let i=0;i<24;i++){const t=i/23,y=1.54-t*.66,z=-.045-.02*Math.sin(t*3.1);ell(bg,0,y,z,.017+.006*t,.0105,.014+.005*t,bm);ell(bg,0,y,z-.02-.004*t,.004,.011,.014,bm)}
+ for(let i=0;i<12;i++){const pts=[],rx=.11+.065*Math.sin((i+1)*.26),rz=.085+.012*Math.sin(i*.3),y0=1.42-i*.026,sp=i<10?.82:.5;for(let k=0;k<=18;k++){const a=-sp+k*sp/9;pts.push(V(rx*Math.sin(a*Math.PI),y0-.02*Math.cos(a*Math.PI)-.012*Math.abs(a),rz*Math.cos(a*Math.PI)-.01))}tube(bg,pts,.0055,bm,28)}
+ ell(bg,0,1.385,.097,.026,.026,.007,bm);ell(bg,0,1.31,.098,.017,.065,.007,bm);ell(bg,0,1.235,.098,.008,.012,.005,bm);ell(bg,0,.87,-.05,.04,.05,.02,bm);ell(bg,0,.8,.055,.025,.012,.008,bm);ell(bg,0,.79,-.06,.01,.02,.01,bm);
+ // ===== ORGANS =====
+ const disp=g=>{const p=g.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),n=Math.sin(8*x+1)*Math.sin(8*y+2)*Math.sin(8*z)+.5*Math.sin(16*x)*Math.sin(16*y+1)*Math.sin(16*z+2),f=1+.045*n;p.setXYZ(i,x*f,y*f,z*f)}g.computeVertexNormals();return g};
+ const brainM=pm(0xe0a8c0),BD='Controls the body. EEG electrodes on the scalp record cortical activity (alpha 8–12 Hz).';let brain;
+ [-1,1].forEach(s=>{const m=new T.Mesh(disp(new T.IcosahedronGeometry(1,4)),brainM);m.scale.set(.042,.06,.085);m.position.set(.04*s,1.69,-.005);brain=org('nervous','Brain',BD,['eeg','openbci','ads1299','eog','bno'],m)});
+ org('nervous','Cerebellum',BD,['eeg'],ell(sysG.nervous,0,1.645,-.07,.05,.026,.036,pm(0xc08aa0)));seg(sysG.nervous,V(0,1.65,-.03),V(0,1.58,-.045),.012,.01,pm(0xd9b0c0));
+ [-1,1].forEach(s=>{org('nervous','Eye','Gaze is tracked with EOG or IR sensors.',['eog'],ell(sysG.nervous,.03*s,1.68,.08,.012,.012,.012,whiteM));ell(sysG.nervous,.03*s,1.68,.091,.006,.006,.002,mat(0x3b82f6,1,.4));ell(sysG.nervous,.03*s,1.68,.093,.003,.003,.001,darkM)});
+ tube(sysG.nervous,[V(0,1.62,-.04),V(0,1.4,-.06),V(0,1.1,-.065),V(0,.88,-.05)],.006,mat(0xfacc15,1,.5));
+ const NC=[[V(0,1.4,-.06),V(.2,1.4,-.02),V(.27,1.14,-.01),V(.31,.88,0),V(.33,.78,.02)],[V(0,1.4,-.06),V(-.2,1.4,-.02),V(-.27,1.14,-.01),V(-.31,.88,0),V(-.33,.78,.02)],[V(0,.88,-.05),V(.09,.8,-.02),V(.095,.48,-.02),V(.09,.1,0)],[V(0,.88,-.05),V(-.09,.8,-.02),V(-.095,.48,-.02),V(-.09,.1,0)]].map(p=>tube(sysG.nervous,p,.003,mat(0xfacc15,1,.5)));
+ const nvp=[0,1,2,3].map(()=>ell(sysG.nervous,0,0,0,.01,.01,.01,mat(0xffffff,1,1)));
+ // respiratory: lobes + bronchial tree
+ const bronM=pm(0xbfdbfe),LB=[[.075,1.34,0,.055,.07,.05],[.075,1.22,-.005,.055,.065,.05],[-.075,1.37,0,.05,.055,.05],[-.078,1.29,.012,.052,.045,.05],[-.075,1.2,-.005,.052,.06,.05]];
+ const lungs=LB.map(a=>{const m=ell(sysG.respiratory,a[0],a[1],a[2],a[3],a[4],a[5],pm(0xf9a8d4));m.userData.s0=[a[3],a[4],a[5]];return org('respiratory','Lung','Gas exchange; breathing belts, spirometers and CO₂ sensors measure ventilation.',['resp','sdp810','scd30','vl53','pcg','inmp'],m)});
+ tube(sysG.respiratory,[V(0,1.53,.01),V(0,1.36,0)],.01,bronM);
+ const br=(p,d,l,dep)=>{if(dep<0)return;const q=p.clone().addScaledVector(d,l);seg(sysG.respiratory,p,q,.0035*(dep+1)/2+.0008,.003*(dep+1)/2+.0008,bronM);[-1,1].forEach(s=>br(q,d.clone().applyAxisAngle(V(0,0,1),s*.55).applyAxisAngle(V(1,0,0),s*.3).normalize(),l*.74,dep-1))};
+ br(V(0,1.36,0),V(.6,-.7,0).normalize(),.05,3);br(V(0,1.36,0),V(-.6,-.7,0).normalize(),.05,3);
+ const dia=org('respiratory','Diaphragm','Main breathing muscle; moves the abdomen (ToF / ultrasonic excursion sensors).',['hcsr04','vl53','resp'],ell(sysG.respiratory,0,1.14,0,.14,.012,.085,pm(0xd6a77a)));
+ // heart (lathe ventricles, atria, great vessels, coronaries)
+ const hg=new T.Group();hg.position.set(.025,1.2,.05);sysG.circulatory.add(hg);const HD='Four-chamber pump (~72 bpm). ECG electrodes (RA, LA, LL) and PPG optics sense it.',HK=['ad8232','ads1292','max86150','max30102','pulse','pcg'],hrt=m=>{hg.add(m);return org('circulatory','Heart',HD,HK,m)};
+ const hp=[[0,.055],[.02,.045],[.033,.015],[.031,-.015],[.018,-.045],[0,-.058]].map(p=>new T.Vector2(p[0],p[1]));
+ const lv=new T.Mesh(new T.LatheGeometry(hp,22),pm(0xe11d48));lv.rotation.z=.6;hrt(lv);const rv=new T.Mesh(new T.LatheGeometry(hp,22),pm(0x9f1239));rv.scale.set(.85,.85,.85);rv.position.set(-.022,.004,.018);rv.rotation.z=.5;hrt(rv);
+ hrt(ell(hg,.022,.045,-.015,.02,.018,.02,pm(0xf87171)));hrt(ell(hg,-.032,.038,0,.02,.022,.02,pm(0xdc2626)));
+ tube(hg,[V(.005,.04,0),V(.01,.078,0),V(-.012,.095,0),V(-.032,.07,-.012),V(-.034,.03,-.018)],.009,pm(0xef4444),24);tube(hg,[V(-.008,.04,.012),V(-.004,.07,.02),V(.022,.08,.0)],.008,pm(0x6366f1),16);tube(hg,[V(-.035,.045,0),V(-.035,.1,0)],.0075,pm(0x3b82f6),10);
+ [[V(.01,.045,.03),V(.03,.02,.032),V(.04,-.02,.03)],[V(-.01,.04,.028),V(-.025,.0,.03),V(-.02,-.04,.02)]].forEach(p=>tube(hg,p,.0025,pm(0xff4d4d),16));
+ tube(sysG.circulatory,[V(-.025,1.18,.03),V(-.02,1.05,-.02),V(-.01,.9,-.04)],.007,pm(0x3b82f6));
+ const AC=[[V(.02,1.26,.03),V(0,1.2,-.01),V(0,1,-.03),V(0,.88,-.02)],[V(0,.88,-.02),V(.05,.82,0),V(.09,.6,.02),V(.095,.3,.02),V(.09,.08,.02)],[V(0,.88,-.02),V(-.05,.82,0),V(-.09,.6,.02),V(-.095,.3,.02),V(-.09,.08,.02)],[V(.02,1.3,.02),V(.12,1.4,0),V(.22,1.3,.01),V(.27,1.12,.02),V(.31,.9,.02),V(.32,.78,.02)],[V(.02,1.3,.02),V(-.12,1.4,0),V(-.22,1.3,.01),V(-.27,1.12,.02),V(-.31,.9,.02),V(-.32,.78,.02)],[V(.025,1.3,.03),V(.03,1.45,.025),V(.035,1.6,.02),V(.03,1.72,.01)],[V(.025,1.3,.03),V(-.02,1.45,.025),V(-.03,1.6,.02),V(-.03,1.72,.01)]];
+ const ACv=AC.map(p=>tube(sysG.circulatory,p,.0035,pm(0xef4444),24)),VCv=AC.map(p=>tube(sysG.circulatory,p.map(v=>V(v.x+(v.x>0?.014:-.014),v.y,v.z-.012)),.0045,pm(0x3b82f6),24));
+ const mkFlow=(n,col)=>{const gg=new T.BufferGeometry();gg.setAttribute('position',new T.BufferAttribute(new Float32Array(n*3),3));const p=new T.Points(gg,new T.PointsMaterial({color:col,size:.014}));sysG.circulatory.add(p);return p},fa=mkFlow(210,0xff6b6b),fv=mkFlow(210,0x60a5fa);
+ const flowUpd=(p,cv,t,rev)=>{const a=p.geometry.attributes.position,n=a.count,per=n/cv.length;for(let i=0;i<n;i++){const k=i%cv.length,j=Math.floor(i/cv.length);let u=(j/per+t*.15)%1;if(rev)u=1-u;const q=cv[k].getPoint(u);a.setXYZ(i,q.x,q.y,q.z)}a.needsUpdate=true};
+ // digestive
+ const lvM=pm(0x9a3412),LD='Largest internal organ; indirect abdominal bioimpedance (AD5933) shows fluid trends, not liver function.';
+ org('digestive','Liver',LD,['ad5933','ad5940'],ell(sysG.digestive,-.075,1.1,.04,.095,.045,.055,lvM));org('digestive','Liver',LD,['ad5933'],ell(sysG.digestive,.02,1.115,.05,.04,.03,.04,lvM));ell(sysG.digestive,-.05,1.07,.075,.012,.02,.012,pm(0x16a34a));
+ const stom=org('digestive','Stomach','Digests food with acid and churning peristalsis.',['ad5933'],ell(sysG.digestive,.075,1.1,.04,.05,.065,.04,pm(0xfdba74)));stom.rotation.z=.5;
+ tube(sysG.digestive,[V(.04,1.06,.05),V(0,1.04,.05),V(-.03,1.03,.04),V(-.035,.99,.03),V(0,.97,.03)],.009,pm(0xfcd34d));tube(sysG.digestive,[V(0,1.5,0),V(0,1.2,0),V(.05,1.12,.03)],.008,pm(0xfca5a5));
+ org('digestive','Spleen','Filters blood.',[],ell(sysG.digestive,.13,1.12,-.03,.02,.04,.02,pm(0xa78bfa)));
+ org('digestive','Pancreas','Digestive enzymes and insulin.',[],new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3([V(-.05,1.04,0),V(0,1.05,0),V(.06,1.07,-.01),V(.1,1.1,-.02)]),20,.01,8),pm(0xfcd34d)));
+ const ip=[];for(let i=0;i<90;i++){const t=i/89;ip.push(V(Math.sin(i*.85)*.065*(1-.2*t),.985-t*.12+Math.sin(i*.3)*.004,.05+Math.cos(i*.55)*.014))}
+ const gut=org('digestive','Small intestine','About 6 m long; nutrient absorption.',['ad5933'],new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(ip),320,.0095,8),pm(0xfb7185)));
+ const cc=new T.CatmullRomCurve3([V(-.1,.87,.045),V(-.1,1,.045),V(.1,1,.045),V(.1,.87,.045)]);for(let i=0;i<=34;i++){const p=cc.getPoint(i/34);ell(sysG.digestive,p.x,p.y,p.z,.017,.017,.017,pm(0xc2410c))}
+ tube(sysG.digestive,[V(-.1,.87,.045),V(-.11,.84,.05)],.004,pm(0xc2410c));
+ [-1,1].forEach(s=>{org('urinary','Kidney','Filters blood; hydration trends only via impedance, real function needs lab tests.',['ad5933'],ell(sysG.urinary,.065*s,1.04,-.055,.025,.045,.02,pm(0x9f1239)));tube(sysG.urinary,[V(.065*s,1,-.05),V(.04*s,.92,0),V(.01*s,.84,.04)],.003,pm(0xfde68a));ell(sysG.endocrine,.065*s,1.09,-.055,.014,.008,.012,pm(0xfde047));ell(sysG.endocrine,.014*s,1.5,.035,.014,.018,.011,pm(0xfde047))});
+ org('urinary','Bladder','Stores urine.',[],ell(sysG.urinary,0,.82,.045,.035,.03,.03,pm(0x67e8f9)));org('endocrine','Thyroid','Hormones controlling metabolism.',['mlx90614'],ell(sysG.endocrine,0,1.5,.035,.012,.006,.01,pm(0xfde047)));
+ // scan ring
+ const ring=new T.Mesh(new T.TorusGeometry(.3,.004,8,64),mat(0x22d3ee,.8,1));ring.rotation.x=Math.PI/2;body.add(ring);
+ // markers
+ const MK=[['Fp1','eeg',-.04,1.74,.085],['Fp2','eeg',.04,1.74,.085],['Cz','openbci',0,1.775,0],['Oz','eeg',0,1.68,-.095],['EOG','eog',-.1,1.68,.06],['Ear','max30102',.095,1.64,0],['RA','ad8232',-.14,1.33,.085],['LA','ad8232',.14,1.33,.085],['V4','ads1292',.05,1.2,.1],['LL','ad8232',.1,1.0,.085],['Mic','pcg',-.03,1.22,.105],['Biceps','myoware',.245,1.27,.04],['Quad','gravemg',-.095,.68,.07],['Median','ncs',.31,.87,.03],['Finger','pulse',.33,.75,.03],['GSR','gsr',-.31,.8,.03],['Axilla','ds18',.17,1.3,0],['Resp','resp',0,1.1,.11],['Abd Z','ad5933',0,.95,.095],['Shin','mpu',-.092,.3,.05],['Foot','fsr',.09,.02,.08]];
+ const mkm=MK.map(a=>{const m=new T.Mesh(new T.SphereGeometry(.012,12,8),mat(0x22d3ee,1,1));m.position.set(a[2],a[3],a[4]);m.userData={sid:a[1],mk:a[0]};mkG.add(m);pk.push(m);const d=document.createElement('div');d.className='mk';d.textContent=a[0];$('#mks').appendChild(d);return{m,d}});
+ // boards
+ const pins_=[];
+ function buildBoard(){while(brd.children.length)brd.remove(brd.children[0]);pins_.length=0;const b=B[bd],P=pins(),used=P.map(q=>rl(b,q[1])),k=5;
+  const bx=(w,h,d,x,y,z,c)=>{const m=new T.Mesh(new T.BoxGeometry(w*k/5,h,d*k/5),mat(c,1,.05));m.position.set(x*k/5,y,z*k/5);brd.add(m);return m};
+  bx(b.w,.16,b.d,0,0,0,b.col);bx(1.4,.6,1.2,-b.w/2+.5,.35,0,0xbfc7d1);bx(1,.2,1,b.w*.1,.18,0,0x111827);
+  if(bd=='rpi'){bx(1.4,.8,1.6,b.w/2-.8,.45,-1.5,0xbfc7d1);bx(1.4,.8,1.6,b.w/2-.8,.45,1.5,0xbfc7d1);bx(1.8,.1,1.8,0,.15,0,0x9ca3af)}
+  [[b.t,-1],[b.b,1]].forEach(([arr,s])=>{const n=arr.length,sp=Math.min(.5,(b.w-.9)/(n-1));arr.forEach((l,i)=>{const on=used.includes(l),m=new T.Mesh(new T.BoxGeometry(.18,.4,.18),mat(on?0x34d399:0xd4af37,1,on?.9:.2));m.position.set(-b.w/2+.45+i*sp,.25,s*(b.d/2-.3));m.userData.pin=l;brd.add(m);pins_.push(m)})});
+  const mz=-(b.d/2+3.2);bx(2.4,.12,1.6,0,.1,mz,new T.Color(`hsl(${cur.h},60%,28%)`).getHex());bx(.9,.2,.7,0,.25,mz,0x111827);
+  P.forEach((q,i)=>{const t=pins_.find(p=>p.userData.pin==rl(b,q[1]));if(!t)return;const x0=-1+i*(2/Math.max(1,P.length-1)),gg=new T.BufferGeometry().setFromPoints([V(x0,.2,mz+.8),V(x0,.8,mz+1.6),V(t.position.x,.8,t.position.z-.6),V(t.position.x,.45,t.position.z)]);brd.add(new T.Line(gg,new T.LineBasicMaterial({color:q[1]=='VCC'?0xf87171:q[1]=='GND'?0x9ca3af:0x22d3ee})))});
+  // components: resistor + cap near module
+  const rb=bx(.8,.14,.3,2,.1,mz+.2,0xd2b48c);bx(.2,.15,.32,2,.12,mz+.2,0xb91c1c);bx(.3,.3,.3,3,.2,mz+.2,0x1e3a8a)}
+ onSel=buildBoard;
+ setWorld=w=>{world=w;body.visible=w=='body';brd.visible=w=='board';if(w=='board')buildBoard();reset();applyL()};
+ function reset(){if(world=='body'){cs.t.set(0,.95,0);cs.r=3.4;cs.ph=1.45;gridH.position.y=0}else{cs.t.set(0,0,-1);cs.r=12;cs.ph=.9;gridH.position.y=-.1}}
+ function applyL(){const sy=page=='systems';Object.keys(sysG).forEach(k=>sysG[k].visible=sy?k==sysSel:!!lay[k]);skinM.opacity=sy?.07:.15;skin.visible=sy||!!lay.skin;mkG.visible=page=='anatomy';$('#mks').style.display=(page=='anatomy'&&lay.labels)?'block':'none'}
+ window.applyL=applyL;
+ // UI
+ $('#lay').innerHTML=Object.keys(lay).map(k=>`<button data-l="${k}" class="${lay[k]?'on':''}">${k}</button>`).join('');$$('#lay button').forEach(b=>b.onclick=()=>{lay[b.dataset.l]=lay[b.dataset.l]?0:1;b.classList.toggle('on');applyL()});
+ $('#sysb').innerHTML=Object.keys(SYS).map(k=>`<button data-s="${k}">${SYS[k][0]}</button>`).join('');
+ const selSys=k=>{sysSel=k;$$('#sysb button').forEach(b=>b.classList.toggle('on',b.dataset.s==k));const names=[...new Set(pk.filter(m=>m.userData.sys==k&&m.userData.name).map(m=>m.userData.name))];$('#sysd').innerHTML=`<h3>${SYS[k][0]}</h3><p>${SYS[k][1]}</p><div>${names.map(n=>`<span class="chip">${n}</span>`).join('')||'<span class="mu">Structural system</span>'}</div>`;applyL()};
+ $$('#sysb button').forEach(b=>b.onclick=()=>selSys(b.dataset.s));selSys('circulatory');
+ $('#ar').onclick=e=>{auto=!auto;e.target.classList.toggle('on')};$('#zi').onclick=()=>cs.r=Math.max(.6,cs.r*.8);$('#zo').onclick=()=>cs.r=Math.min(30,cs.r*1.25);$('#rs2').onclick=reset;
+
+ // ---- solid skin, explode, section, user model ----
+ let solid=false;$('#sk').onclick=e=>{solid=!solid;skinMs.forEach(m=>m.material=solid?solidM:skinM);hairG.visible=solid;e.target.classList.toggle('on',solid)};
+ const EX={skeletal:[0,0,-.18],muscular:[0,0,.3],circulatory:[0,0,.18],nervous:[0,.12,0],respiratory:[0,.14,.08],digestive:[0,-.02,.14],urinary:[0,-.08,-.1],endocrine:[0,.14,0]};
+ $('#ex').oninput=e=>{const k=e.target.value/100;Object.keys(EX).forEach(s=>sysG[s].position.set(EX[s][0]*k,EX[s][1]*k,EX[s][2]*k))};
+ const clip=new T.Plane(V(0,0,-1),.16);$('#cx').oninput=e=>{const k=e.target.value/100;clip.constant=.16-k*.3;R.clippingPlanes=k>0?[clip]:[]};
+ let um=null;const setUO=()=>{if(um)um.traverse(o=>{if(o.isMesh)[].concat(o.material).forEach(m=>{m.transparent=true;m.opacity=$('#uo').value/100;m.depthWrite=false})})};$('#uo').oninput=setUO;
+ $('#glb').onchange=e=>{const f=e.target.files[0];if(!f)return;if(!T.GLTFLoader){$('#gm').textContent='GLTFLoader did not load (check connection).';return}const r=new FileReader();r.onload=()=>{try{new T.GLTFLoader().parse(r.result,'',gl=>{if(um)body.remove(um);um=gl.scene;const b1=new T.Box3().setFromObject(um),k=1.78/Math.max(.001,b1.getSize(V(0,0,0)).y);um.scale.setScalar(k);const b2=new T.Box3().setFromObject(um),c=b2.getCenter(V(0,0,0));um.position.set(-c.x,-b2.min.y,-c.z);um.traverse(o=>{if(o.isMesh)o.material=Array.isArray(o.material)?o.material.map(m=>m.clone()):o.material.clone()});body.add(um);setUO();$('#gm').textContent='Loaded: '+f.name+' (fade it with the slider; hide the built-in skin with the Layers button).'},er=>{$('#gm').textContent='Could not read model: '+(er.message||er)})}catch(er){$('#gm').textContent='Error: '+er.message}};r.readAsArrayBuffer(f)};
+ // pointer controls
+ const el=R.domElement,Pm=new Map();let mv=0;
+ el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);Pm.set(e.pointerId,[e.clientX,e.clientY]);mv=0});
+ el.addEventListener('pointermove',e=>{if(!Pm.has(e.pointerId))return;const o=Pm.get(e.pointerId);
+  if(Pm.size==1){cs.th-=(e.clientX-o[0])*.008;cs.ph=Math.max(.1,Math.min(3.04,cs.ph-(e.clientY-o[1])*.008))}
+  else{const k=[...Pm.keys()],a=Pm.get(k[0]),b=Pm.get(k[1]),d0=Math.hypot(a[0]-b[0],a[1]-b[1]);Pm.set(e.pointerId,[e.clientX,e.clientY]);const a2=Pm.get(k[0]),b2=Pm.get(k[1]);cs.r=Math.max(.6,Math.min(30,cs.r*d0/Math.max(1,Math.hypot(a2[0]-b2[0],a2[1]-b2[1]))))}
+  mv+=Math.abs(e.clientX-o[0])+Math.abs(e.clientY-o[1]);Pm.set(e.pointerId,[e.clientX,e.clientY])});
+ el.addEventListener('pointerup',e=>{Pm.delete(e.pointerId);if(mv<6&&!Pm.size)click(e)});el.addEventListener('pointercancel',e=>Pm.delete(e.pointerId));
+ el.addEventListener('wheel',e=>{e.preventDefault();cs.r=Math.max(.6,Math.min(30,cs.r*Math.exp(e.deltaY*.001)))},{passive:false});
+ const rc=new T.Raycaster(),ms=new T.Vector2(),vis=o=>{while(o){if(!o.visible)return false;o=o.parent}return true};let selSid=null;
+ function click(e){const r=el.getBoundingClientRect();ms.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);rc.setFromCamera(ms,cam);
+  if(world=='board'){const h=rc.intersectObjects(pins_)[0];if(h)$('#tip').textContent='Pin: '+h.object.userData.pin;return}
+  const h=rc.intersectObjects(pk).find(x=>vis(x.object));if(!h)return;const u=h.object.userData;
+  if(u.sid){selSid=u.sid;const s=sensor(u.sid);cur=s;setSensor(s.id);$('#tip').textContent='Sensor point: '+u.mk+' – '+s.n;$('#ainfo').innerHTML=`<b>${s.n}</b> <span class="mu">${s.m}</span><p>${s.sp}<br>${s.hz} · ${s.i} · ${s.v}<br>Site: ${s.site}</p><button id="ao">Sensor details + 3D</button>`;$('#ao').onclick=()=>openSensor(s.id)}
+  else{selSid=null;$('#tip').textContent='Organ: '+u.name;$('#ainfo').innerHTML=`<b>${u.name}</b><p>${u.d}</p>`+(u.k.length?'<div class="mu">Related sensors:</div>'+u.k.map(id=>`<button class="rk" data-id="${id}">${sensor(id).n}</button>`).join(' '):'');$$('.rk').forEach(b=>b.onclick=()=>openSensor(b.dataset.id))}}
+ // loop
+ const tmp=V(0,0,0);
+ (function loop(){requestAnimationFrame(loop);const t=performance.now()/1e3;if(auto)cs.th+=.006;place();
+  if(world=='body'&&body.visible){const e=Math.max(0,F.ecg(t)),h=1+.2*e,k=Math.sin(1.57*t);hg.scale.setScalar(h);lungs.forEach(l=>{const q=l.userData.s0;l.scale.set(q[0],q[1]*(1+.06*k),q[2]*(1+.06*k))});dia.position.y=1.14-.012*k;tor.scale.z=.62*(1+.012*k);
+   stom.scale.setScalar(1+.06*Math.sin(t*2));gut.scale.setScalar(1+.015*Math.sin(t*3));brain.material.emissiveIntensity=.2+.25*Math.abs(F.eeg(t))*.5;
+   ring.position.y=(t*.35)%1.85;flowUpd(fa,ACv,t,false);flowUpd(fv,VCv,t,true);nvp.forEach((m,i)=>{const q=NC[i].getPoint((t*.4+i*.25)%1);m.position.copy(q)});
+   pk.forEach(m=>{if(m.userData.sid){const on=m.userData.sid==selSid,s=1+(on?.6:.2)*Math.sin(t*5);m.scale.setScalar(s);m.material.color.setHex(on?0xfacc15:0x22d3ee);m.material.emissive.setHex(on?0xfacc15:0x22d3ee)}});
+   if(page=='anatomy'&&lay.labels){const w=st.clientWidth,hh=st.clientHeight;mkm.forEach(o=>{o.m.getWorldPosition(tmp);tmp.project(cam);const sh=tmp.z>1||!mkG.visible;o.d.style.display=sh?'none':'block';o.d.style.left=(tmp.x*.5+.5)*w+'px';o.d.style.top=(-tmp.y*.5+.5)*hh+'px'})}}
+  R.render(sc,cam)})();
+ fitR();setWorld('body')}
+// ---------- 2D signal canvases ----------
+function loop2(){requestAnimationFrame(loop2);const t=performance.now()/1e3;[['heroSignal',page=='overview',F.ecg,'#22d3ee'],['asig',page=='anatomy',F.ecg,'#34d399'],['lsig',page=='lab',F[cur.sg],'#34d399'],['msig',false,F[cur.sg],'#34d399']].forEach(([id,on,fn,col])=>{const c=$('#'+id);if(on&&c){const w=fit(c),x=c.getContext('2d');grid(x,w,c.height);plot(c,fn,col,0,c.height,w)}});if(page==='signals'&&!signalPause){[['sig-ecg',F.ecg,'#22d3ee'],['sig-eeg',F.eeg,'#a78bfa'],['sig-ppg',F.ppg,'#34d399'],['sig-emg',F.emg,'#f472b6'],['sig-res',F.res,'#fbbf24'],['sig-eog',F.eog,'#38bdf8']].forEach(([id,fn,col])=>{const c=$('#'+id);if(c){const w=fit(c),x=c.getContext('2d');grid(x,w,c.height);plot(c,fn,col,0,c.height,w,.45)}})}if(page=='dash')dash(t)}
+let signalPause=false;
+const audio=$('#labAudio'),soundBtn=$('#soundToggle'),vol=$('#soundVol');audio.volume=Number(vol.value);vol.addEventListener('input',()=>audio.volume=Number(vol.value));soundBtn.addEventListener('click',async()=>{if(audio.paused){try{await audio.play();soundBtn.textContent='♫ Sound on · Pause';soundBtn.classList.add('audio-active')}catch(e){soundBtn.textContent='Tap to enable sound'}}else{audio.pause();soundBtn.textContent='♫ Enable sound';soundBtn.classList.remove('audio-active')}});document.addEventListener('click',function firstAudio(){if(audio.paused){audio.play().then(()=>{soundBtn.textContent='♫ Sound on · Pause';soundBtn.classList.add('audio-active')}).catch(()=>{})}document.removeEventListener('click',firstAudio)}, {once:true});
+$('#sigPause')?.addEventListener('click',()=>{signalPause=!signalPause;$('#sigPause').textContent=signalPause?'Resume graphs':'Pause graphs'});
+setSensor('ad8232');setBoard('uno');renderGal();loop2();
+try{init3D()}catch(e){$$('.slot').forEach(s=>s.innerHTML='<pre style="padding:12px;color:#f87171;white-space:pre-wrap">3D engine error: '+e.message+'</pre>')}
+const h0=(location.hash||'').slice(1);show(['overview','anatomy','systems','sensors','signals','models','lab','circuit','arch','dash','proto'].includes(h0)?h0:'overview');
+</script></body></html>
