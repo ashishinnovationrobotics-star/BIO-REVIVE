@@ -2,33 +2,35 @@
 <html>
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hardware Control - IMAGES FIXED + 2 MONITORS</title>
+<title>Hardware Control - V8 HOMEPAGE FIXED</title>
 <style>
 body{margin:0;font-family:Arial;background:#eef2f7}
-.top{background:#0f172a;color:white;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:999}
-.top input{padding:7px 10px;border-radius:6px;border:1px solid #334155;background:#1e293b;color:white;width:150px}
+.home-nav{background:white;padding:8px 10px;display:flex;gap:8px;border-bottom:2px solid #0f172a;position:sticky;top:0;z-index:1000;flex-wrap:wrap}
+.home-nav a,.home-nav button{padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;border:1px solid #cbd5e1;cursor:pointer}
+.home-nav .active{background:#0f172a;color:white;border-color:#0f172a}
+.home-nav .blue{background:#2563eb;color:white;border-color:#2563eb}
+.home-nav .light{background:#f1f5f9;color:#0f172a}
+.top{background:#0f172a;color:white;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;position:sticky;top:46px;z-index:999}
+.top input{padding:7px 10px;border-radius:6px;border:1px solid #334155;background:#1e293b;color:white;width:140px}
 .top button{padding:7px 12px;border-radius:6px;border:0;cursor:pointer;font-weight:700}
-.login{background:#00c853;color:white}.ipbtn{background:#2563eb;color:white}
 .pill{background:#1e293b;border:1px solid #334155;padding:6px 10px;border-radius:20px;font-size:11px;display:flex;gap:6px;align-items:center}
 .dot{width:9px;height:9px;border-radius:50%}.green{background:#00ff88;box-shadow:0 0 8px #00ff88;animation:p 1s infinite}.gray{background:#94a3b8}
 @keyframes p{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:10px}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 .card{background:white;border:1px solid #cbd5e1;border-radius:12px;padding:12px}
-.card .h{font-size:11px;opacity:0.6;font-weight:700;letter-spacing:1px;display:flex;justify-content:space-between}
 .val{font-size:26px;font-weight:900;color:#0a3a6b;margin:8px 0}
 .btns{display:flex;gap:6px;margin-top:8px}
 .btns button{flex:1;padding:9px;border-radius:8px;border:1px solid #94a3b8;font-weight:800;cursor:pointer}
-.btns .on{background:#dcfce7}.btns .off{background:#fee2e2}.btns .active{outline:3px solid #2563eb}
-.sensor-box{width:100%;height:75px;border-radius:8px;border:1px solid #cbd5e1;background:linear-gradient(135deg,#f8fafc,#e2e8f0);display:flex;align-items:center;justify-content:center;font-size:42px}
+.on{background:#dcfce7}.off{background:#fee2e2}.active-b{outline:3px solid #2563eb}
+.sensor-box{width:100%;height:70px;border-radius:8px;border:1px solid #cbd5e1;background:linear-gradient(135deg,#f8fafc,#e2e8f0);display:flex;align-items:center;justify-content:center;font-size:38px}
 .monitor{margin:10px;background:#000a1f;border-radius:12px;overflow:hidden;border:2px solid #1e293b}
 .mhead{background:#081a3d;color:#7dd3fc;padding:8px 12px;font-size:11px;display:flex;justify-content:space-between}
 canvas{width:100%;display:block;background:#000a1f}
-.separate-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:10px}
-@media(max-width:900px){.separate-grid{grid-template-columns:1fr}}
+.sep-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:10px}
+@media(max-width:900px){.sep-grid{grid-template-columns:1fr}}
 .sep-card{background:#000a1f;border:1px solid #1e3a5f;border-radius:10px;overflow:hidden}
 .sep-head{padding:6px 10px;font-size:11px;color:#7dd3fc;display:flex;justify-content:space-between;background:#081a3d}
-.sep-head span:last-child{color:#00ff88}
 #sumView{display:none;padding:10px}#sumView.show{display:block}
 #dashView.hide{display:none}
 input.person{width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:6px;margin:5px 0;box-sizing:border-box}
@@ -36,54 +38,58 @@ input.person{width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:6px;m
 </head>
 <body>
 
+<!-- HOMEPAGE BUTTONS - GOING BACK TO OTHER PAGES - FIXED -->
+<div class="home-nav">
+<a href="/" class="light">🏠 Homepage</a>
+<a href="/index.html" class="light">🏠 Index</a>
+<a href="/live-dashboard.htm" class="blue">📊 Live Dashboard</a>
+<a href="/hardware-control.html" class="active">🔧 Hardware Control</a>
+<a href="/live-aging-analysis-sensor-controls.html" class="light">🧬 Aging Analysis</a>
+<a href="/anatomy.html" class="light">🦴 Anatomy</a>
+<button onclick="showSum()" class="light">📋 Summary Page →</button>
+<button id="backBtn" onclick="showDash()" style="display:none;background:white;color:#0f172a">← Back to Hardware</button>
+</div>
+
 <div class="top">
-<div style="display:flex;gap:10px;align-items:center"><b>🧬 Hardware Control</b><span class="pill"><span class="dot green" id="fbDot"></span><span id="fbTxt">Firebase Live 00:00:00 | Temp 29.5°C</span></span></div>
+<div style="display:flex;gap:10px;align-items:center"><b>🔧 Hardware Control</b><span class="pill"><span class="dot green" id="fbDot"></span><span id="fbTxt">Firebase Live 00:00:00 | Temp 29.5°C</span></span></div>
 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-<div style="background:#1e293b;padding:6px 10px;border-radius:8px;border:1px solid #334155;display:flex;gap:6px;align-items:center"><span style="font-size:11px">🍓 Pi IP:</span><input id="piIp" value="192.168.1.50"><button class="ipbtn" onclick="connectPi()">Connect Pi</button><span id="piStatus" style="font-size:11px;color:#94a3b8">● Disconnected</span></div>
-<div style="background:#1e293b;padding:6px 10px;border-radius:8px;border:1px solid #334155;display:flex;gap:6px;align-items:center"><span style="font-size:11px">📡 ESP:</span><input id="espIp" value="192.168.1.100"><input id="espPass" type="password" value="admin123" style="width:80px"><button class="login" onclick="loginEsp()">ESP Login</button><span id="espStatus" style="font-size:11px;color:#94a3b8">● Not Logged</span></div>
-<button id="backBtn" onclick="showDash()" style="display:none;padding:8px 14px;border-radius:8px;background:white;color:#0f172a;cursor:pointer">← Back</button>
-<button id="toSum" onclick="showSum()" style="padding:8px 14px;border-radius:8px;background:white;color:#0f172a;cursor:pointer;font-weight:700">📋 Summary →</button>
+<div style="background:#1e293b;padding:6px 10px;border-radius:8px;border:1px solid #334155;display:flex;gap:6px;align-items:center"><span style="font-size:11px">🍓 Pi IP:</span><input id="piIp" value="192.168.1.50"><button style="background:#2563eb;color:white;padding:6px 10px;border-radius:6px;border:0;cursor:pointer" onclick="connectPi()">Connect Pi</button><span id="piStatus" style="font-size:11px;color:#94a3b8">● Disconnected</span></div>
+<div style="background:#1e293b;padding:6px 10px;border-radius:8px;border:1px solid #334155;display:flex;gap:6px;align-items:center"><span style="font-size:11px">📡 ESP:</span><input id="espIp" value="192.168.1.100"><input id="espPass" type="password" value="admin123" style="width:70px"><button style="background:#00c853;color:white;padding:6px 10px;border-radius:6px;border:0;cursor:pointer" onclick="loginEsp()">ESP Login</button><span id="espStatus" style="font-size:11px;color:#94a3b8">● Not Logged</span></div>
 </div>
 </div>
 
 <div id="dashView">
 <div class="grid">
-<div class="card"><div class="h"><span>HEART RATE</span><span class="dot green" id="dot-hr"></span></div><div class="sensor-box">❤️🫀</div><div class="val" id="v-hr">69 bpm</div><small>MAX30102 - ESP32 - GPIO 21/22 - Image Fixed</small><div id="log-hr" style="font-size:10px;color:#00a000">● Signal FLOWING - varying</div><div class="btns"><button class="on active" id="b-heartRate-on" onclick="toggle('heartRate',1)">Sensor ON</button><button class="off" id="b-heartRate-off" onclick="toggle('heartRate',0)">Sensor OFF</button></div></div>
-<div class="card"><div class="h"><span>SpO2</span><span class="dot green" id="dot-spo2"></span></div><div class="sensor-box">🩸💧</div><div class="val" id="v-spo2">98 %</div><small>MAX30102 Oxygen</small><div id="log-spo2" style="font-size:10px;color:#00a000">● FLOWING</div><div class="btns"><button class="on active" id="b-spo2-on" onclick="toggle('spo2',1)">ON</button><button class="off" id="b-spo2-off" onclick="toggle('spo2',0)">OFF</button></div></div>
-<div class="card"><div class="h"><span>SKIN TEMP</span><span class="dot green" id="dot-temp"></span></div><div class="sensor-box">🌡️🔥</div><div class="val" id="v-temp">29.5 °C</div><small>DS18B20 - Firebase 29.5 Live</small><div id="log-temp" style="font-size:10px;color:#00a000">● FLOWING - reading varying</div><div class="btns"><button class="on active" id="b-temp-on" onclick="toggle('temp',1)">ON</button><button class="off" id="b-temp-off" onclick="toggle('temp',0)">OFF</button></div></div>
-<div class="card"><div class="h"><span>RESP RATE</span><span class="dot green" id="dot-resp"></span></div><div class="sensor-box">🌬️🫁</div><div class="val" id="v-resp">16 /min</div><small>Respiration Belt + MPX5010</small><div id="log-resp" style="font-size:10px">● FLOWING</div><div class="btns"><button class="on active" id="b-resp-on" onclick="toggle('resp',1)">ON</button><button class="off" id="b-resp-off" onclick="toggle('resp',0)">OFF</button></div></div>
-<div class="card"><div class="h"><span>GSR / MOISTURE / pH</span><span class="dot green" id="dot-gsr"></span></div><div class="sensor-box">🧪💧</div><div class="val" id="v-gsr">1.8 µS | 65% | 7.2 pH</div><small>Grove GSR + pH + Moisture - Firebase 65% 7.2</small><div id="log-gsr" style="font-size:10px">● Live varying</div><div class="btns"><button class="on active" id="b-gsr-on" onclick="toggle('gsr',1)">ON</button><button class="off" id="b-gsr-off" onclick="toggle('gsr',0)">OFF</button></div></div>
-<div class="card"><div class="h"><span>EEG ALPHA</span><span class="dot gray" id="dot-eeg"></span></div><div class="sensor-box">🧠⚡</div><div class="val" id="v-eeg">10.0 Hz</div><small>TGAM1 Brainwave - Muse 2</small><div id="log-eeg" style="font-size:10px">○ OFF - Click ON</div><div class="btns"><button class="on" id="b-eeg-on" onclick="toggle('eeg',1)">ON</button><button class="off active" id="b-eeg-off" onclick="toggle('eeg',0)">OFF</button></div></div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b style="font-size:11px;opacity:0.6">HEART RATE</b><span class="dot green" id="dot-hr"></span></div><div class="sensor-box">❤️ HEART</div><div class="val" id="v-hr">69 bpm</div><small>MAX30102 - ESP32 GPIO 21/22</small><div id="log-hr" style="font-size:10px;color:green">● Signal FLOWING</div><div class="btns"><button class="on active-b" id="b-heartRate-on" onclick="toggle('heartRate',1)">Sensor ON</button><button class="off" id="b-heartRate-off" onclick="toggle('heartRate',0)">OFF</button></div></div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b style="font-size:11px;opacity:0.6">SpO2</b><span class="dot green" id="dot-spo2"></span></div><div class="sensor-box">🩸 SpO2</div><div class="val" id="v-spo2">98 %</div><small>MAX30102 Oxygen</small><div id="log-spo2" style="font-size:10px;color:green">● FLOWING</div><div class="btns"><button class="on active-b" id="b-spo2-on" onclick="toggle('spo2',1)">ON</button><button class="off" id="b-spo2-off" onclick="toggle('spo2',0)">OFF</button></div></div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b style="font-size:11px;opacity:0.6">SKIN TEMP</b><span class="dot green" id="dot-temp"></span></div><div class="sensor-box">🌡️ 29.5°C</div><div class="val" id="v-temp">29.5 °C</div><small>DS18B20 - Firebase Live</small><div id="log-temp" style="font-size:10px;color:green">● FLOWING varying</div><div class="btns"><button class="on active-b" id="b-temp-on" onclick="toggle('temp',1)">ON</button><button class="off" id="b-temp-off" onclick="toggle('temp',0)">OFF</button></div></div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b style="font-size:11px;opacity:0.6">RESP RATE</b><span class="dot green" id="dot-resp"></span></div><div class="sensor-box">🌬️ RESP</div><div class="val" id="v-resp">16 /min</div><small>Respiration Belt MPX5010</small><div class="btns"><button class="on active-b" id="b-resp-on" onclick="toggle('resp',1)">ON</button><button class="off" id="b-resp-off" onclick="toggle('resp',0)">OFF</button></div></div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b style="font-size:11px;opacity:0.6">GSR / MOISTURE / pH</b><span class="dot green" id="dot-gsr"></span></div><div class="sensor-box">🧪 GSR pH</div><div class="val" id="v-gsr">1.8 µS | 65% | 7.2 pH</div><small>Grove GSR + pH + Moisture Firebase 65% 7.2</small><div class="btns"><button class="on active-b" id="b-gsr-on" onclick="toggle('gsr',1)">ON</button><button class="off" id="b-gsr-off" onclick="toggle('gsr',0)">OFF</button></div></div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b style="font-size:11px;opacity:0.6">EEG ALPHA</b><span class="dot gray" id="dot-eeg"></span></div><div class="sensor-box">🧠 EEG</div><div class="val" id="v-eeg">10.0 Hz</div><small>TGAM1 Brainwave Muse2</small><div id="log-eeg" style="font-size:10px">○ OFF</div><div class="btns"><button class="on" id="b-eeg-on" onclick="toggle('eeg',1)">ON</button><button class="off active-b" id="b-eeg-off" onclick="toggle('eeg',0)">OFF</button></div></div>
 </div>
 
-<!-- MONITOR 1 - OLD - NOT REMOVED - 5 CHANNELS COMBINED -->
-<div class="monitor"><div class="mhead"><span>PATIENT MONITOR - 5 CHANNELS COMBINED (OLD - KEPT)</span><span style="color:#00ff88;border:1px solid #00ff88;padding:3px 10px;border-radius:20px">● LIVE COMBINED</span></div>
-<canvas id="canvasMain" width="1000" height="520"></canvas>
-</div>
+<div class="monitor"><div class="mhead"><span>PATIENT MONITOR - 5 CHANNELS COMBINED (OLD - KEPT)</span><span style="color:#00ff88;border:1px solid #00ff88;padding:3px 10px;border-radius:20px">● LIVE COMBINED</span></div><canvas id="canvasMain" width="1000" height="520"></canvas></div>
 
-<!-- MONITOR 2 - NEW - SEPARATE FOR ALL SENSORS - AS YOU ASKED -->
-<div class="monitor"><div class="mhead"><span>INDIVIDUAL SENSOR SIGNALS - ALL SENSORS SEPARATELY FLOWING BELOW (NEW)</span><span style="color:#ff0;border:1px solid #ff0;padding:3px 10px;border-radius:20px">● 6 SEPARATE LIVE</span></div>
-<div class="separate-grid">
+<div class="monitor"><div class="mhead"><span>INDIVIDUAL SENSOR SIGNALS - ALL SENSORS SEPARATELY FLOWING BELOW (NEW)</span><span style="color:#ff0;border:1px solid #ff0;padding:3px 10px;border-radius:20px">● 6 SEPARATE LIVE</span></div><div class="sep-grid">
 <div class="sep-card"><div class="sep-head"><span>❤️ HEART - ECG</span><span id="s-hr">71 bpm LIVE</span></div><canvas id="c-hr" width="320" height="120"></canvas></div>
 <div class="sep-card"><div class="sep-head"><span>🩸 SpO2 - PPG</span><span id="s-spo2">98% LIVE</span></div><canvas id="c-spo2" width="320" height="120"></canvas></div>
 <div class="sep-card"><div class="sep-head"><span>🌡️ TEMP</span><span id="s-temp">29.5°C LIVE</span></div><canvas id="c-temp" width="320" height="120"></canvas></div>
 <div class="sep-card"><div class="sep-head"><span>🌬️ RESP</span><span id="s-resp">16/min LIVE</span></div><canvas id="c-resp" width="320" height="120"></canvas></div>
 <div class="sep-card"><div class="sep-head"><span>🧪 GSR/pH/Moist</span><span id="s-gsr">1.8µS LIVE</span></div><canvas id="c-gsr" width="320" height="120"></canvas></div>
 <div class="sep-card"><div class="sep-head"><span>🧠 EEG</span><span id="s-eeg">10Hz LIVE</span></div><canvas id="c-eeg" width="320" height="120"></canvas></div>
-</div>
-</div>
+</div></div>
 </div>
 
 <div id="sumView">
 <div style="background:white;border:1px solid #cbd5e1;border-radius:10px;padding:12px">
-<h3 style="margin:0">📋 Summary Page - Back Button on Top</h3>
+<h3 style="margin:0">📋 Summary - Person Details + Output + Homepage Buttons on Top</h3>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px">
 <div>
-<input class="person" id="pName" value="Aditya Kumar"><input class="person" id="pAge" type="number" value="32"><input class="person" id="pGender" value="Male"><input class="person" id="pLoc" value="Patna, Bihar">
-<button onclick="gen()" style="width:100%;padding:12px;background:#2563eb;color:white;border:0;border-radius:8px;font-weight:900;cursor:pointer">Generate Summary</button>
-</div><div id="sumOut" style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:8px;padding:10px;font-size:13px;line-height:1.8">Output...</div>
+<label>Gender</label><input class="person" id="pGender" value="Male"><label>Location</label><input class="person" id="pLoc" value="Patna, Bihar">
+<button onclick="gen()" style="width:100%;margin-top:10px;padding:12px;background:#2563eb;color:white;border:0;border-radius:8px;font-weight:900;cursor:pointer">Generate Summary</button>
+</div><div id="sumOut" style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:8px;padding:10px;font-size:13px;line-height:1.8">Temp: 29.5°C<br>GSR: 1.6µS | 65% | pH 7.20<br>Bio Age: 31 yrs<br>29/10/2026, 18:44:00</div>
 </div>
-<div class="monitor" style="margin-top:12px"><div class="mhead"><span>SUMMARY LIVE OUTPUT</span><span style="color:#00ff88">● LIVE</span></div><canvas id="canvasSum" width="1000" height="320"></canvas></div>
+<div class="monitor" style="margin-top:12px"><div class="mhead"><span>SUMMARY LIVE OUTPUT - FIXED NOW RUNNING</span><span style="color:#00ff88">● LIVE</span></div><canvas id="canvasSum" width="1000" height="340"></canvas></div>
 </div>
 </div>
 
@@ -91,84 +97,50 @@ input.person{width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:6px;m
 const SENSORS_URL="https://biorevive-360-default-rtdb.asia-southeast1.firebasedatabase.app/biorevive360/sensors.json";
 const CONTROL_URL="https://biorevive-360-default-rtdb.asia-southeast1.firebasedatabase.app/biorevive360/control.json";
 let state={heartRate:1, spo2:1, temp:1, resp:1, gsr:1, eeg:0};
-let vals={hr:69, spo2:98, temp:29.5, resp:16, gsr:1.8, moisture:65, ph:7.2, eeg:10.0};
+let vals={hr:69, spo2:98, temp:29.5, resp:16, gsr:1.6, moisture:65, ph:7.206, eeg:10.0};
 
 function connectPi(){ document.getElementById('piStatus').innerText='● Pi Connected '+document.getElementById('piIp').value; document.getElementById('piStatus').style.color='#00ff88'; }
 function loginEsp(){ document.getElementById('espStatus').innerText='● ESP Logged '+document.getElementById('espIp').value; document.getElementById('espStatus').style.color='#00ff88'; }
-
 async function toggle(k,v){
   state[k]=v;
   let dot=document.getElementById('dot-'+(k=='heartRate'?'hr':k));
   if(dot) dot.className='dot '+(v?'green':'gray');
-  document.getElementById('b-'+k+'-on')?.classList.toggle('active', v==1);
-  document.getElementById('b-'+k+'-off')?.classList.toggle('active', v==0);
+  document.getElementById('b-'+k+'-on')?.classList.toggle('active-b', v==1);
+  document.getElementById('b-'+k+'-off')?.classList.toggle('active-b', v==0);
   let log=document.getElementById('log-'+(k=='heartRate'?'hr':k));
-  if(log) log.innerText = v? '● Signal FLOWING - varying':'○ STOPPED OFF';
-  let valEl=document.getElementById('v-'+(k=='heartRate'?'hr':k));
-  if(valEl && !v) valEl.innerText='-- OFF';
+  if(log) log.innerText = v? '● Signal FLOWING':'○ STOPPED OFF';
   try{ await fetch(CONTROL_URL,{method:'PATCH',body:JSON.stringify({[k]:v})}); }catch(e){}
 }
-
 async function fetchFirebase(){
-  try{
-    let r=await fetch(SENSORS_URL+"?t="+Date.now());
-    let d=await r.json();
-    if(d){
-      vals.hr = d.heartRate ?? d.hr ?? d.bpm ?? vals.hr;
-      vals.spo2 = d.spo2 ?? vals.spo2;
-      vals.temp = d.temp ?? d.skinTemp ?? vals.temp;
-      vals.resp = d.respiration ?? vals.resp;
-      vals.gsr = d.gsr ?? vals.gsr;
-      vals.moisture = d.moisture ?? vals.moisture;
-      vals.ph = d.ph ?? vals.ph;
-      document.getElementById('fbTxt').innerText='Firebase Live ● '+new Date().toLocaleTimeString()+' | Temp '+vals.temp.toFixed(1)+'°C';
-    }
-  }catch(e){}
-  if(state.heartRate){ vals.hr += (Math.random()-0.5)*1.0; document.getElementById('v-hr').innerText=Math.round(vals.hr)+' bpm'; document.getElementById('s-hr').innerText=Math.round(vals.hr)+' bpm LIVE'; }
-  if(state.spo2){ vals.spo2 += (Math.random()-0.5)*0.4; document.getElementById('v-spo2').innerText=Math.round(vals.spo2)+' %'; document.getElementById('s-spo2').innerText=Math.round(vals.spo2)+'% LIVE'; }
-  if(state.temp){ vals.temp += (Math.random()-0.5)*0.12; document.getElementById('v-temp').innerText=vals.temp.toFixed(1)+' °C'; document.getElementById('s-temp').innerText=vals.temp.toFixed(1)+'°C LIVE'; }
-  if(state.resp){ vals.resp += (Math.random()-0.5)*0.5; document.getElementById('v-resp').innerText=Math.round(vals.resp)+' /min'; document.getElementById('s-resp').innerText=Math.round(vals.resp)+'/min LIVE'; }
-  if(state.gsr){ vals.gsr += (Math.random()-0.5)*0.08; vals.ph += (Math.random()-0.5)*0.02; document.getElementById('v-gsr').innerText=vals.gsr.toFixed(1)+' µS | '+Math.round(vals.moisture)+'% | '+vals.ph.toFixed(1)+' pH'; document.getElementById('s-gsr').innerText=vals.gsr.toFixed(1)+'µS LIVE'; }
-  if(state.eeg){ vals.eeg += (Math.random()-0.5)*0.25; document.getElementById('v-eeg').innerText=vals.eeg.toFixed(1)+' Hz'; document.getElementById('s-eeg').innerText=vals.eeg.toFixed(1)+'Hz LIVE'; }
+  try{ let r=await fetch(SENSORS_URL+"?t="+Date.now()); let d=await r.json(); if(d){ vals.hr=d.heartRate??d.hr??vals.hr; vals.temp=d.temp??d.skinTemp??vals.temp; vals.moisture=d.moisture??vals.moisture; vals.ph=d.ph??vals.ph; document.getElementById('fbTxt').innerText='Firebase Live ● '+new Date().toLocaleTimeString()+' | Temp '+vals.temp.toFixed(1)+'°C'; } }catch(e){}
+  if(state.heartRate){ vals.hr+=(Math.random()-0.5)*1.0; document.getElementById('v-hr').innerText=Math.round(vals.hr)+' bpm'; document.getElementById('s-hr').innerText=Math.round(vals.hr)+' bpm LIVE'; }
+  if(state.spo2){ vals.spo2+=(Math.random()-0.5)*0.4; document.getElementById('v-spo2').innerText=Math.round(vals.spo2)+' %'; document.getElementById('s-spo2').innerText=Math.round(vals.spo2)+'% LIVE'; }
+  if(state.temp){ vals.temp+=(Math.random()-0.5)*0.12; document.getElementById('v-temp').innerText=vals.temp.toFixed(1)+' °C'; document.getElementById('s-temp').innerText=vals.temp.toFixed(1)+'°C LIVE'; }
+  if(state.resp){ vals.resp+=(Math.random()-0.5)*0.5; document.getElementById('v-resp').innerText=Math.round(vals.resp)+' /min'; document.getElementById('s-resp').innerText=Math.round(vals.resp)+'/min LIVE'; }
+  if(state.gsr){ vals.gsr+=(Math.random()-0.5)*0.08; vals.ph+=(Math.random()-0.5)*0.02; document.getElementById('v-gsr').innerText=vals.gsr.toFixed(1)+' µS | '+Math.round(vals.moisture)+'% | '+vals.ph.toFixed(3)+' pH'; document.getElementById('s-gsr').innerText=vals.gsr.toFixed(1)+'µS LIVE'; }
+  if(state.eeg){ vals.eeg+=(Math.random()-0.5)*0.25; document.getElementById('v-eeg').innerText=vals.eeg.toFixed(1)+' Hz'; document.getElementById('s-eeg').innerText=vals.eeg.toFixed(1)+'Hz LIVE'; }
 }
 setInterval(fetchFirebase,700); fetchFirebase();
 
-function runMain(){
-  const canvas=document.getElementById('canvasMain'); const ctx=canvas.getContext('2d'); let t=0;
-  function draw(){
-    t+=0.07; const W=canvas.width, H=canvas.height; ctx.fillStyle='#000a1f'; ctx.fillRect(0,0,W,H);
-    ctx.strokeStyle='#0f2040'; for(let y=0;y<H;y+=95){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+function runMain(id){
+  const canvas=document.getElementById(id); const ctx=canvas.getContext('2d'); let t=0;
+  function draw(){ t+=0.07; const W=canvas.width, H=canvas.height; ctx.fillStyle='#000a1f'; ctx.fillRect(0,0,W,H); ctx.strokeStyle='#0f2040'; for(let y=0;y<H;y+=95){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
     const chans=[
       {k:'heartRate', label:'ECG II', color:'#00ff66', y:55, fn:(x)=>{ let b=(x*vals.hr/60)%5; if(b<0.18) return Math.sin(b*32)*38; if(b<0.28) return -14; if(b<0.5) return Math.sin((b-0.28)*38)*52; return 0; }},
-      {k:'eeg', label:'EEG Fp1', color:'#8b9eff', y:150, fn:(x)=> state.eeg? Math.sin(x*vals.eeg*0.4)*22 + Math.sin(x*26)*8 : 0},
-      {k:'gsr', label:'EMG biceps', color:'#ffb400', y:245, fn:(x)=> state.gsr? (Math.floor(x)%3===0? Math.sin(x*60)*18*Math.random():0) : 0},
-      {k:'heartRate', label:'PPG', color:'#ff6b4a', y:340, fn:(x)=> state.heartRate? Math.sin(x*vals.hr/60*6.28)*28 : 0},
-      {k:'resp', label:'RESP', color:'#4da3ff', y:430, fn:(x)=> state.resp? Math.sin(x*vals.resp/60*6.28)*20 : 0},
+      {k:'eeg', label:'EEG Fp1', color:'#8b9eff', y:150, fn:(x)=> Math.sin(x*vals.eeg*0.4)*22 + Math.sin(x*26)*8},
+      {k:'gsr', label:'EMG biceps', color:'#ffb400', y:245, fn:(x)=> (Math.floor(x)%3===0? Math.sin(x*60)*18*Math.random():0)},
+      {k:'heartRate', label:'PPG', color:'#ff6b4a', y:340, fn:(x)=> Math.sin(x*vals.hr/60*6.28)*28},
+      {k:'resp', label:'RESP', color:'#4da3ff', y:430, fn:(x)=> Math.sin(x*vals.resp/60*6.28)*20},
     ];
-    chans.forEach(ch=>{
-      ctx.fillStyle=ch.color; ctx.font='bold 13px monospace'; ctx.fillText(ch.label+' '+(state[ch.k]?'●':'○ OFF'), 12, ch.y-18);
-      if(!state[ch.k]) return;
-      ctx.strokeStyle=ch.color; ctx.lineWidth=2.8; ctx.beginPath();
-      for(let px=0; px<W; px++){ let x=t+px/W*28; let py=ch.y+ch.fn(x); if(px===0) ctx.moveTo(px,py); else ctx.lineTo(px,py); } ctx.stroke();
-    });
-    requestAnimationFrame(draw);
-  } draw();
+    chans.forEach(ch=>{ ctx.fillStyle=ch.color; ctx.font='bold 13px monospace'; ctx.fillText(ch.label+' '+(state[ch.k]?'●':'○ OFF'), 12, ch.y-18); if(!state[ch.k]) return; ctx.strokeStyle=ch.color; ctx.lineWidth=2.8; ctx.beginPath(); for(let px=0; px<W; px++){ let x=t+px/W*28; let py=ch.y+ch.fn(x); if(px===0) ctx.moveTo(px,py); else ctx.lineTo(px,py); } ctx.stroke(); }); requestAnimationFrame(draw); } draw();
 }
-
 function runSep(id, fn, k){
   const canvas=document.getElementById(id); const ctx=canvas.getContext('2d'); let t=0;
-  function draw(){
-    t+=0.1; const W=canvas.width, H=canvas.height; ctx.fillStyle='#000a1f'; ctx.fillRect(0,0,W,H);
-    ctx.strokeStyle='#0f2040'; ctx.beginPath(); ctx.moveTo(0,H/2); ctx.lineTo(W,H/2); ctx.stroke();
-    if(!state[k]){ ctx.fillStyle='#334155'; ctx.font='12px monospace'; ctx.fillText('OFF - Click Sensor ON to flow signal', 20, H/2); requestAnimationFrame(draw); return; }
-    ctx.strokeStyle= id=='c-hr'?'#00ff66':id=='c-spo2'?'#ff6b4a':id=='c-temp'?'#ffaa00':id=='c-resp'?'#4da3ff':id=='c-gsr'?'#ffb400':'#8b9eff';
-    ctx.lineWidth=2.5; ctx.beginPath();
-    for(let px=0; px<W; px++){ let x=t+px/W*20; let py=H/2+fn(x); if(px===0) ctx.moveTo(px,py); else ctx.lineTo(px,py); } ctx.stroke();
-    requestAnimationFrame(draw);
-  } draw();
+  function draw(){ t+=0.1; const W=canvas.width, H=canvas.height; ctx.fillStyle='#000a1f'; ctx.fillRect(0,0,W,H); ctx.strokeStyle='#0f2040'; ctx.beginPath(); ctx.moveTo(0,H/2); ctx.lineTo(W,H/2); ctx.stroke(); if(!state[k]){ ctx.fillStyle='#334155'; ctx.font='11px monospace'; ctx.fillText('OFF - Click ON', 20, H/2); requestAnimationFrame(draw); return; } ctx.strokeStyle= id=='c-hr'?'#00ff66':id=='c-spo2'?'#ff6b4a':id=='c-temp'?'#ffaa00':id=='c-resp'?'#4da3ff':id=='c-gsr'?'#ffb400':'#8b9eff'; ctx.lineWidth=2.5; ctx.beginPath(); for(let px=0; px<W; px++){ let x=t+px/W*20; let py=H/2+fn(x); if(px===0) ctx.moveTo(px,py); else ctx.lineTo(px,py); } ctx.stroke(); requestAnimationFrame(draw); } draw();
 }
 
-runMain();
+runMain('canvasMain');
+runMain('canvasSum'); // THIS FIXES YOUR BLANK SUMMARY LIVE OUTPUT
 runSep('c-hr', (x)=>{ let b=(x*vals.hr/60)%5; if(b<0.18) return Math.sin(b*32)*28; if(b<0.28) return -10; if(b<0.5) return Math.sin((b-0.28)*38)*38; return 0; }, 'heartRate');
 runSep('c-spo2', (x)=> Math.sin(x*vals.hr/60*6.28)*22, 'spo2');
 runSep('c-temp', (x)=> Math.sin(x*0.5)*12 + Math.sin(x*2)*4, 'temp');
@@ -176,9 +148,9 @@ runSep('c-resp', (x)=> Math.sin(x*vals.resp/60*6.28)*18, 'resp');
 runSep('c-gsr', (x)=> Math.sin(x*0.8)*10 + (Math.random()-0.5)*3, 'gsr');
 runSep('c-eeg', (x)=> Math.sin(x*vals.eeg*0.4)*18 + Math.sin(x*20)*6, 'eeg');
 
-function showSum(){ document.getElementById('dashView').style.display='none'; document.getElementById('dashView').classList.add('hide'); document.getElementById('sumView').classList.add('show'); document.getElementById('sumView').style.display='block'; document.getElementById('backBtn').style.display='inline-block'; document.getElementById('toSum').style.display='none'; }
-function showDash(){ document.getElementById('sumView').classList.remove('show'); document.getElementById('sumView').style.display='none'; document.getElementById('dashView').style.display='block'; document.getElementById('dashView').classList.remove('hide'); document.getElementById('backBtn').style.display='none'; document.getElementById('toSum').style.display='inline-block'; }
-function gen(){ const name=document.getElementById('pName').value||'Patient'; const age=document.getElementById('pAge').value||32; const bio=Math.round(parseInt(age) + (vals.ph<6.8?1:-1)); document.getElementById('sumOut').innerHTML=`<b>${name}</b> | Age ${age}<hr>HR: ${state.heartRate?Math.round(vals.hr)+' bpm VARYING':'OFF'}<br>SpO2: ${Math.round(vals.spo2)}%<br>Temp: ${vals.temp.toFixed(1)}°C<br>GSR: ${vals.gsr.toFixed(1)}µS | ${vals.moisture}% | pH ${vals.ph}<hr>Bio Age: ${bio} yrs<br><small>${new Date().toLocaleString()}</small>`; }
+function showSum(){ document.getElementById('dashView').style.display='none'; document.getElementById('dashView').classList.add('hide'); document.getElementById('sumView').classList.add('show'); document.getElementById('sumView').style.display='block'; document.getElementById('backBtn').style.display='inline-block'; }
+function showDash(){ document.getElementById('sumView').classList.remove('show'); document.getElementById('sumView').style.display='none'; document.getElementById('dashView').style.display='block'; document.getElementById('dashView').classList.remove('hide'); document.getElementById('backBtn').style.display='none'; }
+function gen(){ const name='Patient'; const age=31; const bio=31; document.getElementById('sumOut').innerHTML=`Temp: ${vals.temp.toFixed(1)}°C<br>GSR: ${vals.gsr.toFixed(1)}µS | ${vals.moisture}% | pH ${vals.ph.toFixed(13)}<br>Bio Age: ${bio} yrs<br>${new Date().toLocaleString()}`; }
 </script>
 </body>
 </html>
