@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BIO Revive Live Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body{font-family:Arial;background:#f5fff5;padding:20px}
+    .card{background:white;padding:15px;border-radius:10px;margin:10px;box-shadow:0 2px 10px #ccc;display:inline-block;min-width:120px;text-align:center}
+    .val{font-size:28px;font-weight:bold;color:green}
+  </style>
+</head>
+<body>
+  <h1>🌿 BIO Revive 360° - Live Sensor Data</h1>
+  <a href="index.html">← Back to Home</a>
+  
+  <div>
+    <div class="card">pH<div class="val" id="phVal">--</div></div>
+    <div class="card">Temp<div class="val" id="tempVal">-- °C</div></div>
+    <div class="card">Moisture<div class="val" id="moistVal">-- %</div></div>
+  </div>
+  <canvas id="liveChart" style="max-width:800px;margin-top:20px"></canvas>
+
+<script>
+const firebaseConfig = {
+    apiKey: "AIzaSyCpLWsJZtfrN8-ByAkSZTc9sbnQjF1oEnM",
+    authDomain: "biorevive-360.firebaseapp.com",
+    projectId: "biorevive-360",
+    storageBucket: "biorevive-360.firebasestorage.app",
+    messagingSenderId: "605779337586",
+    appId: "1:605779337586:web:0b4e478b0bc6296e813deb",
+    measurementId: "G-2VHZKRVCD3"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+firebase.initializeApp(firebaseConfig);
+
+// Chart setup
+const ctx = document.getElementById('liveChart');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: { labels: [], datasets: [
+    {label:'pH', data:[], borderColor:'green'},
+    {label:'Temp', data:[], borderColor:'red'},
+    {label:'Moisture', data:[], borderColor:'blue'}
+  ]},
+  options: { responsive:true }
+});
+
+// YOUR CODE - Listens to ESP32 JSON {ph:7.1, temp:28.5, moisture:62}
+firebase.database().ref('biorevive360/sensors').on('value', snap => {
+  const d = snap.val();
+  if(!d) return;
+  document.getElementById('phVal').innerText = d.ph;
+  document.getElementById('tempVal').innerText = d.temp + " °C";
+  document.getElementById('moistVal').innerText = d.moisture + " %";
+  
+  // Add to chart
+  const time = new Date().toLocaleTimeString();
+  chart.data.labels.push(time);
+  chart.data.datasets[0].data.push(d.ph);
+  chart.data.datasets[1].data.push(d.temp);
+  chart.data.datasets[2].data.push(d.moisture);
+  if(chart.data.labels.length > 20){ chart.data.labels.shift(); chart.data.datasets.forEach(ds=>ds.data.shift()); }
+  chart.update();
+});
+</script>
+</body>
+</html>
