@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BIO Revive - Remote Control</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:#f0fff0;padding:20px;text-align:center}
+.btn{padding:20px 40px;margin:15px;font-size:18px;border:none;border-radius:10px;cursor:pointer}
+.on{background:#4CAF50;color:white}
+.off{background:#f44336;color:white}
+.card{background:white;padding:20px;border-radius:15px;display:inline-block;box-shadow:0 4px 10px #ccc}
+</style>
+</head>
+<body>
+<h1>🎮 BIO Revive 360° - Remote Control</h1>
+<a href="live-dashboard.html">← Live Data</a> | <a href="index.html">Home</a>
+<div style="margin-top:20px"><div class="card">
+<h2>💧 Water Pump</h2>
+<button class="btn on" onclick="control('pump',1)">ON</button>
+<button class="btn off" onclick="control('pump',0)">OFF</button>
+<p id="pumpState">Loading...</p>
+
+<h2>💡 Grow Light</h2>
+<button class="btn on" onclick="control('light',1)">ON</button>
+<button class="btn off" onclick="control('light',0)">OFF</button>
+<p id="lightState">Loading...</p>
+</div></div>
+
+<script>
+const CTRL_URL = "https://biorevive-360-default-rtdb.asia-southeast1.firebasedatabase.app/biorevive360/controls.json";
+
+async function control(device,val){
+  let data = {};
+  // get current first
+  let cur = await (await fetch(CTRL_URL)).json() || {};
+  cur[device] = val;
+  await fetch(CTRL_URL,{method:'PUT',body:JSON.stringify(cur),headers:{'Content-Type':'application/json'}});
+  alert(device + (val?' ON':' OFF') + ' sent!');
+  loadState();
+}
+async function loadState(){
+  let d = await (await fetch(CTRL_URL+"?t="+Date.now())).json();
+  if(!d) return;
+  document.getElementById('pumpState').innerText = "Pump: " + (d.pump?'ON 🟢':'OFF 🔴');
+  document.getElementById('lightState').innerText = "Light: " + (d.light?'ON 🟢':'OFF 🔴');
+}
+loadState();
+setInterval(loadState,3000);
+</script>
+</body>
+</html>
