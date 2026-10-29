@@ -23,6 +23,7 @@
   </div>
   <canvas id="liveChart" style="max-width:800px;margin-top:20px"></canvas>
 
+<script>
 const firebaseConfig = {
     apiKey: "AIzaSyCpLWsJZtfrN8-ByAkSZTc9sbnQjF1oEnM",
     authDomain: "biorevive-360.firebaseapp.com",
@@ -33,10 +34,8 @@ const firebaseConfig = {
     measurementId: "G-2VHZKRVCD3"
   };
 
-// Initialize Firebase (compat version)
 firebase.initializeApp(firebaseConfig);
 
-// Chart setup
 const ctx = document.getElementById('liveChart');
 const chart = new Chart(ctx, {
   type: 'line',
@@ -48,15 +47,13 @@ const chart = new Chart(ctx, {
   options: { responsive:true }
 });
 
-// Listens to ESP32 JSON {ph:7.1, temp:28.5, moisture:62}
 firebase.database().ref('biorevive360/sensors').on('value', snap => {
   const d = snap.val();
+  console.log("Data from Firebase:", d);
   if(!d) return;
   document.getElementById('phVal').innerText = d.ph;
   document.getElementById('tempVal').innerText = d.temp + " °C";
   document.getElementById('moistVal').innerText = d.moisture + " %";
-  
-  // Add to chart
   const time = new Date().toLocaleTimeString();
   chart.data.labels.push(time);
   chart.data.datasets[0].data.push(d.ph);
