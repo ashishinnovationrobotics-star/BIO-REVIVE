@@ -1,51 +1,548 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>BIO Revive - Remote Control</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO Revive 360° | Sensor & Hardware Center</title>
+
 <style>
-body{font-family:Arial;background:#f0fff0;padding:20px;text-align:center}
-.btn{padding:20px 40px;margin:15px;font-size:18px;border:none;border-radius:10px;cursor:pointer}
-.on{background:#4CAF50;color:white}
-.off{background:#f44336;color:white}
-.card{background:white;padding:20px;border-radius:15px;display:inline-block;box-shadow:0 4px 10px #ccc}
+:root {
+  --bg:#07111d; --panel:#101e2e; --panel2:#14263a;
+  --cyan:#42e8ff; --green:#38e49b; --red:#ff6278;
+  --muted:#8ba6bc; --border:#243c52; --text:#eaf7ff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:radial-gradient(ellipse at top,#142c45,var(--bg) 65%);
+  color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;
+}
+header{
+  padding:24px 5%;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;
+  background:#07111de8;position:sticky;top:0;z-index:5;backdrop-filter:blur(14px)
+}
+h1{font-size:clamp(21px,3vw,30px);margin:0}
+h2{font-size:18px;margin:0 0 16px}
+h3{font-size:15px;margin:0}
+p{color:var(--muted);line-height:1.55}
+a{color:var(--cyan);text-decoration:none}
+nav{display:flex;gap:16px;flex-wrap:wrap}
+main{max-width:1450px;margin:auto;padding:25px 5% 55px}
+.eyebrow{font-size:11px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}
+.sub{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:18px}
+.card{
+  grid-column:span 4;background:linear-gradient(145deg,#14273a,#0d1928);
+  border:1px solid var(--border);border-radius:17px;padding:20px;
+  box-shadow:0 10px 35px #0002;min-width:0
+}
+.wide{grid-column:span 8}
+.full{grid-column:1/-1}
+.half{grid-column:span 6}
+.status{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:#70849a;display:inline-block}
+.dot.live{background:var(--green);box-shadow:0 0 12px var(--green)}
+.dot.error{background:var(--red)}
+.metric{font-size:30px;font-weight:750;margin:16px 0 3px}
+.unit{font-size:12px;color:var(--muted);font-weight:400}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+button{
+  border:1px solid var(--border);border-radius:9px;padding:10px 15px;
+  background:#1a3046;color:var(--text);cursor:pointer;font-weight:650;
+  transition:.2s
+}
+button:hover{border-color:var(--cyan);transform:translateY(-1px)}
+button:disabled{opacity:.5;cursor:wait;transform:none}
+.btn-on{background:#123e37;border-color:#21765e;color:#7af5c2}
+.btn-off{background:#401f2b;border-color:#733144;color:#ff9aaa}
+.primary{background:#0e3a4b;border-color:#17748a;color:#8defff}
+input,select{
+  background:#081522;border:1px solid var(--border);color:var(--text);
+  padding:11px;border-radius:8px;width:100%;min-width:0
+}
+label{display:block;font-size:12px;color:var(--muted);margin:12px 0 6px}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.signal{
+  height:100px;width:100%;display:block;margin-top:15px;
+  border:1px solid #203d52;border-radius:10px;background:#071521
+}
+.signal path{fill:none;stroke:var(--cyan);stroke-width:2;filter:drop-shadow(0 0 4px #42e8ff88)}
+.signal .gridline{stroke:#1b3447;stroke-width:1;filter:none}
+.signal .secondary{stroke:var(--green)}
+.device{grid-column:span 4}
+.device-icon{font-size:26px;margin:12px 0}
+.reading{font-size:23px;font-weight:750;margin-top:16px}
+.note{font-size:12px;color:var(--muted)}
+.notice{
+  padding:12px 14px;border:1px solid #715a2d;border-radius:10px;
+  background:#342b19;color:#f4d9a0;font-size:12px;line-height:1.6;margin:15px 0
+}
+#message{font-size:13px;margin-top:12px;min-height:20px}
+.ok{color:var(--green)} .bad{color:var(--red)}
+.pulse{animation:pulse 1.5s infinite}
+@keyframes pulse{50%{opacity:.4;box-shadow:0 0 20px #42e8ff55}}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
+@media(max-width:900px){
+  .card,.wide,.half,.device{grid-column:span 6}
+}
+@media(max-width:600px){
+  header{position:static}.card,.wide,.half,.device{grid-column:1/-1}
+  main{padding:20px 4%}.formgrid{grid-template-columns:1fr}
+}
 </style>
 </head>
-<body>
-<h1>🎮 BIO Revive 360° - Remote Control</h1>
-<a href="live-dashboard.html">← Live Data</a> | <a href="index.html">Home</a>
-<div style="margin-top:20px"><div class="card">
-<h2>💧 Water Pump</h2>
-<button class="btn on" onclick="control('pump',1)">ON</button>
-<button class="btn off" onclick="control('pump',0)">OFF</button>
-<p id="pumpState">Loading...</p>
 
-<h2>💡 Grow Light</h2>
-<button class="btn on" onclick="control('light',1)">ON</button>
-<button class="btn off" onclick="control('light',0)">OFF</button>
-<p id="lightState">Loading...</p>
-</div></div>
+<body>
+<header>
+  <div>
+    <div class="eyebrow">BIO REVIVE 360° · HARDWARE LAB</div>
+    <h1>🧬 Sensor & Hardware Center</h1>
+  </div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="live-dashboard.html">Live Data</a>
+    <a href="hardware-control.html">Hardware</a>
+  </nav>
+</header>
+
+<main>
+  <div class="row" style="margin-bottom:22px">
+    <div>
+      <div class="eyebrow">SYSTEM MONITOR</div>
+      <p style="margin:7px 0 0">Connect hardware, manage sensors and inspect incoming signals.</p>
+    </div>
+    <span class="status"><i class="dot" id="dbDot"></i><span id="dbStatus">Database connecting…</span></span>
+  </div>
+
+  <div class="grid">
+    <!-- Raspberry Pi connection -->
+    <section class="card wide">
+      <div class="row">
+        <h2>🍓 Raspberry Pi Remote Access</h2>
+        <span class="status"><i class="dot" id="piDot"></i><span id="piStatus">Not connected</span></span>
+      </div>
+      <p class="sub">Enter the Pi network address and launch your configured remote desktop client.</p>
+
+      <div class="formgrid">
+        <div>
+          <label for="piHost">Raspberry Pi IP / Hostname</label>
+          <input id="piHost" placeholder="192.168.1.100">
+        </div>
+        <div>
+          <label for="piUser">Username (reference only)</label>
+          <input id="piUser" placeholder="pi">
+        </div>
+        <div style="grid-column:1/-1">
+          <label for="desktopUrl">Authenticated remote desktop web URL</label>
+          <input id="desktopUrl" type="url" placeholder="https://your-server.example.com/">
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="primary" onclick="openDesktop()">Open Remote Desktop ↗</button>
+        <button onclick="checkPi()">Check Network</button>
+      </div>
+      <p class="note">Use a secured noVNC, Apache Guacamole or equivalent remote desktop gateway.
+      This page does not authenticate to SSH/VNC directly. Do not enter your Pi password here.</p>
+    </section>
+
+    <!-- Database -->
+    <section class="card">
+      <h2>☁️ Firebase Link</h2>
+      <div class="metric" id="dbLatency">— <span class="unit">status</span></div>
+      <p id="lastSync" class="sub">Waiting for first response…</p>
+      <div class="controls">
+        <button class="primary" onclick="loadAll()">Refresh Data</button>
+      </div>
+      <p class="note">REST database connection status; not a medical device connection test.</p>
+    </section>
+
+    <!-- Raspberry sensors -->
+    <section class="card device">
+      <div class="row">
+        <h3>❤️ Raspberry Pi Heart Sensor</h3>
+        <i class="dot" id="dot-piHeart"></i>
+      </div>
+      <div class="device-icon">📈</div>
+      <div class="reading" id="read-piHeart">— <span class="unit">BPM</span></div>
+      <p class="sub" id="state-piHeart">Awaiting sensor data</p>
+      <div class="controls">
+        <button class="btn-on" onclick="setSensor('piHeart',1)">Sensor ON</button>
+        <button class="btn-off" onclick="setSensor('piHeart',0)">Sensor OFF</button>
+      </div>
+      <svg class="signal" viewBox="0 0 320 100" preserveAspectRatio="none">
+        <path class="gridline" d="M0 25H320 M0 50H320 M0 75H320 M80 0V100 M160 0V100 M240 0V100"/>
+        <path id="wave-piHeart" d=""/>
+      </svg>
+    </section>
+
+    <section class="card device">
+      <div class="row">
+        <h3>🔴 ESP32 Pulse Sensor</h3>
+        <i class="dot" id="dot-espPulse"></i>
+      </div>
+      <div class="device-icon">〰️</div>
+      <div class="reading" id="read-espPulse">— <span class="unit">BPM</span></div>
+      <p class="sub" id="state-espPulse">Awaiting sensor data</p>
+      <div class="controls">
+        <button class="btn-on" onclick="setSensor('espPulse',1)">Sensor ON</button>
+        <button class="btn-off" onclick="setSensor('espPulse',0)">Sensor OFF</button>
+      </div>
+      <svg class="signal" viewBox="0 0 320 100" preserveAspectRatio="none">
+        <path class="gridline" d="M0 25H320 M0 50H320 M0 75H320 M80 0V100 M160 0V100 M240 0V100"/>
+        <path id="wave-espPulse" d=""/>
+      </svg>
+    </section>
+
+    <section class="card device">
+      <div class="row">
+        <h3>🩸 MAX30102 SpO₂</h3>
+        <i class="dot" id="dot-spo2"></i>
+      </div>
+      <div class="device-icon">🫁</div>
+      <div class="reading" id="read-spo2">— <span class="unit">%</span></div>
+      <p class="sub" id="state-spo2">Awaiting sensor data</p>
+      <div class="controls">
+        <button class="btn-on" onclick="setSensor('spo2',1)">Sensor ON</button>
+        <button class="btn-off" onclick="setSensor('spo2',0)">Sensor OFF</button>
+      </div>
+      <svg class="signal" viewBox="0 0 320 100" preserveAspectRatio="none">
+        <path class="gridline" d="M0 25H320 M0 50H320 M0 75H320 M80 0V100 M160 0V100 M240 0V100"/>
+        <path class="secondary" id="wave-spo2" d=""/>
+      </svg>
+    </section>
+
+    <section class="card device">
+      <div class="row"><h3>🫀 AD8232 ECG</h3><i class="dot" id="dot-ecg"></i></div>
+      <div class="reading" id="read-ecg">— <span class="unit">mV</span></div>
+      <p class="sub" id="state-ecg">Awaiting ECG samples</p>
+      <div class="controls">
+        <button class="btn-on" onclick="setSensor('ecg',1)">Sensor ON</button>
+        <button class="btn-off" onclick="setSensor('ecg',0)">Sensor OFF</button>
+      </div>
+      <svg class="signal" viewBox="0 0 320 100" preserveAspectRatio="none">
+        <path class="gridline" d="M0 25H320 M0 50H320 M0 75H320 M80 0V100 M160 0V100 M240 0V100"/>
+        <path id="wave-ecg" d=""/>
+      </svg>
+    </section>
+
+    <section class="card device">
+      <div class="row"><h3>🌡️ Body Temperature</h3><i class="dot" id="dot-temp"></i></div>
+      <div class="reading" id="read-temp">— <span class="unit">°C</span></div>
+      <p class="sub" id="state-temp">Awaiting temperature data</p>
+      <div class="controls">
+        <button class="btn-on" onclick="setSensor('temp',1)">Sensor ON</button>
+        <button class="btn-off" onclick="setSensor('temp',0)">Sensor OFF</button>
+      </div>
+    </section>
+
+    <section class="card device">
+      <div class="row"><h3>💧 GSR / Skin Conductance</h3><i class="dot" id="dot-gsr"></i></div>
+      <div class="reading" id="read-gsr">— <span class="unit">µS</span></div>
+      <p class="sub" id="state-gsr">Awaiting sensor data</p>
+      <div class="controls">
+        <button class="btn-on" onclick="setSensor('gsr',1)">Sensor ON</button>
+        <button class="btn-off" onclick="setSensor('gsr',0)">Sensor OFF</button>
+      </div>
+    </section>
+
+    <section class="card device">
+      <div class="row"><h3>🌬️ Respiration Sensor</h3><i class="dot" id="dot-resp"></i></div>
+      <div class="reading" id="read-resp">— <span class="unit">breaths/min</span></div>
+      <p class="sub" id="state-resp">Awaiting sensor data</p>
+      <div class="controls">
+        <button class="btn-on" onclick="setSensor('resp',1)">Sensor ON</button>
+        <button class="btn-off" onclick="setSensor('resp',0)">Sensor OFF</button>
+      </div>
+    </section>
+
+    <section class="card device">
+      <div class="row"><h3>🌡️ Ambient Temp / Humidity</h3><i class="dot" id="dot-env"></i></div>
+      <div class="reading" id="read-env">— <span class="unit">°C / %</span></div>
+      <p class="sub" id="state-env">Awaiting DHT22 / BME280 data</p>
+      <div class="controls">
+        <button class="btn-on" onclick="setSensor('env',1)">Sensor ON</button>
+        <button class="btn-off" onclick="setSensor('env',0)">Sensor OFF</button>
+      </div>
+    </section>
+
+    <!-- All signals -->
+    <section class="card full">
+      <div class="row">
+        <div><h2>📡 Hardware Event Log</h2><p class="sub">Recent commands and incoming data status</p></div>
+        <button onclick="clearLog()">Clear Log</button>
+      </div>
+      <div id="log" class="sub" aria-live="polite">Dashboard initialized. Waiting for connection.</div>
+      <div class="notice">
+        Research prototype only: readings and waveforms are not a diagnosis or a substitute for
+        a clinically validated medical device. No simulated signal is presented as a real measurement.
+      </div>
+    </section>
+  </div>
+
+  <div id="message" role="status"></div>
+</main>
+
+<footer>BIO Revive 360° · Sensor & Hardware Control · Research Prototype</footer>
 
 <script>
-const CTRL_URL = "https://biorevive-360-default-rtdb.asia-southeast1.firebasedatabase.app/biorevive360/controls.json";
+/*
+ * Firebase Realtime Database REST integration.
+ * Recommended schema:
+ *
+ * /biorevive360/controls.json
+ *   { "piHeart": 1, "espPulse": 0, ... }
+ *
+ * /biorevive360/sensors.json
+ *   {
+ *     "piHeart": {"bpm": 72, "signal": [0.1,0.2,...]},
+ *     "espPulse": {"bpm": 74, "signal": [...]},
+ *     "spo2": {"value": 98, "signal": [...]},
+ *     "ecg": {"value": 0.42, "signal": [...]},
+ *     "temp": {"value": 36.8},
+ *     "gsr": {"value": 3.2},
+ *     "resp": {"value": 15},
+ *     "env": {"temperature": 25.4, "humidity": 51}
+ *   }
+ *
+ * Each device's firmware must read the controls and publish real readings.
+ */
 
-async function control(device,val){
-  let data = {};
-  // get current first
-  let cur = await (await fetch(CTRL_URL)).json() || {};
-  cur[device] = val;
-  await fetch(CTRL_URL,{method:'PUT',body:JSON.stringify(cur),headers:{'Content-Type':'application/json'}});
-  alert(device + (val?' ON':' OFF') + ' sent!');
-  loadState();
+const DB_ROOT =
+  "https://biorevive-360-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+const CONTROL_URL = DB_ROOT + "/biorevive360/controls.json";
+const SENSOR_URL  = DB_ROOT + "/biorevive360/sensors.json";
+
+const DEVICES = {
+  piHeart: {label:"Raspberry Pi heart sensor", key:"bpm", unit:"BPM"},
+  espPulse:{label:"ESP pulse sensor", key:"bpm", unit:"BPM"},
+  spo2:    {label:"MAX30102 SpO₂", key:"value", unit:"%"},
+  ecg:     {label:"AD8232 ECG", key:"value", unit:"mV"},
+  temp:    {label:"Body temperature", key:"value", unit:"°C"},
+  gsr:     {label:"GSR sensor", key:"value", unit:"µS"},
+  resp:    {label:"Respiration sensor", key:"value", unit:"breaths/min"},
+  env:     {label:"Environment sensor", key:"temperature", unit:"°C"}
+};
+
+let busy = false;
+
+function logEvent(text) {
+  const box = document.getElementById("log");
+  const line = document.createElement("div");
+  line.style.cssText =
+    "padding:9px 0;border-bottom:1px solid #203448";
+  line.textContent = new Date().toLocaleTimeString() + " · " + text;
+  box.prepend(line);
+  while (box.children.length > 12) box.lastChild.remove();
 }
-async function loadState(){
-  let d = await (await fetch(CTRL_URL+"?t="+Date.now())).json();
-  if(!d) return;
-  document.getElementById('pumpState').innerText = "Pump: " + (d.pump?'ON 🟢':'OFF 🔴');
-  document.getElementById('lightState').innerText = "Light: " + (d.light?'ON 🟢':'OFF 🔴');
+
+function message(text, error=false) {
+  const el = document.getElementById("message");
+  el.textContent = text;
+  el.className = error ? "bad" : "ok";
 }
-loadState();
-setInterval(loadState,3000);
+
+async function requestJSON(url, options={}) {
+  const response = await fetch(url, {
+    ...options,
+    cache:"no-store",
+    headers:{
+      "Content-Type":"application/json",
+      ...(options.headers || {})
+    }
+  });
+  if (!response.ok) throw new Error("HTTP " + response.status);
+  return response.json();
+}
+
+async function setSensor(device, value) {
+  try {
+    const current = await requestJSON(CONTROL_URL) || {};
+    current[device] = value;
+    await requestJSON(CONTROL_URL, {
+      method:"PUT",
+      body:JSON.stringify(current)
+    });
+
+    const name = DEVICES[device]?.label || device;
+    message(name + ": " + (value ? "ON command sent." : "OFF command sent."));
+    logEvent(name + " → " + (value ? "ON" : "OFF"));
+    await loadAll();
+  } catch (error) {
+    message("Control failed: " + error.message +
+      ". Check Firebase access and database rules.", true);
+    logEvent("Command failed for " + device);
+  }
+}
+
+function setDot(id, state) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = "dot" + (state === true ? " live" : state === false ? " error" : "");
+}
+
+function displayValue(id, value, unit) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = value === undefined || value === null || value === ""
+    ? "—" : value;
+  const u = document.createElement("span");
+  u.className = "unit";
+  u.textContent = " " + unit;
+  el.appendChild(u);
+}
+
+function animateSignal(id, samples) {
+  const path = document.getElementById(id);
+  if (!path || !Array.isArray(samples) || samples.length < 2) return;
+
+  const values = samples.slice(-100).map(Number).filter(Number.isFinite);
+  if (values.length < 2) return;
+
+  const min = Math.min(...values), max = Math.max(...values);
+  const range = max - min || 1;
+  const points = values.map((v, i) => {
+    const x = i * 320 / (values.length - 1);
+    const y = 88 - ((v - min) / range) * 76;
+    return (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1);
+  });
+  path.setAttribute("d", points.join(" "));
+}
+
+function setDeviceState(device, active, hasData) {
+  setDot("dot-" + device, hasData ? true : null);
+  const state = document.getElementById("state-" + device);
+  if (!state) return;
+
+  state.textContent = hasData
+    ? "Live data received · " + new Date().toLocaleTimeString()
+    : active
+      ? "Enabled · waiting for sensor readings"
+      : "Sensor disabled";
+}
+
+async function loadAll() {
+  if (busy) return;
+  busy = true;
+  const started = performance.now();
+
+  try {
+    const [controls, sensors] = await Promise.all([
+      requestJSON(CONTROL_URL),
+      requestJSON(SENSOR_URL)
+    ]);
+
+    const elapsed = Math.round(performance.now() - started);
+    document.getElementById("dbStatus").textContent = "Connected";
+    setDot("dbDot", true);
+    document.getElementById("dbLatency").textContent = elapsed + " ms";
+    document.getElementById("lastSync").textContent =
+      "Last refresh: " + new Date().toLocaleTimeString();
+
+    Object.entries(DEVICES).forEach(([id, config]) => {
+      const reading = sensors?.[id];
+      const active = controls?.[id] === 1 || controls?.[id] === true;
+
+      let value;
+      if (id === "env" && reading) {
+        value = reading.temperature;
+        displayValue("read-env",
+          value == null ? "—" : Number(value).toFixed(1) +
+          " / " + (reading.humidity ?? "—"), "°C / % humidity");
+      } else {
+        value = reading?.[config.key];
+        displayValue("read-" + id,
+          value == null ? "—" :
+            (typeof value === "number" ? value.toFixed(2).replace(/\.?0+$/,"") : value),
+          config.unit);
+      }
+
+      const hasData = value !== undefined && value !== null;
+      setDeviceState(id, active, hasData);
+
+      const wave = reading?.signal;
+      if (Array.isArray(wave)) {
+        animateSignal("wave-" + id, wave);
+      }
+    });
+
+  } catch (error) {
+    document.getElementById("dbStatus").textContent = "Connection error";
+    setDot("dbDot", false);
+    document.getElementById("lastSync").textContent =
+      "Could not fetch control and sensor data.";
+    message("Firebase error: " + error.message +
+      ". Check the database URL, network and authorized access.", true);
+  } finally {
+    busy = false;
+  }
+}
+
+function openDesktop() {
+  const host = document.getElementById("piHost").value.trim();
+  const username = document.getElementById("piUser").value.trim();
+  const urlText = document.getElementById("desktopUrl").value.trim();
+
+  if (!host) {
+    message("Enter the Raspberry Pi IP address or hostname.", true);
+    return;
+  }
+
+  if (!urlText) {
+    message("Configure your authenticated noVNC/Guacamole web URL first.", true);
+    return;
+  }
+
+  let target;
+  try {
+    target = new URL(urlText);
+  } catch {
+    message("Enter a valid remote desktop URL.", true);
+    return;
+  }
+
+  if (target.protocol !== "https:" &&
+      !(target.protocol === "http:" &&
+        ["localhost","127.0.0.1"].includes(target.hostname))) {
+    message("For security, remote desktop must use HTTPS (except local testing).", true);
+    return;
+  }
+
+  setDot("piDot", true);
+  document.getElementById("piStatus").textContent = "Opening gateway";
+  logEvent("Remote desktop gateway requested for " + host +
+    (username ? " (user " + username + ")" : ""));
+
+  // Open the administrator-configured gateway, not an arbitrary host path.
+  window.open(target.href, "_blank", "noopener,noreferrer");
+  message("Remote desktop gateway opened. Complete authentication there.");
+}
+
+async function checkPi() {
+  const host = document.getElementById("piHost").value.trim();
+  if (!host) {
+    message("Enter the Raspberry Pi IP address or hostname.", true);
+    return;
+  }
+
+  // A browser-only page cannot reliably ping arbitrary LAN hosts.
+  message("Host saved for reference: " + host +
+    ". Confirm availability through your remote desktop gateway.");
+  document.getElementById("piStatus").textContent = "Host entered";
+  setDot("piDot", null);
+  logEvent("Pi host entered: " + host);
+}
+
+function clearLog() {
+  document.getElementById("log").replaceChildren();
+  logEvent("Log cleared");
+}
+
+loadAll();
+setInterval(loadAll, 3000);
 </script>
 </body>
 </html>
