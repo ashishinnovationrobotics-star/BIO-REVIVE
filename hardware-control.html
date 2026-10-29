@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIO Revive 360° - NEUROCARDIAC SENSOR LAB FINAL</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--bg:#eef2f7;--card:#ffffff;--dark:#00051f;--blue:#2563eb;--green:#00c853}
+body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:#0f172a}
+.top{position:sticky;top:0;z-index:10;background:white;border-bottom:1px solid #cbd5e1;padding:8px 14px;display:flex;gap:6px;overflow-x:auto;align-items:center}
+.top b{margin-right:10px;white-space:nowrap}
+.top button{padding:7px 14px;border-radius:8px;border:1px solid #94a3b8;background:white;cursor:pointer;white-space:nowrap;font-size:12px}
+.top button.active{background:var(--blue);color:white;border-color:var(--blue)}
+.pill{padding:6px 10px;border-radius:20px;font-size:11px;border:1px solid #cbd5e1;background:white}
+.grid6{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:12px}
+@media(max-width:900px){.grid6{grid-template-columns:repeat(2,1fr)}}
+.card{background:var(--card);border:1px solid #cbd5e1;border-radius:12px;padding:12px;position:relative;overflow:hidden}
+.card .label{font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:1px}
+.card .val{font-size:22px;font-weight:800;color:#0a4a7b;margin-top:4px}
+.card .sub{font-size:11px;opacity:0.7;margin-top:4px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.dot.on{background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1s infinite}
+.dot.off{background:#94a3b8}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+.btn-row{display:flex;gap:6px;margin-top:8px}
+.btn-row button{flex:1;padding:6px;border-radius:6px;border:1px solid #94a3b8;cursor:pointer;font-size:11px}
+.btn-row .on{background:#dcfce7} .btn-row .off{background:#fee2e2}
+.monitor{background:var(--dark);border-radius:12px;margin:12px;overflow:hidden;border:1px solid #1e293b}
+.monitor-head{display:flex;justify-content:space-between;padding:10px 14px;color:#94a3b8;font-size:11px;background:#0a122e;border-bottom:1px solid #1e293b}
+#monitorCanvas{width:100%;height:420px;display:block}
+.arch{display:grid;grid-template-columns:1.2fr 1fr;gap:12px;padding:12px}
+@media(max-width:900px){.arch{grid-template-columns:1fr}}
+.arch-card{background:white;border:1px solid #cbd5e1;border-radius:12px;padding:14px}
+.sensor-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.sensor-item{border:1px solid #e2e8f0;border-radius:10px;padding:10px;display:flex;gap:10px;align-items:center;background:#f8fafc}
+.sensor-item img{width:56px;height:56px;border-radius:8px;object-fit:cover;background:#e2e8f0}
+.tag{font-size:10px;padding:2px 6px;border-radius:4px;background:#e0f2fe;border:1px solid #7dd3fc}
+.telemetry{height:120px}
+.summary{display:none;padding:20px}
+.summary.active{display:block}
+input{padding:10px;border:1px solid #cbd5e1;border-radius:8px;width:100%;margin:6px 0}
+.live-badge{font-size:10px;padding:3px 8px;border-radius:20px;background:#000;color:#00ff88;border:1px solid #00ff88}
+</style>
+</head>
+<body>
+
+<div class="top">
+<b>🧬 BIO Revive 360°</b>
+<button class="active">Dashboard</button>
+<button>Overview</button><button>Anatomy 3D</button><button>Body Systems</button>
+<button>Sensor Gallery</button><button>Signal Graphs</button>
+<button>Architecture</button>
+<button onclick="showSummary()" style="background:#0f172a;color:white">📋 Summary → Next Page</button>
+<span id="fbStatus" class="pill"><span class="dot off" id="fbDot"></span> Firebase: Connecting...</span>
+<span class="pill">🔊 <button id="soundBtn" style="border:0;background:transparent;cursor:pointer">Sound On</button> <input type="range" id="vol" min="0" max="1" step="0.1" value="0.2" style="width:60px"></span>
+</div>
+
+<!-- DASHBOARD VIEW -->
+<div id="dashView">
+<div class="grid6">
+<div class="card"><div class="label">Heart rate <span class="dot on" id="d-hr"></span></div><div class="val" id="v-hr">-- bpm</div><div class="sub">MAX30102 · ESP32</div><div class="btn-row"><button class="on" onclick="sensorPower('heartRate',1)">ON</button><button class="off" onclick="sensorPower('heartRate',0)">OFF</button></div></div>
+<div class="card"><div class="label">SpO2 <span class="dot on" id="d-spo2"></span></div><div class="val" id="v-spo2">-- %</div><div class="sub">MAX30102</div><div class="btn-row"><button class="on" onclick="sensorPower('spo2',1)">ON</button><button class="off" onclick="sensorPower('spo2',0)">OFF</button></div></div>
+<div class="card"><div class="label">Skin temp <span class="dot on" id="d-temp"></span></div><div class="val" id="v-temp">-- °C</div><div class="sub">DS18B20 / DHT22</div><div class="btn-row"><button class="on" onclick="sensorPower('temp',1)">ON</button><button class="off" onclick="sensorPower('temp',0)">OFF</button></div></div>
+<div class="card"><div class="label">Resp rate <span class="dot on" id="d-resp"></span></div><div class="val" id="v-resp">-- /min</div><div class="sub">MPX5010 + Belt</div><div class="btn-row"><button class="on" onclick="sensorPower('resp',1)">ON</button><button class="off" onclick="sensorPower('resp',0)">OFF</button></div></div>
+<div class="card"><div class="label">GSR / Hydration <span class="dot on" id="d-gsr"></span></div><div class="val" id="v-gsr">-- µS</div><div class="sub">GSR + Moisture 65%</div><div class="btn-row"><button class="on" onclick="sensorPower('gsr',1)">ON</button><button class="off" onclick="sensorPower('gsr',0)">OFF</button></div></div>
+<div class="card"><div class="label">EEG alpha <span class="dot off" id="d-eeg"></span></div><div class="val" id="v-eeg">-- Hz</div><div class="sub">TGAM1 / Muse 2</div><div class="btn-row"><button class="on" onclick="sensorPower('eeg',1)">ON</button><button class="off" onclick="sensorPower('eeg',0)">OFF</button></div></div>
+</div>
+
+<div class="monitor">
+<div class="monitor-head"><span>PATIENT MONITOR - 5 CHANNELS (SIMULATED + FIREBASE)</span><span><span class="live-badge" id="liveBadge">LIVE SIM</span> Cloud: Firebase → Vercel → ESP32</span></div>
+<canvas id="monitorCanvas"></canvas>
+</div>
+
+<div class="arch">
+<div class="arch-card">
+<h3 style="margin:0 0 10px">🏗️ Architecture - Market Available Devices + Cloud + Remote</h3>
+<div style="font-size:12px;line-height:1.6">
+<b>Edge:</b> ESP32 DevKit v1 + Raspberry Pi 4 (4GB) | <b>Sensors (Market):</b> MAX30102 (HR+SpO2 - ₹450), AD8232 ECG Module (₹900), MyoWare EMG (₹2800), TGAM Brainwave EEG (₹3500), GSR Grove (₹1100), DS18B20 Body Temp, DHT22, MPU6050<br>
+<b>Cloud:</b> Firebase Realtime DB (asia-southeast1) <code>biorevive360/sensors</code> + <code>biorevive360/control</code> + <code>biorevive360/signals</code><br>
+<b>Remote Control:</b> ON/OFF buttons above write 1/0 to Firebase control → ESP32 reads and powers sensor via MOSFET / GPIO → Reading shows with signal, OFF stops telemetry<br>
+<b>Flow:</b> Sensor → ESP32 ADC/I2C → Pi processes → Firebase Upload → This Dashboard shows live + 3D hardware below
+</div>
+<canvas id="telemetryChart" height="120"></canvas>
+</div>
+
+<div class="arch-card">
+<h3 style="margin:0 0 10px">🔧 Hardware 3D & Sensors Gallery</h3>
+<div class="sensor-list">
+<div class="sensor-item"><img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200"><div><b>ESP32 DevKit</b><br><span class="tag">WiFi + BLE</span><br><small>Main MCU - reads all sensors</small></div></div>
+<div class="sensor-item"><img src="https://images.unsplash.com/photo-1555664424-778a1e5e1b48?w=200"><div><b>Raspberry Pi 4</b><br><span class="tag">Cloud Gateway</span><br><small>Pi Camera for facial age</small></div></div>
+<div class="sensor-item"><img src="https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=200"><div><b>MAX30102</b><br><span class="tag">HR + SpO2</span><br><small>Heart Rate 76 bpm</small></div></div>
+<div class="sensor-item"><img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?w=200"><div><b>AD8232 ECG</b><br><span class="tag">ECG II</span><br><small>Green wave in monitor</small></div></div>
+<div class="sensor-item"><img src="https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=200"><div><b>GSR + pH</b><br><span class="tag">1.8 µS / pH 7.2</span><br><small>Skin conductance + Sweat</small></div></div>
+<div class="sensor-item"><img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=200"><div><b>OLED + Buzzer</b><br><span class="tag">Remote Alert</span><br><small>Shows Bio Age on device</small></div></div>
+</div>
+<div style="margin-top:12px;font-size:11px;background:#f1f5f9;padding:10px;border-radius:8px">
+<b>Firebase Images Path:</b> If you add real 3D renders, put them in /public/hardware-3d.glb and replace img src. This gallery currently uses placeholder but architecture is final.
+</div>
+</div>
+</div>
+</div>
+
+<!-- SUMMARY NEXT PAGE -->
+<div id="summaryView" class="summary arch-card">
+<h2>📋 BIO Revive 360° - Patient Summary Report</h2>
+<p style="opacity:0.7">This page is linked from Dashboard → Summary button. It shows person details + all sensor readings from Firebase live + calculated Biological Age.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div>
+<label>Person Name</label><input id="pName" placeholder="Enter name e.g. Aditya Kumar">
+<label>Age (Chronological)</label><input id="pAge" type="number" value="32">
+<label>Gender</label><input id="pGender" placeholder="Male / Female">
+<label>Location</label><input id="pLoc" placeholder="Patna, Bihar">
+<button onclick="generateSummary()" style="margin-top:10px;padding:10px 20px;background:#2563eb;color:white;border:0;border-radius:8px;cursor:pointer">Generate Summary</button>
+</div>
+<div id="summaryOutput" style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:12px;padding:14px;font-size:13px;line-height:1.7">
+Click Generate - it will pull live Firebase values.
+</div>
+</div>
+<button onclick="showDash()" style="margin-top:20px">← Back to Dashboard</button>
+</div>
+
+<script>
+// CONFIG
+const DB_ROOT="https://biorevive-360-default-rtdb.asia-southeast1.firebasedatabase.app/biorevive360";
+const SENSORS_URL=DB_ROOT+"/sensors.json";
+const CONTROL_URL=DB_ROOT+"/control.json";
+let state={heartRate:1, spo2:1, temp:1, resp:1, gsr:1, eeg:0, ph:1};
+let liveVals={hr:76, spo2:96, temp:36.7, resp:16, gsr:1.8, eeg:10.0, ph:7.2, moisture:65, bioAge:33, chrono:32};
+let audioCtx, beepOn=true, vol=0.2;
+const soundBtn=document.getElementById('soundBtn'); const volSlider=document.getElementById('vol');
+soundBtn.onclick=()=>{beepOn=!beepOn; soundBtn.innerText=beepOn?'Sound On':'Sound Off'; if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();};
+volSlider.oninput=(e)=>vol=parseFloat(e.target.value);
+
+// REMOTE CONTROL - ON/OFF
+async function sensorPower(sensor, val){
+  state[sensor]=val;
+  document.getElementById('d-'+sensor).className='dot '+(val?'on':'off');
+  try{ await fetch(CONTROL_URL, {method:'PATCH', body:JSON.stringify({[sensor]:val})}); document.getElementById('fbStatus').innerHTML='<span class="dot on"></span> Firebase: Control '+sensor+' = '+val; }catch(e){console.log(e)}
+  if(val==0){ document.getElementById('v-'+sensor).innerText='-- (OFF)'; } // stop reading visually
+}
+
+// FETCH FIREBASE - LIVE TELEMETRY
+async function fetchLive(){
+  try{
+    let r=await fetch(SENSORS_URL+"?t="+Date.now()); let d=await r.json();
+    if(d){
+      // handle both old and new keys
+      liveVals.hr=d.heartRate||d.hr||d.bpm||liveVals.hr;
+      liveVals.spo2=d.spo2||d.SpO2||liveVals.spo2;
+      liveVals.temp=d.temp||d.skinTemp||d.temperature||liveVals.temp;
+      liveVals.resp=d.respiration||d.resp||liveVals.resp;
+      liveVals.gsr=d.gsr||d.skinConductance|| (d.moisture?d.moisture/36:liveVals.gsr);
+      liveVals.eeg=d.eegAlpha||d.eeg||liveVals.eeg;
+      liveVals.ph=d.ph||d.pH||liveVals.ph;
+      liveVals.moisture=d.moisture||d.hydration||liveVals.moisture;
+      liveVals.bioAge=d.bioAge||liveVals.bioAge;
+      document.getElementById('fbDot').className='dot on';
+      document.getElementById('fbStatus').innerHTML='<span class="dot on"></span> Firebase connected ● '+new Date().toLocaleTimeString();
+      document.getElementById('liveBadge').innerText='LIVE FIREBASE';
+    }
+  }catch(e){ document.getElementById('fbDot').className='dot off'; }
+  // Update cards only if sensor ON
+  if(state.heartRate) document.getElementById('v-hr').innerText=Math.round(liveVals.hr)+' bpm';
+  if(state.spo2) document.getElementById('v-spo2').innerText=Math.round(liveVals.spo2)+' %';
+  if(state.temp) document.getElementById('v-temp').innerText=liveVals.temp.toFixed(1)+' °C';
+  if(state.resp) document.getElementById('v-resp').innerText=Math.round(liveVals.resp)+' /min';
+  if(state.gsr) document.getElementById('v-gsr').innerText=liveVals.gsr.toFixed(1)+' µS / '+liveVals.moisture+'%';
+  if(state.eeg) document.getElementById('v-eeg').innerText=liveVals.eeg.toFixed(1)+' Hz'; else document.getElementById('v-eeg').innerText=liveVals.eeg.toFixed(1)+' Hz (SIM)';
+}
+setInterval(fetchLive,1000); fetchLive();
+
+// MONITOR 5 CHANNELS - CANVAS SCROLL
+const canvas=document.getElementById('monitorCanvas'); const ctx=canvas.getContext('2d');
+function resize(){ canvas.width=canvas.clientWidth*2; canvas.height=420*2; } resize(); window.onresize=resize;
+let t=0;
+function beep(){ if(!beepOn||!audioCtx||vol==0) return; let o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.frequency.value=900; g.gain.value=vol; o.connect(g); g.connect(audioCtx.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.12); o.stop(audioCtx.currentTime+0.12); }
+function drawMonitor(){
+  t+=0.04;
+  ctx.fillStyle='#00051f'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle='#102040'; ctx.lineWidth=1; for(let y=0;y<canvas.height;y+=160){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
+  const ch=[
+    {label:'ECG II', color:'#00ff66', y:60, fn:(x)=>{ let b=(x*liveVals.hr/70)%60; if(b<0.8) return Math.sin(b*7)*40; if(b<1.2) return -12; if(b<2.2) return Math.sin((b-1.2)*18)*50; return 0; }},
+    {label:'EEG Fp1', color:'#8b9eff', y:180, fn:(x)=>Math.sin(x*liveVals.eeg*0.5)*24+Math.sin(x*28)*9+(Math.random()-0.5)*4},
+    {label:'EMG biceps', color:'#ffb400', y:300, fn:(x)=>{ let sec=Math.floor(x)%6; return (sec<1||sec==2||sec==4)? Math.sin(x*60)*22*Math.random() : (Math.random()-0.5)*2; }},
+    {label:'PPG', color:'#ff6b4a', y:420, fn:(x)=>{ if(!state.heartRate) return 0; return Math.sin(x*liveVals.hr/60*2*Math.PI)*26; }},
+    {label:'RESP', color:'#4da3ff', y:540, fn:(x)=>{ if(!state.resp) return 0; return Math.sin(x*liveVals.resp/60*2*Math.PI)*20; }},
+  ];
+  ch.forEach(c=>{
+    ctx.fillStyle=c.color; ctx.font='bold 22px monospace'; ctx.fillText(c.label,18,c.y*2-18);
+    ctx.strokeStyle=c.color; ctx.lineWidth=4; ctx.beginPath();
+    for(let px=0; px<canvas.width; px++){ let x=t+px/canvas.width*24; let vy=c.fn(x); let py=c.y*2+vy; if(px==0) ctx.moveTo(px,py); else ctx.lineTo(px,py); }
+    ctx.stroke();
+    if(c.label=='ECG II' && c.fn(t+12)>38) beep();
+  });
+  requestAnimationFrame(drawMonitor);
+}
+drawMonitor();
+
+// Bottom telemetry chart
+const teleCtx=document.getElementById('telemetryChart').getContext('2d');
+let teleChart=new Chart(teleCtx,{type:'line',data:{labels:Array(30).fill(''),datasets:[{label:'HR',data:Array(30).fill(76),borderColor:'#00ff66',tension:0.3},{label:'SpO2',data:Array(30).fill(96),borderColor:'#4da3ff',tension:0.3}]},options:{animation:false,plugins:{legend:{display:false}},scales:{x:{display:false}}}});
+setInterval(()=>{ teleChart.data.datasets[0].data.push(liveVals.hr); teleChart.data.datasets[0].data.shift(); teleChart.data.datasets[1].data.push(liveVals.spo2); teleChart.data.datasets[1].data.shift(); teleChart.update(); },1000);
+
+// SUMMARY PAGE
+function showSummary(){ document.getElementById('dashView').style.display='none'; document.getElementById('summaryView').classList.add('active'); }
+function showDash(){ document.getElementById('dashView').style.display='block'; document.getElementById('summaryView').classList.remove('active'); }
+function generateSummary(){
+  let name=document.getElementById('pName').value||'Patient';
+  let age=document.getElementById('pAge').value||liveVals.chrono;
+  let gender=document.getElementById('pGender').value||'--';
+  let loc=document.getElementById('pLoc').value||'--';
+  // calculate bio age
+  let bio=parseInt(age)+ (liveVals.ph<6.8||liveVals.ph>7.6?1:-1) + (liveVals.moisture<50?2:-1) + (liveVals.hr>85?1:0);
+  document.getElementById('summaryOutput').innerHTML=`
+  <b style="font-size:16px">${name}</b><br>Age: ${age} yrs | Gender: ${gender} | Location: ${loc}<br><hr>
+  <b>Live Readings (from Firebase):</b><br>
+  ❤️ Heart Rate: ${liveVals.hr} bpm (${state.heartRate?'ON':'OFF'})<br>
+  🫁 SpO2: ${liveVals.spo2}% (${state.spo2?'ON':'OFF'})<br>
+  🌡️ Skin Temp: ${liveVals.temp}°C<br>
+  🌬️ Resp: ${liveVals.resp}/min<br>
+  💧 GSR: ${liveVals.gsr.toFixed(1)} µS | Moisture: ${liveVals.moisture}% | pH: ${liveVals.ph}<br>
+  🧠 EEG Alpha: ${liveVals.eeg.toFixed(1)} Hz<br><hr>
+  <b>🧬 Analysis:</b><br>
+  Chronological Age: ${age} yrs<br>
+  Estimated Biological Age: <b style="color:#2563eb">${bio} yrs</b> ${bio<age?'✅ Younger (Revived)':'⚠️ Needs Revival'}<br>
+  Heart Age: ${bio+1} yrs | Lung Age: ${bio+(liveVals.spo2<95?2:0)} yrs | Skin Age: ${bio+(liveVals.moisture<50?3:-2)} yrs<br><hr>
+  <small>Generated: ${new Date().toLocaleString()} | Device: ESP32 + Pi 4 + MAX30102 + AD8232 + GSR + DS18B20 | Cloud: Firebase</small>
+  `;
+}
+</script>
+</body>
+</html>
