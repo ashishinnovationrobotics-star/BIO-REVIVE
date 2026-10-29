@@ -8,12 +8,18 @@
     body{font-family:Arial;background:#f5fff5;padding:20px}
     .card{background:white;padding:15px;border-radius:10px;margin:10px;box-shadow:0 2px 10px #ccc;display:inline-block;min-width:120px;text-align:center}
     .val{font-size:28px;font-weight:bold;color:green}
+    .control-card{min-width:220px; border-left:5px solid #ff9800;}
+    .btn-ctrl{padding:12px 25px;border:none;border-radius:8px;cursor:pointer;margin:5px;color:white;font-weight:bold}
+    .btn-on{background:#4CAF50}
+    .btn-off{background:#f44336}
+    .wiring-img{max-width:100%;border-radius:10px;box-shadow:0 4px 15px #aaa;margin:15px 0}
+    .section{background:white;padding:20px;border-radius:12px;margin-top:25px;box-shadow:0 2px 10px #ddd}
   </style>
 </head>
 <body>
   <h1>🌿 BIO Revive 360° - Live Sensor Data</h1>
-  <a href="index.html">← Back to Home</a>
-  <div id="status" style="color:green;margin:10px">● Live</div>
+  <a href="index.html">← Back to Home</a> | <a href="remote-control.html">Full Controls →</a>
+  <div id="status" style="color:green;margin:10px;font-weight:bold">● Live</div>
   
   <div>
     <div class="card">pH<div class="val" id="phVal">--</div></div>
@@ -22,8 +28,42 @@
   </div>
   <canvas id="liveChart" style="max-width:800px;margin-top:20px"></canvas>
 
+  <!-- ===== REMOTE CONTROL SECTION ===== -->
+  <div class="section">
+    <h2 style="text-align:center;">🎮 Remote Control Center</h2>
+    <div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin-top:15px;">
+      <div class="card control-card" style="border-left-color:#2196F3;">
+        <h3>💧 Water Pump</h3>
+        <p id="pumpStatusLive">Status: Loading...</p>
+        <button onclick="controlDevice('pump',1)" class="btn-ctrl btn-on">ON</button>
+        <button onclick="controlDevice('pump',0)" class="btn-ctrl btn-off">OFF</button>
+      </div>
+      <div class="card control-card" style="border-left-color:#ff9800;">
+        <h3>💡 Grow Light</h3>
+        <p id="lightStatusLive">Status: Loading...</p>
+        <button onclick="controlDevice('light',1)" class="btn-ctrl btn-on">ON</button>
+        <button onclick="controlDevice('light',0)" class="btn-ctrl btn-off">OFF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== WIRING DIAGRAMS ===== -->
+  <div class="section">
+    <h2>🔌 Hardware Wiring - ESP32 + Sensors + Relays</h2>
+    <p>ESP32: pH→GPIO34, Moisture→GPIO35, DHT22→GPIO4, Pump Relay→GPIO26, Light Relay→GPIO27</p>
+    <!-- Upload the 1st image I gave you as esp32-wiring.png in same folder -->
+    <img src="esp32-wiring.png" alt="ESP32 Wiring Diagram" class="wiring-img" onerror="this.style.display='none'; document.getElementById('esp32-note').style.display='block'">
+    <div id="esp32-note" style="display:none;background:#fff3cd;padding:10px;border-radius:8px;">⚠️ Upload image: Save the ESP32 wiring image I generated as <b>esp32-wiring.png</b> in root folder</div>
+    
+    <h2 style="margin-top:30px;">🍓 Raspberry Pi 4 - Full System + Firebase</h2>
+    <p>Pi: Camera → CSI, ADS1115 → I2C, Relay Pump→GPIO17, Light→GPIO27, ESP32→USB Serial, Firebase→Vercel Live</p>
+    <img src="pi-wiring.png" alt="Raspberry Pi Wiring" class="wiring-img" onerror="this.style.display='none'; document.getElementById('pi-note').style.display='block'">
+    <div id="pi-note" style="display:none;background:#fff3cd;padding:10px;border-radius:8px;">⚠️ Upload image: Save the Pi wiring image I generated as <b>pi-wiring.png</b> in root folder</div>
+  </div>
+
 <script>
 const DB_URL = "https://biorevive-360-default-rtdb.asia-southeast1.firebasedatabase.app/biorevive360/sensors.json";
+const CTRL_URL = "https://biorevive-360-default-rtdb.asia-southeast1.firebasedatabase.app/biorevive360/controls.json";
 
 const ctx = document.getElementById('liveChart');
 const chart = new Chart(ctx, {
@@ -55,12 +95,30 @@ async function fetchLive(){
     chart.update();
   }catch(e){
     document.getElementById('status').innerText = "● Error: " + e.message;
-    console.log(e);
   }
 }
 
+// ===== REMOTE CONTROL =====
+async function controlDevice(device, val){
+  let cur = await (await fetch(CTRL_URL)).json() || {};
+  cur[device] = val;
+  await fetch(CTRL_URL,{method:'PUT', body:JSON.stringify(cur), headers:{'Content-Type':'application/json'}});
+  loadControlStatus();
+}
+
+async function loadControlStatus(){
+  try{
+    let d = await (await fetch(CTRL_URL+"?t="+Date.now())).json();
+    if(!d) return;
+    document.getElementById('pumpStatusLive').innerText = "Status: " + (d.pump?"ON 🟢 Pumping":"OFF 🔴");
+    document.getElementById('lightStatusLive').innerText = "Status: " + (d.light?"ON 🟢":"OFF 🔴");
+  }catch(e){}
+}
+
 fetchLive();
-setInterval(fetchLive, 3000); // refresh every 3 sec like real sensor
+loadControlStatus();
+setInterval(fetchLive, 3000);
+setInterval(loadControlStatus, 3000);
 </script>
 </body>
 </html>
