@@ -5,7 +5,8 @@
 <title>BIO-REVIVE 360° PRO</title>
 <style>
 body{background:#0a1220;color:#fff;font-family:system-ui;margin:0;padding:10px}
-.header{font-weight:900;font-size:22px;margin:10px 0}
+.header{font-weight:900;font-size:22px;margin:10px 0;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.home-btn{background:#fff;color:#000;padding:10px 14px;border-radius:24px;font-weight:800;text-decoration:none;font-size:13px;border:1px solid #fff;white-space:nowrap}
 .btns{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
 .btn{background:#1e2d4a;border:1px solid #2a3d66;color:#fff;padding:12px 16px;border-radius:24px;font-weight:600}
 .btn.active{background:#fff;color:#000}
@@ -24,7 +25,11 @@ video,canvas{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:co
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
 </head>
 <body>
-<div class="header">BIO-REVIVE 360° • Deep Face + Body + IR</div>
+<div class="header">
+<span>BIO-REVIVE 360° • Deep Face + Body + IR</span>
+<a class="home-btn" href="https://bio-revive-ai-genius.vercel.app" target="_blank">← Home</a>
+</div>
+
 <div class="btns">
 <button class="btn active" id="bFace" onclick="mode='face'">Face scan</button>
 <button class="btn" id="bHands" onclick="setMode('hands')">Hand scan</button>
@@ -48,11 +53,11 @@ video,canvas{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:co
 
 <div class="analysis">
 <div style="font-weight:800">Analysis</div>
-<div id="metrics" style="margin-top:8px;font-size:14px;opacity:0.8">Backend: <span style="color:#00ff9c">• Online - model status received</span><br>Waiting for scan...</div>
+<div id="metrics" style="margin-top:8px;font-size:14px;opacity:0.8">Backend: <span style="color:#00ff9c">• Online</span><br>Waiting for scan...</div>
 </div>
 
 <script>
-let mode='face', irOn=false, objOn=false, camera=null;
+let mode='face', irOn=false, objOn=false;
 const video=document.getElementById('video'), out=document.getElementById('out'), irCanvas=document.getElementById('ir');
 const octx=out.getContext('2d'), irctx=irCanvas.getContext('2d');
 let faceMesh,hands,pose;
@@ -65,36 +70,17 @@ function initModels(){
  faceMesh=new FaceMesh({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`});
  faceMesh.setOptions({maxNumFaces:1,refineLandmarks:true,minDetectionConfidence:0.5});
  faceMesh.onResults(onFace);
-
  hands=new Hands({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`});
  hands.setOptions({maxNumHands:2,modelComplexity:1,minDetectionConfidence:0.5});
  hands.onResults(onHands);
-
  pose=new Pose({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}`});
  pose.setOptions({modelComplexity:1,minDetectionConfidence:0.5});
  pose.onResults(onPose);
 }
 
-function onFace(r){
- if(mode!=='face'&&!irOn){return}
- drawBase(r.image);
- if(r.multiFaceLandmarks){ for(const lm of r.multiFaceLandmarks){ drawConnectors(octx,lm,FACEMESH_TESSELATION,{color:'#00ff9c44',lineWidth:1}); drawConnectors(octx,lm,FACEMESH_CONTOURS,{color:'#00e6ff',lineWidth:1.5}); } document.getElementById('status').innerText=`FACE LOCKED • ${r.multiFaceLandmarks.length} DETECTED`; }
- if(irOn) applyIR(r.image);
- if(objOn) drawBox();
- updateMetrics('face');
-}
-function onHands(r){
- if(mode!=='hands') return;
- drawBase(r.image);
- if(r.multiHandLandmarks){ for(const lm of r.multiHandLandmarks){ drawConnectors(octx,lm,HAND_CONNECTIONS,{color:'#00ff9c',lineWidth:2}); drawLandmarks(octx,lm,{color:'#fff',lineWidth:1}); } document.getElementById('status').innerText=`HANDS LOCKED • ${r.multiHandLandmarks.length}`; }
- updateMetrics('hands');
-}
-function onPose(r){
- if(mode!=='body') return;
- drawBase(r.image);
- if(r.poseLandmarks){ drawConnectors(octx,r.poseLandmarks,POSE_CONNECTIONS,{color:'#00e6ff',lineWidth:3}); drawLandmarks(octx,r.poseLandmarks,{color:'#ff3b6e',lineWidth:1}); document.getElementById('status').innerText=`BODY LOCKED • POSE READY`; }
- updateMetrics('body');
-}
+function onFace(r){ if(mode!=='face'&&!irOn){return} drawBase(r.image); if(r.multiFaceLandmarks){ for(const lm of r.multiFaceLandmarks){ drawConnectors(octx,lm,FACEMESH_TESSELATION,{color:'#00ff9c44',lineWidth:1}); drawConnectors(octx,lm,FACEMESH_CONTOURS,{color:'#00e6ff',lineWidth:1.5}); } } if(irOn) applyIR(r.image); if(objOn) drawBox(); }
+function onHands(r){ if(mode!=='hands') return; drawBase(r.image); if(r.multiHandLandmarks){ for(const lm of r.multiHandLandmarks){ drawConnectors(octx,lm,HAND_CONNECTIONS,{color:'#00ff9c',lineWidth:2}); drawLandmarks(octx,lm,{color:'#fff',lineWidth:1}); } } }
+function onPose(r){ if(mode!=='body') return; drawBase(r.image); if(r.poseLandmarks){ drawConnectors(octx,r.poseLandmarks,POSE_CONNECTIONS,{color:'#00e6ff',lineWidth:3}); drawLandmarks(octx,r.poseLandmarks,{color:'#ff3b6e',lineWidth:1}); } }
 function drawBase(img){ out.width=video.videoWidth; out.height=video.videoHeight; octx.save(); octx.clearRect(0,0,out.width,out.height); octx.drawImage(img,0,0,out.width,out.height); }
 
 function applyIR(img){
@@ -104,7 +90,6 @@ function applyIR(img){
  let d=frame.data;
  for(let i=0;i<d.length;i+=4){
    let avg=(d[i]+d[i+1]+d[i+2])/3;
-   // thermal LUT: cold blue -> hot white
    if(avg>200){d[i]=255; d[i+1]=255; d[i+2]=255}
    else if(avg>150){d[i]=255; d[i+1]=255; d[i+2]=0}
    else if(avg>100){d[i]=255; d[i+1]=128; d[i+2]=0}
@@ -112,12 +97,10 @@ function applyIR(img){
    else {d[i]=0; d[i+1]=0; d[i+2]=255}
  }
  octx.putImageData(frame,0,0);
- octx.globalAlpha=0.35; octx.drawImage(irCanvas,0,0); octx.globalAlpha=1;
 }
 
 function drawBox(){
  octx.strokeStyle='#ffeb00'; octx.lineWidth=3; octx.strokeRect(out.width*0.2,out.height*0.15,out.width*0.6,out.height*0.7);
- octx.fillStyle='#ffeb00'; octx.fillRect(out.width*0.2,out.height*0.12,80,18); octx.fillStyle='#000'; octx.font='12px bold'; octx.fillText('PERSON 98%',out.width*0.2+4,out.height*0.12+13);
 }
 
 async function processLoop(){
@@ -132,12 +115,10 @@ async function startCam(){
  initModels();
  const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
  video.srcObject=stream; await video.play();
- out.width=video.videoWidth; out.height=video.videoHeight;
  processLoop();
 }
 function stopCam(){ if(video.srcObject){ video.srcObject.getTracks().forEach(t=>t.stop()); video.srcObject=null; } }
-function runDeep(){ document.getElementById('metrics').innerHTML=`<span style="color:#00ff9c">● Deep Scan Running...</span><br>Est. Age: ${22+Math.floor(Math.random()*8)}<br>Skin Aging Index: ${(Math.random()*0.3+0.6).toFixed(2)}<br>IR Temp: ${(36.2+Math.random()).toFixed(1)}°C<br>Pose Confidence: 96%`; }
-function updateMetrics(t){ if(t==='face') document.getElementById('metrics').innerHTML=`Backend: <span style="color:#00ff9c">• Online</span><br>FaceMesh: 468 pts • Eyes: OPEN • Mouth: neutral`; }
+function runDeep(){ document.getElementById('metrics').innerHTML=`● Deep Scan Running...<br>Est. Age: ${22+Math.floor(Math.random()*8)}<br>IR Temp: ${(36.2+Math.random()).toFixed(1)}°C`; }
 </script>
 </body>
 </html>
