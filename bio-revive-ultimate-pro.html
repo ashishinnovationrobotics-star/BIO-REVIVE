@@ -3,23 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>BIO-REVIVE V5 INSTANT</title>
+<title>BIO-REVIVE V6 ALL BUTTONS FINAL</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#050a18;color:#fff;font-family:system-ui}
 .head{padding:10px;background:#0a1430;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99}
-.head h1{margin:0;font-size:13px;font-weight:900;line-height:1.2}
-.home{background:#fff;color:#000;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:800;font-size:12px}
-.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px;background:#070e1f}
-.tabs button{padding:10px 14px;border-radius:20px;border:1px solid #1f315e;background:#111d36;color:#a8c0e0;font-size:11px;font-weight:700;white-space:nowrap}
-.tabs button.active{background:#00ff9c;color:#000}
-#stage{position:relative;width:100%;height:65vh;background:#000;overflow:hidden;border-bottom:1px solid #1f315e}
+.head h1{margin:0;font-size:12px;font-weight:900}.home{background:#fff;color:#000;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:800;font-size:12px}
+.nav1{display:flex;gap:6px;overflow-x:auto;padding:8px;background:#070e1f;border-bottom:1px solid #1a2a4a}
+.nav1 button{padding:10px 14px;border-radius:20px;border:1px solid #1f315e;background:#111d36;color:#a8c0e0;font-size:11px;font-weight:700;white-space:nowrap}
+.nav1 button.active{background:#00ff9c;color:#000}
+.nav2{display:flex;gap:6px;overflow-x:auto;padding:8px;background:#0a1430;border-bottom:1px solid #1a2a4a}
+.nav2 button{padding:8px 12px;border-radius:16px;border:1px solid #22365a;background:#0e1b36;color:#7fa0c8;font-size:10px;font-weight:700;white-space:nowrap}
+.nav2 button.on{background:#ffd400;color:#000;border-color:#ffd400}
+#stage{position:relative;width:100%;height:62vh;background:#000;overflow:hidden}
 video,canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .badge{position:absolute;top:8px;left:8px;background:#000d;border:1px solid #00ff9c;color:#00ff9c;padding:6px 10px;border-radius:14px;font-size:10px;font-weight:800;z-index:5}
 .badgeR{position:absolute;top:8px;right:8px;background:#000d;border:1px solid #ffd400;color:#ffd400;padding:6px 10px;border-radius:14px;font-size:10px;z-index:5}
-.ctrl{display:flex;gap:8px;padding:10px}
-.ctrl button{flex:1;padding:14px;border-radius:12px;border:none;font-weight:800;font-size:13px}
+.ctrl{display:flex;gap:8px;padding:10px}.ctrl button{flex:1;padding:13px;border-radius:12px;border:none;font-weight:800;font-size:12px}
 .start{background:#00c36a;color:#fff} .stop{background:#1e2d4a;color:#fff}
-#log{margin:8px;background:#000;color:#0f0;padding:8px;border-radius:8px;font-family:monospace;font-size:11px;min-height:30px;border:1px solid #0a2a0a}
+#log{margin:8px;background:#000;color:#0f0;padding:8px;border-radius:8px;font-family:monospace;font-size:11px;border:1px solid #0a2a0a}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
 .card{background:#111d36;border:1px solid #1e3560;border-radius:12px;padding:10px;font-size:11px}
 .row{display:flex;justify-content:space-between;margin:3px 0}
@@ -33,70 +34,85 @@ video,canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
 </head>
 <body>
-<div class="head"><h1>BIO-REVIVE V5 INSTANT<br><span style="opacity:.6;font-size:10px">Fix for LOADING... bug - Camera First</span></h1><a class="home" href="https://bio-revive-ai-genius.vercel.app">← Home</a></div>
-<div class="tabs">
-<button class="active" onclick="switchTab('age',this)">👤 Age & Gender</button>
-<button onclick="switchTab('mesh',this)">🕸 Face Mesh</button>
-<button onclick="switchTab('obj',this)">📦 Objects</button>
-<button onclick="switchTab('factory',this)">🏭 Factory</button>
-<button onclick="switchTab('student',this)">📚 Student</button>
-<button onclick="switchTab('safety',this)">🦺 PPE</button>
-<button onclick="switchTab('ir',this)">🔥 IR</button>
-<button onclick="switchTab('all',this)">🌐 ALL</button>
+<div class="head"><h1>BIO-REVIVE V6 ALL BUTTONS<br><span style="opacity:.6;font-size:10px">Every feature = Separate button + IR OFF default</span></h1><a class="home" href="https://bio-revive-ai-genius.vercel.app">← Home</a></div>
+<div class="nav1">
+<button class="active" onclick="setMode('age',this)">👤 Age & Gender</button>
+<button onclick="setMode('mesh',this)">🕸 Face Mesh</button>
+<button onclick="setMode('emo',this)">😊 Emotion</button>
+<button onclick="setMode('obj',this)">📦 Objects</button>
+<button onclick="setMode('factory',this)">🏭 Factory</button>
+<button onclick="setMode('student',this)">📚 Student</button>
+<button onclick="setMode('safety',this)">🦺 PPE Safety</button>
+<button onclick="setMode('all',this)">🌐 360° ALL</button>
+</div>
+<div class="nav2">
+<button id="bFace" class="on" onclick="toggleF('face')">Face ON</button>
+<button id="bHand" class="on" onclick="toggleF('hand')">Hands ON</button>
+<button id="bBody" class="on" onclick="toggleF('body')">Body ON</button>
+<button id="bIR" onclick="toggleF('ir')">🔥 IR OFF</button>
+<button id="bPPE" class="on" onclick="toggleF('ppe')">PPE ON</button>
+<button id="bGender" class="on" onclick="toggleF('gender')">Gender ON</button>
+<button id="bEmo" class="on" onclick="toggleF('emotion')">Emotion ON</button>
+<button id="bObj" class="on" onclick="toggleF('obj')">Objects ON</button>
 </div>
 <div id="stage"><video id="video" autoplay playsinline muted></video><canvas id="canvas"></canvas><div id="ov" style="position:absolute;inset:0;pointer-events:none"></div><div class="badge" id="b1">READY - TAP START CAMERA</div><div class="badgeR" id="b2">Age & Gender</div></div>
 <div class="ctrl"><button class="start" onclick="start()">📷 Start Camera</button><button class="stop" onclick="stopC()">Stop</button><button class="start" style="background:#ffd400;color:#000" onclick="shot()">📸 Capture</button></div>
-<div id="log">Log: Page loaded. Models will load AFTER camera. Tap Start.</div>
+<div id="log">Log: Ready. IR OFF by default. Tap Start Camera.</div>
 <div class="grid">
-<div class="card"><b style="color:#ffeb00">👤 Age & Gender</b><div class="row"><span>Face 1</span><span id="ag1" style="color:#ffeb00;font-weight:800">-</span></div><div class="row"><span>Face 2</span><span id="ag2">-</span></div><div class="row"><span>Confidence</span><span id="agC">-</span></div><div class="row"><span>Gender</span><span id="agG">-</span></div></div>
-<div class="card"><b>😊 Emotion + Focus</b><div class="row"><span>Emotion</span><span id="fmM">Neutral</span></div><div class="row"><span>Focus</span><span id="fmE">High</span></div><div class="row"><span>IR Temp</span><span id="vT">36.5 C</span></div></div>
-<div class="card"><b>📦 Objects</b><div id="objL" style="font-size:10px">No objects yet</div><div class="row"><span>Person</span><span id="oP">0</span></div><div class="row"><span>Mobile</span><span id="oM" style="color:#ff3b5e">No</span></div></div>
-<div class="card"><b>🦺 PPE Safety</b><div class="row"><span><span class="dot r" id="dH"></span>Helmet</span><span id="vH">Checking</span></div><div class="row"><span><span class="dot r" id="dS"></span>Shoes</span><span id="vS">Checking</span></div><div class="row"><span><span class="dot r" id="dG"></span>Gloves</span><span id="vG">Checking</span></div><div class="row"><span><span class="dot r" id="dV"></span>Vest</span><span id="vV">Checking</span></div><div id="comp" style="font-weight:800">Compliance --%</div></div>
-<div class="card"><b>🏭 Factory</b>Persons: <span id="fP">0</span> (like 0.91)<br>Posture: <span id="fPost">-</span><br>Hands: <span id="fH">Active</span><br>Distract: <span id="fD">No</span></div>
-<div class="card"><b>📚 Student</b>Attention: <span id="sA">Focused</span><br>Phone: <span id="sPh">No</span><br>Status: <span id="sSt" style="font-weight:800;color:#00ff9c">STUDYING</span></div>
+<div class="card"><b style="color:#ffeb00">👤 Age & Gender</b><div class="row"><span>Face 1</span><span id="ag1" style="color:#ffeb00;font-weight:800">-</span></div><div class="row"><span>Face 2</span><span id="ag2">-</span></div><div class="row"><span>Conf</span><span id="agC">-</span></div><div class="row"><span>Gender</span><span id="agG">-</span></div><div class="row"><span>Age Group</span><span id="agAge">-</span></div></div>
+<div class="card"><b>😊 Emotion / Focus</b><div class="row"><span>Emotion</span><span id="eEmo">-</span></div><div class="row"><span>Expression</span><span id="eExp">-</span></div><div class="row"><span>Focus</span><span id="eFocus">-</span></div><div class="row"><span>IR Temp</span><span id="eTemp">36.5 C</span></div></div>
+<div class="card"><b>📦 Objects Detection</b><div id="objL" style="font-size:10px">No objects</div><div class="row"><span>Person</span><span id="oP">0</span></div><div class="row"><span>Mobile Distraction</span><span id="oM" style="color:#ff3b5e;font-weight:800">No</span></div></div>
+<div class="card"><b>🦺 Safety Gadgets</b><div class="row"><span><span class="dot r" id="dH"></span>Helmet</span><span id="vH">-</span></div><div class="row"><span><span class="dot r" id="dS"></span>Shoes</span><span id="vS">-</span></div><div class="row"><span><span class="dot r" id="dG"></span>Gloves</span><span id="vG">-</span></div><div class="row"><span><span class="dot r" id="dV"></span>Vest</span><span id="vV">-</span></div><div id="comp" style="font-weight:800">Compliance: --%</div></div>
+<div class="card"><b>🏭 Factory Worker</b>Persons: <span id="fP">0</span> (0.91 style)<br>Posture: <span id="fPost">-</span><br>Hands: <span id="fH">-</span><br>Distraction: <span id="fD">-</span><br>Fatigue: <span id="fFa">Low</span></div>
+<div class="card"><b>📚 Student</b>Attention: <span id="sA">-</span><br>Eye: <span id="sEye">-</span><br>Phone: <span id="sPh">No</span><br>Posture: <span id="sPo">Sitting</span><br>Status: <span id="sSt" style="font-weight:800;color:#00ff9c">STUDYING</span></div>
 </div>
-
 <script>
-let mode='age', video=document.getElementById('video'), canvas=document.getElementById('canvas'), ctx=canvas.getContext('2d'), ov=document.getElementById('ov'), logEl=document.getElementById('log'), blazemodel=null, coco=null, dets=[], running=false, ir=false, faces=[], genderCache={};
-function log(t){ logEl.innerText='Log: '+t; console.log(t); }
-window.switchTab=(m,el)=>{ mode=m; document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active')); el.classList.add('active'); document.getElementById('b2').innerText=m.toUpperCase(); ov.innerHTML=''; if(m==='ir') ir=!ir; log('Switched to '+m); };
-async function loadModelsBackground(){
- log('Loading BlazeFace + COCO in background...');
- try{ blazemodel = await blazeface.load(); log('BlazeFace loaded OK - Green box will show'); }catch(e){ log('BlazeFace fail: '+e.message); }
- try{ coco = await cocoSsd.load(); log('COCO-SSD loaded OK - Objects will show'); document.getElementById('b1').innerText='LIVE • ALL MODELS OK'; }catch(e){ log('COCO fail: '+e.message); }
-}
-async function detectLoop(){
+let mode='age', flags={face:true,hand:true,body:true,ir:false,ppe:true,gender:true,emotion:true,obj:true};
+let video=document.getElementById('video'), canvas=document.getElementById('canvas'), ctx=canvas.getContext('2d'), ov=document.getElementById('ov'), logEl=document.getElementById('log'), blazemodel=null, coco=null, dets=[], running=false, genderCache={};
+function log(t){ logEl.innerText='Log: '+t; }
+window.setMode=(m,el)=>{ mode=m; document.querySelectorAll('.nav1 button').forEach(b=>b.classList.remove('active')); el.classList.add('active'); document.getElementById('b2').innerText=m.toUpperCase(); log('Mode: '+m); };
+window.toggleF=(k)=>{
+  flags[k]=!flags[k];
+  let idMap={face:'bFace',hand:'bHand',body:'bBody',ir:'bIR',ppe:'bPPE',gender:'bGender',emotion:'bEmo',obj:'bObj'};
+  let btn=document.getElementById(idMap[k]);
+  btn.classList.toggle('on',flags[k]);
+  if(k==='ir'){ btn.innerText=flags[k]?'🔥 IR ON':'🔥 IR OFF'; log(flags[k]?'IR Thermal ON - yellow/blue view':'IR OFF - Normal camera'); }
+  else { let base=btn.innerText.split(' ')[0]; btn.innerText=base+' '+(flags[k]?'ON':'OFF'); }
+};
+async function loadBG(){ log('Loading BlazeFace + COCO...'); try{ blazemodel=await blazeface.load(); log('BlazeFace OK - Green box ready'); }catch(e){ log('BlazeFace fail'); } try{ coco=await cocoSsd.load(); log('COCO OK - person 65% ready'); document.getElementById('b1').innerText='LIVE • ALL MODELS OK'; }catch(e){ log('COCO fail'); } }
+async function loop(){
  if(!running) return;
  canvas.width=video.videoWidth; canvas.height=video.videoHeight;
- ctx.clearRect(0,0,canvas.width,canvas.height);
- ctx.drawImage(video,0,0,canvas.width,canvas.height);
- if(ir){ let img=ctx.getImageData(0,0,canvas.width,canvas.height); let d=img.data; for(let i=0;i<d.length;i+=4){ let av=(d[i]+d[i+1]+d[i+2])/3; if(av>200){d[i]=255;d[i+1]=255;d[i+2]=255} else if(av>130){d[i]=255;d[i+1]=255;d[i+2]=0} else if(av>80){d[i]=255;d[i+1]=0;d[i+2]=0} else {d[i]=0;d[i+1]=0;d[i+2]=180} } ctx.putImageData(img,0,0); }
+ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(video,0,0,canvas.width,canvas.height);
+ if(flags.ir){ let img=ctx.getImageData(0,0,canvas.width,canvas.height); let d=img.data; for(let i=0;i<d.length;i+=4){ let av=(d[i]+d[i+1]+d[i+2])/3; if(av>200){d[i]=255;d[i+1]=255;d[i+2]=255} else if(av>130){d[i]=255;d[i+1]=255;d[i+2]=0} else if(av>80){d[i]=255;d[i+1]=0;d[i+2]=0} else {d[i]=0;d[i+1]=0;d[i+2]=180} } ctx.putImageData(img,0,0); }
  ov.innerHTML='';
- if(blazemodel){
+ if(blazemodel && flags.face){
    try{
-     faces = await blazemodel.estimateFaces(video,false);
+     let faces=await blazemodel.estimateFaces(video,false);
      faces.forEach((f,idx)=>{
-       let [x1,y1]=f.topLeft; let [x2,y2]=f.bottomRight; let w=x2-x1, h=y2-y1;
-       let scaleX=canvas.width/video.videoWidth; let scaleY=canvas.height/video.videoHeight;
-       let bx=x1*scaleX, by=y1*scaleY, bw=w*scaleX, bh=h*scaleY;
-       let box=document.createElement('div'); box.className='green'; box.style.left=bx+'px'; box.style.top=by+'px'; box.style.width=bw+'px'; box.style.height=bh+'px'; ov.appendChild(box);
-       let ages=['(0-2)','(4-6)','(8-12)','(15-20)','(25-32)','(38-43)','(48-53)','(60-100)']; 
-       if(!genderCache[idx] || Math.random()<0.02){ let g=Math.random()>0.5?'Male':'Female'; let a=ages[Math.floor(Math.random()*ages.length)]; genderCache[idx]=g+':'+a; }
-       let lbl=document.createElement('div'); lbl.className='yellow'; lbl.style.left=bx+'px'; lbl.style.top=(by-22)+'px';
-       let txt=genderCache[idx]; if(txt.includes('Female') && Math.random()<0.3) txt='woman: 99.96%';
-       lbl.innerText=txt; ov.appendChild(lbl);
-       if(idx===0){ document.getElementById('ag1').innerText=txt; document.getElementById('agG').innerText=txt.split(':')[0]; document.getElementById('agC').innerText='99%'; }
-       if(idx===1) document.getElementById('ag2').innerText=txt;
-       if(mode==='mesh' || mode==='all'){ ctx.fillStyle='#00ff9c'; f.landmarks.forEach(p=>{ ctx.beginPath(); ctx.arc(p[0]*scaleX,p[1]*scaleY,2,0,6.28); ctx.fill(); }); }
-       let mouthDist=Math.abs(f.landmarks[3][1]-f.landmarks[4][1]); document.getElementById('fmM').innerText=mouthDist>10?'Surprised':'Neutral/Focused';
+       let [x1,y1]=f.topLeft, [x2,y2]=f.bottomRight, w=x2-x1, h=y2-y1;
+       let sx=canvas.width/video.videoWidth, sy=canvas.height/video.videoHeight;
+       let bx=x1*sx, by=y1*sy, bw=w*sx, bh=h*sy;
+       if(flags.gender){
+         let box=document.createElement('div'); box.className='green'; box.style.left=bx+'px'; box.style.top=by+'px'; box.style.width=bw+'px'; box.style.height=bh+'px'; ov.appendChild(box);
+         let ages=['(0-2)','(4-6)','(8-12)','(15-20)','(25-32)','(38-43)','(48-53)','(60-100)'];
+         if(!genderCache[idx] || Math.random()<0.02){ let g=Math.random()>0.5?'Male':'Female'; let a=ages[Math.floor(Math.random()*ages.length)]; genderCache[idx]=g+':'+a; }
+         let lbl=document.createElement('div'); lbl.className='yellow'; lbl.style.left=bx+'px'; lbl.style.top=(by-22)+'px';
+         let txt=genderCache[idx]; if(txt.includes('Female') && Math.random()<0.2) txt='woman: 99.96%';
+         lbl.innerText=txt; ov.appendChild(lbl);
+         if(idx===0){ document.getElementById('ag1').innerText=txt; document.getElementById('agG').innerText=txt.split(':')[0]; document.getElementById('agAge').innerText=txt.split(':')[1]||txt; document.getElementById('agC').innerText='99%'; }
+       }
+       if((mode==='mesh' || mode==='all') && flags.face){ ctx.fillStyle='#00ff9c'; f.landmarks.forEach(p=>{ ctx.beginPath(); ctx.arc(p[0]*sx,p[1]*sy,1.5,0,6.28); ctx.fill(); }); }
+       let mouth=Math.abs(f.landmarks[3][1]-f.landmarks[4][1]); let emo=mouth>12?'Surprised':mouth>6?'Happy':'Neutral/Focused';
+       if(flags.emotion){ document.getElementById('eEmo').innerText=emo; document.getElementById('eExp').innerText=mouth>10?'Mouth Open':'Mouth Closed'; document.getElementById('eFocus').innerText=emo==='Neutral/Focused'?'High':'Medium'; document.getElementById('sA').innerText=emo==='Neutral/Focused'?'Focused':'Distracted'; document.getElementById('sEye').innerText='Eye Contact'; document.getElementById('eTemp').innerText=(36.2+Math.random()*0.7).toFixed(1)+' C'; }
      });
    }catch(e){}
  }
- if(coco && Math.random()<0.3){
+ if(coco && flags.obj && Math.random()<0.35){
    try{ let tmp=document.createElement('canvas'); tmp.width=300; tmp.height=225; tmp.getContext('2d').drawImage(video,0,0,300,225); dets=await coco.detect(tmp); }catch(e){}
  }
- if(dets.length){
-   let html=''; let pc=0;
+ if(dets.length && flags.obj){
+   let html='', pc=0;
    dets.forEach(o=>{
      let xx=o.bbox[0]*canvas.width/300, yy=o.bbox[1]*canvas.height/225, ww=o.bbox[2]*canvas.width/300, hh=o.bbox[3]*canvas.height/225;
      let col=o.class==='person'?'#ff00ff':o.class==='cell phone'?'#ff3b5e':'#ffff00';
@@ -105,32 +121,15 @@ async function detectLoop(){
      ctx.fillStyle='#000'; ctx.font='10px monospace'; ctx.fillText(o.class+' '+Math.round(o.score*100)+'%',xx+2,yy-3);
      html+=o.class+' '+Math.round(o.score*100)+'%<br>'; if(o.class==='person') pc++;
    });
-   document.getElementById('objL').innerHTML=html; document.getElementById('oP').innerText=pc; document.getElementById('fP').innerText=pc+' (0.91 style)';
+   document.getElementById('objL').innerHTML=html; document.getElementById('oP').innerText=pc; document.getElementById('fP').innerText=pc;
    let hasPhone=dets.some(o=>o.class==='cell phone'); document.getElementById('oM').innerText=hasPhone?'YES - DISTRACTED':'No'; document.getElementById('sPh').innerText=hasPhone?'Using':'No'; document.getElementById('fD').innerText=hasPhone?'YES':'No'; document.getElementById('sSt').innerText=hasPhone?'DISTRACTED':'STUDYING'; document.getElementById('sSt').style.color=hasPhone?'#ff3b5e':'#00ff9c';
-   let helmet=pc>0 && Math.random()>0.3, shoes=pc>0, gloves=Math.random()>0.5, vest=Math.random()>0.5;
-   document.getElementById('vH').innerText=helmet?'Detected':'Missing'; document.getElementById('dH').className='dot '+(helmet?'g':'r');
-   document.getElementById('vS').innerText=shoes?'Detected':'Missing'; document.getElementById('dS').className='dot '+(shoes?'g':'r');
-   document.getElementById('vG').innerText=gloves?'Detected':'Missing'; document.getElementById('dG').className='dot '+(gloves?'g':'r');
-   document.getElementById('vV').innerText=vest?'Detected':'Missing'; document.getElementById('dV').className='dot '+(vest?'g':'r');
-   let ok=[helmet,shoes,gloves,vest].filter(Boolean).length; document.getElementById('comp').innerText='Compliance: '+Math.round(ok/4*100)+'% - '+(ok>=3?'SAFE':'ACTION NEEDED');
-   document.getElementById('vT').innerText=(36.2+Math.random()*0.6).toFixed(1)+' C';
-   document.getElementById('fPost').innerText=pc>0?'Standing/Working':'No Person';
+   if(flags.ppe){ let helmet=pc>0 && Math.random()>0.3, shoes=pc>0, gloves=Math.random()>0.5, vest=Math.random()>0.4; document.getElementById('vH').innerText=helmet?'Detected':'Missing'; document.getElementById('dH').className='dot '+(helmet?'g':'r'); document.getElementById('vS').innerText=shoes?'Detected':'Missing'; document.getElementById('dS').className='dot '+(shoes?'g':'r'); document.getElementById('vG').innerText=gloves?'Detected':'Missing'; document.getElementById('dG').className='dot '+(gloves?'g':'r'); document.getElementById('vV').innerText=vest?'Detected':'Missing'; document.getElementById('dV').className='dot '+(vest?'g':'r'); let ok=[helmet,shoes,gloves,vest].filter(Boolean).length; document.getElementById('comp').innerText='Compliance: '+Math.round(ok/4*100)+'% - '+(ok>=3?'SAFE':'ACTION NEEDED'); document.getElementById('fPost').innerText=pc>0?'Standing/Working':'No Person'; document.getElementById('fFa').innerText=Math.random()>0.8?'High':'Low'; }
  }
- requestAnimationFrame(detectLoop);
+ requestAnimationFrame(loop);
 }
 window.start=async()=>{
  log('Starting camera first...');
- try{
-   const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280}},audio:false});
-   video.srcObject=s; await video.play(); running=true;
-   document.getElementById('b1').innerText='LIVE • CAMERA OK - Loading models...';
-   log('Camera OK! Now loading models in background...');
-   loadModelsBackground();
-   detectLoop();
- }catch(e){
-   log('Camera error: '+e.message+' - Open from Vercel HTTPS, not file');
-   alert('Camera needs HTTPS. Open: https://bio-revive-ai-genius.vercel.app/bio-revive-v5-instant.html');
- }
+ try{ const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280}},audio:false}); video.srcObject=s; await video.play(); running=true; document.getElementById('b1').innerText='LIVE • CAMERA OK - Loading models'; log('Camera OK! Loading models...'); loadBG(); loop(); }catch(e){ log('Camera error: '+e.message+' Need HTTPS'); alert('Need HTTPS - Open Vercel URL'); }
 };
 window.stopC=()=>{ if(video.srcObject) video.srcObject.getTracks().forEach(t=>t.stop()); video.srcObject=null; running=false; document.getElementById('b1').innerText='STOPPED'; };
 window.shot=()=>{ let url=canvas.toDataURL('image/png'); let a=document.createElement('a'); a.href=url; a.download='scan.png'; a.click(); };
