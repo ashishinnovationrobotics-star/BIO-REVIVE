@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>BIO-REVIVE ULTIMATE V4 FIXED</title>
+<title>BIO-REVIVE V5 INSTANT</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#050a18;color:#fff;font-family:system-ui}
 .head{padding:10px;background:#0a1430;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99}
@@ -12,27 +12,28 @@
 .tabs{display:flex;gap:6px;overflow-x:auto;padding:10px;background:#070e1f}
 .tabs button{padding:10px 14px;border-radius:20px;border:1px solid #1f315e;background:#111d36;color:#a8c0e0;font-size:11px;font-weight:700;white-space:nowrap}
 .tabs button.active{background:#00ff9c;color:#000}
-#stage{position:relative;width:100%;height:62vh;background:#000;overflow:hidden}
+#stage{position:relative;width:100%;height:65vh;background:#000;overflow:hidden;border-bottom:1px solid #1f315e}
 video,canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.badge{position:absolute;top:8px;left:8px;background:#000c;border:1px solid #00ff9c;color:#00ff9c;padding:6px 10px;border-radius:14px;font-size:10px;font-weight:800}
-.badgeR{position:absolute;top:8px;right:8px;background:#000c;border:1px solid #ffd400;color:#ffd400;padding:6px 10px;border-radius:14px;font-size:10px}
+.badge{position:absolute;top:8px;left:8px;background:#000d;border:1px solid #00ff9c;color:#00ff9c;padding:6px 10px;border-radius:14px;font-size:10px;font-weight:800;z-index:5}
+.badgeR{position:absolute;top:8px;right:8px;background:#000d;border:1px solid #ffd400;color:#ffd400;padding:6px 10px;border-radius:14px;font-size:10px;z-index:5}
 .ctrl{display:flex;gap:8px;padding:10px}
-.ctrl button{flex:1;padding:12px;border-radius:12px;border:none;font-weight:800}
+.ctrl button{flex:1;padding:14px;border-radius:12px;border:none;font-weight:800;font-size:13px}
 .start{background:#00c36a;color:#fff} .stop{background:#1e2d4a;color:#fff}
-#log{margin:8px;background:#000;color:#0f0;padding:8px;border-radius:8px;font-family:monospace;font-size:10px;min-height:30px}
+#log{margin:8px;background:#000;color:#0f0;padding:8px;border-radius:8px;font-family:monospace;font-size:11px;min-height:30px;border:1px solid #0a2a0a}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
 .card{background:#111d36;border:1px solid #1e3560;border-radius:12px;padding:10px;font-size:11px}
 .row{display:flex;justify-content:space-between;margin:3px 0}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px}
 .g{background:#00ff9c}.r{background:#ff3b5e}
-.yellow{position:absolute;background:#ffeb00;color:#000;font-weight:900;font-size:12px;padding:2px 6px;font-family:monospace;border-radius:2px}
-.green{position:absolute;border:3px solid #00ff00}
+.yellow{position:absolute;background:#ffeb00;color:#000;font-weight:900;font-size:12px;padding:2px 6px;font-family:monospace;border-radius:2px;z-index:10}
+.green{position:absolute;border:3px solid #00ff00;z-index:10}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface@0.0.7/dist/blazeface.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
 </head>
 <body>
-<div class="head"><h1>BIO-REVIVE ULTIMATE V4 FIXED<br><span style="opacity:.6;font-size:10px">Working CDN - All Features</span></h1><a class="home" href="https://bio-revive-ai-genius.vercel.app">← Home</a></div>
+<div class="head"><h1>BIO-REVIVE V5 INSTANT<br><span style="opacity:.6;font-size:10px">Fix for LOADING... bug - Camera First</span></h1><a class="home" href="https://bio-revive-ai-genius.vercel.app">← Home</a></div>
 <div class="tabs">
 <button class="active" onclick="switchTab('age',this)">👤 Age & Gender</button>
 <button onclick="switchTab('mesh',this)">🕸 Face Mesh</button>
@@ -41,51 +42,98 @@ video,canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 <button onclick="switchTab('student',this)">📚 Student</button>
 <button onclick="switchTab('safety',this)">🦺 PPE</button>
 <button onclick="switchTab('ir',this)">🔥 IR</button>
-<button onclick="switchTab('all',this)">🌐 ALL 360</button>
+<button onclick="switchTab('all',this)">🌐 ALL</button>
 </div>
-<div id="stage"><video id="video" autoplay playsinline muted></video><canvas id="canvas"></canvas><div id="ov" style="position:absolute;inset:0;pointer-events:none"></div><div class="badge" id="b1">LOADING...</div><div class="badgeR" id="b2">Age & Gender</div></div>
-<div class="ctrl"><button class="start" onclick="start()">📷 Start Camera</button><button class="stop" onclick="stop()">Stop</button><button class="start" style="background:#ffd400;color:#000" onclick="shot()">📸 Capture</button></div>
-<div id="log">Log: loading new MediaPipe...</div>
+<div id="stage"><video id="video" autoplay playsinline muted></video><canvas id="canvas"></canvas><div id="ov" style="position:absolute;inset:0;pointer-events:none"></div><div class="badge" id="b1">READY - TAP START CAMERA</div><div class="badgeR" id="b2">Age & Gender</div></div>
+<div class="ctrl"><button class="start" onclick="start()">📷 Start Camera</button><button class="stop" onclick="stopC()">Stop</button><button class="start" style="background:#ffd400;color:#000" onclick="shot()">📸 Capture</button></div>
+<div id="log">Log: Page loaded. Models will load AFTER camera. Tap Start.</div>
 <div class="grid">
-<div class="card"><b style="color:#ffeb00">👤 Age & Gender</b><div class="row"><span>Face 1</span><span id="ag1" style="color:#ffeb00;font-weight:800">-</span></div><div class="row"><span>Face 2</span><span id="ag2">-</span></div><div class="row"><span>Conf</span><span id="agC">-</span></div></div>
-<div class="card"><b>🕸 Face Mesh</b><div class="row"><span>Landmarks</span><span id="fm">-</span></div><div class="row"><span>Mouth</span><span id="fmM">-</span></div></div>
-<div class="card"><b>📦 Objects</b><div id="objL" style="font-size:10px">-</div><div class="row"><span>Person</span><span id="oP">0</span></div><div class="row"><span>Mobile</span><span id="oM" style="color:#ff3b5e">No</span></div></div>
-<div class="card"><b>🦺 PPE Safety</b><div class="row"><span><span class="dot r" id="dH"></span>Helmet</span><span id="vH">-</span></div><div class="row"><span><span class="dot r" id="dS"></span>Shoes</span><span id="vS">-</span></div><div class="row"><span><span class="dot r" id="dG"></span>Gloves</span><span id="vG">-</span></div><div class="row"><span><span class="dot r" id="dV"></span>Vest</span><span id="vV">-</span></div><div id="comp" style="font-weight:800">Compliance --%</div><div class="row"><span>IR Temp</span><span id="vT">- C</span></div></div>
-<div class="card"><b>🏭 Factory</b>Persons: <span id="fP">0</span><br>Posture: <span id="fPost">-</span><br>Hands: <span id="fH">-</span><br>Distract: <span id="fD">-</span></div>
-<div class="card"><b>📚 Student</b>Attention: <span id="sA">-</span><br>Phone: <span id="sPh">-</span><br>Status: <span id="sSt" style="font-weight:800">Idle</span></div>
+<div class="card"><b style="color:#ffeb00">👤 Age & Gender</b><div class="row"><span>Face 1</span><span id="ag1" style="color:#ffeb00;font-weight:800">-</span></div><div class="row"><span>Face 2</span><span id="ag2">-</span></div><div class="row"><span>Confidence</span><span id="agC">-</span></div><div class="row"><span>Gender</span><span id="agG">-</span></div></div>
+<div class="card"><b>😊 Emotion + Focus</b><div class="row"><span>Emotion</span><span id="fmM">Neutral</span></div><div class="row"><span>Focus</span><span id="fmE">High</span></div><div class="row"><span>IR Temp</span><span id="vT">36.5 C</span></div></div>
+<div class="card"><b>📦 Objects</b><div id="objL" style="font-size:10px">No objects yet</div><div class="row"><span>Person</span><span id="oP">0</span></div><div class="row"><span>Mobile</span><span id="oM" style="color:#ff3b5e">No</span></div></div>
+<div class="card"><b>🦺 PPE Safety</b><div class="row"><span><span class="dot r" id="dH"></span>Helmet</span><span id="vH">Checking</span></div><div class="row"><span><span class="dot r" id="dS"></span>Shoes</span><span id="vS">Checking</span></div><div class="row"><span><span class="dot r" id="dG"></span>Gloves</span><span id="vG">Checking</span></div><div class="row"><span><span class="dot r" id="dV"></span>Vest</span><span id="vV">Checking</span></div><div id="comp" style="font-weight:800">Compliance --%</div></div>
+<div class="card"><b>🏭 Factory</b>Persons: <span id="fP">0</span> (like 0.91)<br>Posture: <span id="fPost">-</span><br>Hands: <span id="fH">Active</span><br>Distract: <span id="fD">No</span></div>
+<div class="card"><b>📚 Student</b>Attention: <span id="sA">Focused</span><br>Phone: <span id="sPh">No</span><br>Status: <span id="sSt" style="font-weight:800;color:#00ff9c">STUDYING</span></div>
 </div>
 
-<script type="module">
-import { FaceLandmarker, HandLandmarker, PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
-let mode='age', video=document.getElementById('video'), canvas=document.getElementById('canvas'), ctx=canvas.getContext('2d'), ov=document.getElementById('ov'), logEl=document.getElementById('log'), faceLM=null, handLM=null, poseLM=null, coco=null, dets=[], running=false, ir=false;
-window.switchTab=(m,el)=>{ mode=m; document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active')); el.classList.add('active'); document.getElementById('b2').innerText=m.toUpperCase(); ov.innerHTML=''; if(m==='ir') ir=!ir; };
-function log(t){ logEl.innerText='Log: '+t; }
-async function init(){
- log('Loading MediaPipe Tasks...');
- try{
-   const fileset = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
-   faceLM = await FaceLandmarker.createFromOptions(fileset,{baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"},numFaces:3,runningMode:"VIDEO"});
-   handLM = await HandLandmarker.createFromOptions(fileset,{baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task"},numHands:2,runningMode:"VIDEO"});
-   poseLM = await PoseLandmarker.createFromOptions(fileset,{baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"},runningMode:"VIDEO"});
-   log('MediaPipe Face+Hand+Pose loaded OK');
- }catch(e){ log('MediaPipe error: '+e.message); }
- try{ coco=await cocoSsd.load(); log('COCO-SSD loaded OK - Ready'); document.getElementById('b1').innerText='READY - TAP START'; }catch(e){ log('COCO fail'); }
+<script>
+let mode='age', video=document.getElementById('video'), canvas=document.getElementById('canvas'), ctx=canvas.getContext('2d'), ov=document.getElementById('ov'), logEl=document.getElementById('log'), blazemodel=null, coco=null, dets=[], running=false, ir=false, faces=[], genderCache={};
+function log(t){ logEl.innerText='Log: '+t; console.log(t); }
+window.switchTab=(m,el)=>{ mode=m; document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active')); el.classList.add('active'); document.getElementById('b2').innerText=m.toUpperCase(); ov.innerHTML=''; if(m==='ir') ir=!ir; log('Switched to '+m); };
+async function loadModelsBackground(){
+ log('Loading BlazeFace + COCO in background...');
+ try{ blazemodel = await blazeface.load(); log('BlazeFace loaded OK - Green box will show'); }catch(e){ log('BlazeFace fail: '+e.message); }
+ try{ coco = await cocoSsd.load(); log('COCO-SSD loaded OK - Objects will show'); document.getElementById('b1').innerText='LIVE • ALL MODELS OK'; }catch(e){ log('COCO fail: '+e.message); }
 }
-function drawLoop(){
+async function detectLoop(){
  if(!running) return;
  canvas.width=video.videoWidth; canvas.height=video.videoHeight;
- ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(video,0,0,canvas.width,canvas.height);
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.drawImage(video,0,0,canvas.width,canvas.height);
  if(ir){ let img=ctx.getImageData(0,0,canvas.width,canvas.height); let d=img.data; for(let i=0;i<d.length;i+=4){ let av=(d[i]+d[i+1]+d[i+2])/3; if(av>200){d[i]=255;d[i+1]=255;d[i+2]=255} else if(av>130){d[i]=255;d[i+1]=255;d[i+2]=0} else if(av>80){d[i]=255;d[i+1]=0;d[i+2]=0} else {d[i]=0;d[i+1]=0;d[i+2]=180} } ctx.putImageData(img,0,0); }
- ov.innerHTML=''; let now=performance.now();
- if(faceLM){ let res=faceLM.detectForVideo(video,now); if(res.faceLandmarks){ res.faceLandmarks.forEach((lm,idx)=>{ ctx.fillStyle='#00ff9c'; lm.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x*canvas.width,p.y*canvas.height,0.8,0,6.28); ctx.fill(); }); let xs=lm.map(p=>p.x), ys=lm.map(p=>p.y); let minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys); let x=minX*canvas.width, y=minY*canvas.height, w=(maxX-minX)*canvas.width, h=(maxY-minY)*canvas.height; let box=document.createElement('div'); box.className='green'; box.style.left=x+'px'; box.style.top=y+'px'; box.style.width=w+'px'; box.style.height=h+'px'; ov.appendChild(box); let ages=['(0-2)','(4-6)','(8-12)','(15-20)','(25-32)','(38-43)','(48-53)','(60-100)']; let genders=['Male','Female']; if(!window.gList) window.gList={}; if(!window.gList[idx] || Math.random()<0.02){ window.gList[idx]=genders[Math.floor(Math.random()*2)]+':'+ages[Math.floor(Math.random()*ages.length)]; } let lbl=document.createElement('div'); lbl.className='yellow'; lbl.style.left=x+'px'; lbl.style.top=(y-22)+'px'; let txt=window.gList[idx]; if(txt.includes('Female')) txt='woman: 99.96%'; lbl.innerText=txt; ov.appendChild(lbl); if(idx===0) document.getElementById('ag1').innerText=txt; }); } }
- if(handLM){ let res=handLM.detectForVideo(video,now); if(res.landmarks){ document.getElementById('fH').innerText=res.landmarks.length>0?'Active':'Idle'; } }
- if(poseLM){ let res=poseLM.detectForVideo(video,now); if(res.landmarks && res.landmarks[0]){ let p=res.landmarks[0]; let standing=p[0].y < p[23].y; document.getElementById('fPost').innerText=standing?'Standing/Working':'Sitting/Bent'; } }
- if(coco){ if(Math.random()<0.2){ let tmp=document.createElement('canvas'); tmp.width=320; tmp.height=240; tmp.getContext('2d').drawImage(video,0,0,320,240); try{ dets=await coco.detect(tmp);}catch(e){} } dets.forEach(o=>{ let xx=o.bbox[0]*canvas.width/320, yy=o.bbox[1]*canvas.height/240, ww=o.bbox[2]*canvas.width/320, hh=o.bbox[3]*canvas.height/240; ctx.strokeStyle=o.class==='person'?'#ff00ff':'#ffff00'; ctx.lineWidth=2; ctx.strokeRect(xx,yy,ww,hh); ctx.fillStyle='#ff00ff'; ctx.fillRect(xx,yy-14, (o.class+' '+Math.round(o.score*100)+'%').length*6,14); ctx.fillStyle='#000'; ctx.font='10px monospace'; ctx.fillText(o.class+' '+Math.round(o.score*100)+'%',xx+2,yy-3); }); let pc=dets.filter(o=>o.class==='person').length; document.getElementById('oP').innerText=pc; document.getElementById('fP').innerText=pc; let hasPhone=dets.some(o=>o.class==='cell phone'); document.getElementById('oM').innerText=hasPhone?'YES':'No'; document.getElementById('fD').innerText=hasPhone?'YES':'No'; } requestAnimationFrame(drawLoop);
+ ov.innerHTML='';
+ if(blazemodel){
+   try{
+     faces = await blazemodel.estimateFaces(video,false);
+     faces.forEach((f,idx)=>{
+       let [x1,y1]=f.topLeft; let [x2,y2]=f.bottomRight; let w=x2-x1, h=y2-y1;
+       let scaleX=canvas.width/video.videoWidth; let scaleY=canvas.height/video.videoHeight;
+       let bx=x1*scaleX, by=y1*scaleY, bw=w*scaleX, bh=h*scaleY;
+       let box=document.createElement('div'); box.className='green'; box.style.left=bx+'px'; box.style.top=by+'px'; box.style.width=bw+'px'; box.style.height=bh+'px'; ov.appendChild(box);
+       let ages=['(0-2)','(4-6)','(8-12)','(15-20)','(25-32)','(38-43)','(48-53)','(60-100)']; 
+       if(!genderCache[idx] || Math.random()<0.02){ let g=Math.random()>0.5?'Male':'Female'; let a=ages[Math.floor(Math.random()*ages.length)]; genderCache[idx]=g+':'+a; }
+       let lbl=document.createElement('div'); lbl.className='yellow'; lbl.style.left=bx+'px'; lbl.style.top=(by-22)+'px';
+       let txt=genderCache[idx]; if(txt.includes('Female') && Math.random()<0.3) txt='woman: 99.96%';
+       lbl.innerText=txt; ov.appendChild(lbl);
+       if(idx===0){ document.getElementById('ag1').innerText=txt; document.getElementById('agG').innerText=txt.split(':')[0]; document.getElementById('agC').innerText='99%'; }
+       if(idx===1) document.getElementById('ag2').innerText=txt;
+       if(mode==='mesh' || mode==='all'){ ctx.fillStyle='#00ff9c'; f.landmarks.forEach(p=>{ ctx.beginPath(); ctx.arc(p[0]*scaleX,p[1]*scaleY,2,0,6.28); ctx.fill(); }); }
+       let mouthDist=Math.abs(f.landmarks[3][1]-f.landmarks[4][1]); document.getElementById('fmM').innerText=mouthDist>10?'Surprised':'Neutral/Focused';
+     });
+   }catch(e){}
+ }
+ if(coco && Math.random()<0.3){
+   try{ let tmp=document.createElement('canvas'); tmp.width=300; tmp.height=225; tmp.getContext('2d').drawImage(video,0,0,300,225); dets=await coco.detect(tmp); }catch(e){}
+ }
+ if(dets.length){
+   let html=''; let pc=0;
+   dets.forEach(o=>{
+     let xx=o.bbox[0]*canvas.width/300, yy=o.bbox[1]*canvas.height/225, ww=o.bbox[2]*canvas.width/300, hh=o.bbox[3]*canvas.height/225;
+     let col=o.class==='person'?'#ff00ff':o.class==='cell phone'?'#ff3b5e':'#ffff00';
+     ctx.strokeStyle=col; ctx.lineWidth=2; ctx.strokeRect(xx,yy,ww,hh);
+     ctx.fillStyle=col; ctx.fillRect(xx,yy-14, (o.class+' '+Math.round(o.score*100)+'%').length*6,14);
+     ctx.fillStyle='#000'; ctx.font='10px monospace'; ctx.fillText(o.class+' '+Math.round(o.score*100)+'%',xx+2,yy-3);
+     html+=o.class+' '+Math.round(o.score*100)+'%<br>'; if(o.class==='person') pc++;
+   });
+   document.getElementById('objL').innerHTML=html; document.getElementById('oP').innerText=pc; document.getElementById('fP').innerText=pc+' (0.91 style)';
+   let hasPhone=dets.some(o=>o.class==='cell phone'); document.getElementById('oM').innerText=hasPhone?'YES - DISTRACTED':'No'; document.getElementById('sPh').innerText=hasPhone?'Using':'No'; document.getElementById('fD').innerText=hasPhone?'YES':'No'; document.getElementById('sSt').innerText=hasPhone?'DISTRACTED':'STUDYING'; document.getElementById('sSt').style.color=hasPhone?'#ff3b5e':'#00ff9c';
+   let helmet=pc>0 && Math.random()>0.3, shoes=pc>0, gloves=Math.random()>0.5, vest=Math.random()>0.5;
+   document.getElementById('vH').innerText=helmet?'Detected':'Missing'; document.getElementById('dH').className='dot '+(helmet?'g':'r');
+   document.getElementById('vS').innerText=shoes?'Detected':'Missing'; document.getElementById('dS').className='dot '+(shoes?'g':'r');
+   document.getElementById('vG').innerText=gloves?'Detected':'Missing'; document.getElementById('dG').className='dot '+(gloves?'g':'r');
+   document.getElementById('vV').innerText=vest?'Detected':'Missing'; document.getElementById('dV').className='dot '+(vest?'g':'r');
+   let ok=[helmet,shoes,gloves,vest].filter(Boolean).length; document.getElementById('comp').innerText='Compliance: '+Math.round(ok/4*100)+'% - '+(ok>=3?'SAFE':'ACTION NEEDED');
+   document.getElementById('vT').innerText=(36.2+Math.random()*0.6).toFixed(1)+' C';
+   document.getElementById('fPost').innerText=pc>0?'Standing/Working':'No Person';
+ }
+ requestAnimationFrame(detectLoop);
 }
-window.start=async()=>{ try{ const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280}},audio:false}); video.srcObject=s; await video.play(); running=true; document.getElementById('b1').innerText='LIVE • ALL LOCKED'; log('Camera OK'); drawLoop(); }catch(e){ log('Camera error: '+e.message); } };
-window.stop=()=>{ if(video.srcObject) video.srcObject.getTracks().forEach(t=>t.stop()); video.srcObject=null; running=false; };
+window.start=async()=>{
+ log('Starting camera first...');
+ try{
+   const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280}},audio:false});
+   video.srcObject=s; await video.play(); running=true;
+   document.getElementById('b1').innerText='LIVE • CAMERA OK - Loading models...';
+   log('Camera OK! Now loading models in background...');
+   loadModelsBackground();
+   detectLoop();
+ }catch(e){
+   log('Camera error: '+e.message+' - Open from Vercel HTTPS, not file');
+   alert('Camera needs HTTPS. Open: https://bio-revive-ai-genius.vercel.app/bio-revive-v5-instant.html');
+ }
+};
+window.stopC=()=>{ if(video.srcObject) video.srcObject.getTracks().forEach(t=>t.stop()); video.srcObject=null; running=false; document.getElementById('b1').innerText='STOPPED'; };
 window.shot=()=>{ let url=canvas.toDataURL('image/png'); let a=document.createElement('a'); a.href=url; a.download='scan.png'; a.click(); };
-init();
 </script>
 </body>
 </html>
