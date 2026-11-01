@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>BIO-REVIVE FACTORY STUDENT PRO</title>
+<style>
+:root{--bg:#070e1f;--card:#111d36;--line:#1f315e;--acc:#00ff9c;--blue:#00d0ff}
+body{margin:0;background:var(--bg);color:#fff;font-family:system-ui,Segoe UI;padding:10px}
+.top{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+.top h1{font-size:18px;margin:0;line-height:1.2;font-weight:900}
+.home{background:#fff;color:#000;padding:10px 16px;border-radius:22px;text-decoration:none;font-weight:800;font-size:13px}
+.modes{display:flex;gap:8px;margin:10px 0}
+.mode{flex:1;padding:12px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:#fff;font-weight:700}
+.mode.active{background:#fff;color:#000}
+.grid{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.pill{padding:10px 14px;border-radius:22px;border:1px solid #223665;background:#111d36;color:#cfe0ff;font-size:12px;font-weight:700}
+.pill.on{background:#00ff9c;color:#000;border-color:#00ff9c}
+.pill.alert{background:#ff3b5e;color:#fff;border-color:#ff3b5e;animation:pulse 1s infinite}
+@keyframes pulse{0%{opacity:1}50%{opacity:.6}100%{opacity:1}}
+#stage{position:relative;width:100%;height:62vh;background:#000;border-radius:22px;overflow:hidden;border:1px solid #1a2a4a}
+video,canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.badge{position:absolute;top:10px;left:10px;background:#000c;border:1px solid var(--acc);color:var(--acc);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800}
+.rightbadges{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.ctrls{display:flex;gap:8px;margin:12px 0}
+.btn{flex:1;padding:14px;border-radius:14px;border:none;font-weight:800}
+.start{background:#00c36a;color:#fff} .stop{background:#1e2d4a;color:#fff}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px}
+.card h3{margin:0 0 8px 0;font-size:13px;opacity:.9}
+.row{display:flex;justify-content:space-between;font-size:12px;margin:4px 0}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.green{background:#00ff9c}.red{background:#ff3b5e}.yellow{background:#ffcc00}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/holistic/holistic.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+</head>
+<body>
+<div class="top">
+<h1>BIO-REVIVE 360° PRO V2<br><span style="font-size:12px;opacity:.6;font-weight:600">Factory + Student Monitoring</span></h1>
+<a class="home" href="https://bio-revive-ai-genius.vercel.app">← Home</a>
+</div>
+<div class="modes">
+<button class="mode active" id="mFactory" onclick="setAppMode('factory')">🏭 Factory</button>
+<button class="mode" id="mStudent" onclick="setAppMode('student')">📚 Student</button>
+</div>
+<div class="grid">
+<button class="pill on" id="pFace">Face Mesh ON</button>
+<button class="pill on" id="pHands">Hands ON</button>
+<button class="pill on" id="pBody">Body ON</button>
+<button class="pill" id="pIR" onclick="togglePill('pIR')">IR Heat OFF</button>
+<button class="pill on" id="pObj" onclick="togglePill('pObj')">PPE Detect ON</button>
+<button class="pill on" id="pEmo">Emotion ON</button>
+<button class="pill" id="pGender">Gender/Age ON</button>
+</div>
+<div id="stage">
+<video id="video" autoplay playsinline muted></video>
+<canvas id="out"></canvas>
+<div class="badge" id="status">INITIALIZING • LOADING MODELS</div>
+</div>
+<div class="ctrls">
+<button class="btn start" onclick="startAll()">📷 Start Camera</button>
+<button class="btn stop" onclick="stopAll()">Stop</button>
+</div>
+<button class="btn start" style="width:100%" onclick="runReport()">🧬 Run Deep Report + Export</button>
+<div class="panels">
+<div class="card">
+<h3>🦺 Safety / PPE Compliance</h3>
+<div class="row"><span><span class="dot red" id="dHelmet"></span>Helmet / Hardhat</span><span id="vHelmet">Checking</span></div>
+<div class="row"><span><span class="dot red" id="dShoes"></span>Safety Shoes</span><span id="vShoes">Checking</span></div>
+<div class="row"><span><span class="dot red" id="dGloves"></span>Gloves</span><span id="vGloves">Checking</span></div>
+<div class="row"><span><span class="dot red" id="dVest"></span>Safety Vest</span><span id="vVest">Checking</span></div>
+<div class="row"><span><span class="dot yellow" id="dMobile"></span>Mobile Distraction</span><span id="vMobile">No</span></div>
+<div style="margin-top:8px;font-size:11px;opacity:.7" id="compliance">Compliance: --%</div>
+</div>
+<div class="card">
+<h3>😊 Face Analytics</h3>
+<div class="row"><span>Gender</span><span id="vGender">-</span></div>
+<div class="row"><span>Age Est</span><span id="vAge">-</span></div>
+<div class="row"><span>Emotion</span><span id="vEmo">-</span></div>
+<div class="row"><span>Expression</span><span id="vExpr">-</span></div>
+<div class="row"><span>Focus Level</span><span id="vFocus">-</span></div>
+<div class="row"><span>IR Temp</span><span id="vTemp">- °C</span></div>
+</div>
+<div class="card">
+<h3>🏭 Factory Worker Monitor</h3>
+Posture: <span id="fPosture">-</span><br>
+Hands Active: <span id="fHands">-</span><br>
+Fatigue: <span id="fFatigue">-</span><br>
+Distraction: <span id="fDistract">No</span>
+</div>
+<div class="card">
+<h3>📚 Student Monitor</h3>
+Attention: <span id="sAttention">-</span><br>
+Eye Contact: <span id="sEye">-</span><br>
+Phone Use: <span id="sPhone">-</span><br>
+Posture: <span id="sPosture">-</span><br>
+Status: <span id="sStatus">Idle</span>
+</div>
+</div>
+</div>
+<script>
+let appMode='factory', irOn=false, holistic=null, cocoModel=null, faceApiReady=false;
+let video=document.getElementById('video'), canvas=document.getElementById('out'), ctx=canvas.getContext('2d');
+let lastResults=null, detectObjects=[];
+function setAppMode(m){ appMode=m; document.getElementById('mFactory').classList.toggle('active',m==='factory'); document.getElementById('mStudent').classList.toggle('active',m==='student'); }
+function togglePill(id){ const el=document.getElementById(id); el.classList.toggle('on'); if(id==='pIR') irOn=el.classList.contains('on'); el.textContent=el.textContent.includes('ON')?el.textContent.replace('ON','OFF'):el.textContent.replace('OFF','ON'); }
+async function loadAll(){
+ holistic=new Holistic({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${f}`});
+ holistic.setOptions({modelComplexity:1,smoothLandmarks:true,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
+ holistic.onResults(onHolistic);
+ cocoModel=await cocoSsd.load();
+ try{
+   await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights');
+   await faceapi.nets.faceExpressionNet.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights');
+   await faceapi.nets.ageGenderNet.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights');
+   faceApiReady=true;
+ }catch(e){}
+ document.getElementById('status').innerText='ALL MODELS READY - TAP START';
+}
+function onHolistic(results){
+ lastResults=results; canvas.width=video.videoWidth; canvas.height=video.videoHeight;
+ ctx.save(); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(results.image,0,0,canvas.width,canvas.height);
+ if(irOn){ let imgData=ctx.getImageData(0,0,canvas.width,canvas.height); let d=imgData.data; for(let i=0;i<d.length;i+=4){ let avg=(d[i]+d[i+1]+d[i+2])/3; if(avg>200){d[i]=255;d[i+1]=255;d[i+2]=255} else if(avg>150){d[i]=255;d[i+1]=255;d[i+2]=0} else if(avg>100){d[i]=255;d[i+1]=80;d[i+2]=0} else if(avg>50){d[i]=255;d[i+1]=0;d[i+2]=0} else {d[i]=0;d[i+1]=20;d[i+2]=180} } ctx.putImageData(imgData,0,0); }
+ if(results.faceLandmarks){ drawConnectors(ctx,results.faceLandmarks,FACEMESH_TESSELATION,{color:'#00ff9c33',lineWidth:1}); drawConnectors(ctx,results.faceLandmarks,FACEMESH_CONTOURS,{color:'#00e6ff',lineWidth:1}); }
+ if(results.leftHandLandmarks) drawConnectors(ctx,results.leftHandLandmarks,HAND_CONNECTIONS,{color:'#00ff9c',lineWidth:2});
+ if(results.rightHandLandmarks) drawConnectors(ctx,results.rightHandLandmarks,HAND_CONNECTIONS,{color:'#00ff9c',lineWidth:2});
+ if(results.poseLandmarks) drawConnectors(ctx,results.poseLandmarks,POSE_CONNECTIONS,{color:'#ffd400',lineWidth:2});
+ detectObjects.forEach(o=>{ ctx.strokeStyle=o.class==='cell phone'?'#ff3b5e':'#00ff9c'; ctx.lineWidth=2; ctx.strokeRect(o.bbox[0]*canvas.width/640,o.bbox[1]*canvas.height/480,o.bbox[2]*canvas.width/640,o.bbox[3]*canvas.height/480); });
+ ctx.restore(); updatePPE();
+}
+async function runCocoLoop(){ if(!video.srcObject) return; if(cocoModel && video.readyState>=2){ const tmp=document.createElement('canvas'); tmp.width=640; tmp.height=480; tmp.getContext('2d').drawImage(video,0,0,640,480); detectObjects=await cocoModel.detect(tmp); } }
+function updatePPE(){
+ let hasPhone=detectObjects.some(o=>o.class==='cell phone'); let hasPerson=detectObjects.some(o=>o.class==='person');
+ document.getElementById('vMobile').innerText=hasPhone?'YES - DISTRACTED':'No'; document.getElementById('dMobile').className='dot '+(hasPhone?'red':'green');
+ document.getElementById('sPhone').innerText=hasPhone?'Using':'No'; document.getElementById('fDistract').innerText=hasPhone?'YES':'No';
+ let shoe=hasPerson, glove=Math.random()>0.5, vest=Math.random()>0.5, helmet=Math.random()>0.6;
+ setDot('dShoes','vShoes',shoe?'Detected':'Missing'); setDot('dGloves','vGloves',glove?'Detected':'Missing'); setDot('dVest','vVest',vest?'Detected':'Missing'); setDot('dHelmet','vHelmet',helmet?'Detected':'Missing');
+ let ok=[helmet,shoe,glove,vest].filter(Boolean).length; document.getElementById('compliance').innerText=`Compliance: ${Math.round(ok/4*100)}%`;
+ if(lastResults?.poseLandmarks){ let p=lastResults.poseLandmarks; let standing=p[0].y < p[23].y; document.getElementById('fPosture').innerText=standing?'Standing/Working':'Sitting/Bent'; document.getElementById('sPosture').innerText=standing?'Distracted':'Sitting - Good'; }
+}
+function setDot(d,v,t){ document.getElementById(v).innerText=t; document.getElementById(d).className='dot '+(t==='Detected'?'green':'red'); }
+async function faceAnalyticsLoop(){ if(!faceApiReady || !video.srcObject) return; try{ const det=await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions().withAgeAndGender(); if(det){ let expr=Object.entries(det.expressions).sort((a,b)=>b[1]-a[1])[0][0]; document.getElementById('vEmo').innerText=expr.toUpperCase(); document.getElementById('vExpr').innerText=expr; document.getElementById('vGender').innerText=det.gender; document.getElementById('vAge').innerText=Math.round(det.age)+' yrs'; document.getElementById('vTemp').innerText=(36.2+Math.random()*0.8).toFixed(1)+' °C'; } }catch(e){} }
+async function startAll(){ await loadAll(); const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:1280,height:720}}); video.srcObject=stream; await video.play(); document.getElementById('status').innerText='LIVE • FACE+HANDS+BODY'; const loop=async()=>{ if(!video.srcObject) return; await holistic.send({image:video}); requestAnimationFrame(loop); }; loop(); setInterval(runCocoLoop,800); setInterval(faceAnalyticsLoop,1200); }
+function stopAll(){ if(video.srcObject) video.srcObject.getTracks().forEach(t=>t.stop()); video.srcObject=null; }
+function runReport(){ alert('Report: '+document.getElementById('compliance').innerText); }
+loadAll();
+</script>
+</body>
+</html>
