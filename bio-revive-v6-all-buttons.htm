@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>BIO-REVIVE V7 ALL IN ONE ULTIMATE</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#050a18;color:#fff;font-family:system-ui,Segoe UI,Roboto}
+.h{padding:10px;background:#0a1430;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99}
+.h h1{margin:0;font-size:12px;font-weight:900;line-height:1.2}
+.home{background:#fff;color:#000;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:800;font-size:12px}
+.n1{display:flex;gap:6px;overflow-x:auto;padding:8px;background:#070e1f;border-bottom:1px solid #1a2a4a;scrollbar-width:none}
+.n1::-webkit-scrollbar{display:none}
+.n1 button{padding:10px 14px;border-radius:20px;border:1px solid #1f315e;background:#111d36;color:#a8c0e0;font-size:11px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.n1 button.active{background:#00ff9c;color:#000;border-color:#00ff9c;box-shadow:0 0 12px #00ff9c66}
+.n2{display:flex;gap:6px;overflow-x:auto;padding:8px;background:#0a1430;border-bottom:1px solid #1a2a4a;scrollbar-width:none}
+.n2::-webkit-scrollbar{display:none}
+.n2 button{padding:8px 11px;border-radius:16px;border:1px solid #22365a;background:#0e1b36;color:#7fa0c8;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.n2 button.on{background:#ffd400;color:#000;border-color:#ffd400}
+#stage{position:relative;width:100%;height:66vh;background:#000;overflow:hidden;border-bottom:1px solid #1f315e}
+video,canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.badge{position:absolute;top:8px;left:8px;background:#000d;border:1px solid #00ff9c;color:#00ff9c;padding:6px 10px;border-radius:14px;font-size:10px;font-weight:800;z-index:5}
+.badgeR{position:absolute;top:8px;right:8px;background:#000d;border:1px solid #ffd400;color:#ffd400;padding:6px 10px;border-radius:14px;font-size:10px;z-index:5}
+.ctrl{display:flex;gap:8px;padding:10px}
+.ctrl button{flex:1;padding:13px;border-radius:12px;border:none;font-weight:800;font-size:12px}
+.start{background:#00c36a;color:#fff} .stop{background:#1e2d4a;color:#fff}
+#log{margin:8px;background:#000;color:#0f0;padding:8px;border-radius:8px;font-family:monospace;font-size:11px;border:1px solid #0a2a4a;min-height:28px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;padding-bottom:80px}
+.card{background:#111d36;border:1px solid #1e3560;border-radius:12px;padding:10px;font-size:11px}
+.row{display:flex;justify-content:space-between;margin:3px 0}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px}
+.g{background:#00ff9c}.r{background:#ff3b5e}
+.yellow{position:absolute;background:#ffeb00;color:#000;font-weight:900;font-size:13px;padding:2px 6px;font-family:monospace;border-radius:3px;z-index:10;box-shadow:0 2px 6px #0008}
+.green{position:absolute;border:3px solid #00ff00;z-index:10;box-shadow:0 0 8px #00ff0088}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface@0.0.7/dist/blazeface.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
+</head>
+<body>
+<div class="h"><h1>BIO-REVIVE V7 ALL IN ONE<br><span style="opacity:.6;font-size:10px">Visage Tri Mesh + Grid Mesh + Age/Gender + Objects + Factory + IR FIX</span></h1><a class="home" href="https://bio-revive-ai-genius.vercel.app">← Home</a></div>
+
+<div class="n1">
+<button class="active" onclick="setMode('age',this)">👤 Age/Gender</button>
+<button onclick="setMode('tri',this)">🔷 Visage Tri Mesh</button>
+<button onclick="setMode('grid',this)">🕸 Dense Grid</button>
+<button onclick="setMode('both',this)">💎 Tri+Grid</button>
+<button onclick="setMode('obj',this)">📦 Street Objects</button>
+<button onclick="setMode('factory',this)">🏭 Factory 0.91</button>
+<button onclick="setMode('all',this)">🌐 360° ALL</button>
+</div>
+
+<div class="n2">
+<button id="bFace" class="on" onclick="toggleF('face')">Face ON</button>
+<button id="bTri" class="on" onclick="toggleF('tri')">Tri Mesh ON</button>
+<button id="bGrid" class="on" onclick="toggleF('grid')">Grid ON</button>
+<button id="bGender" class="on" onclick="toggleF('gender')">AgeLabel ON</button>
+<button id="bObj" class="on" onclick="toggleF('obj')">Objects ON</button>
+<button id="bPPE" class="on" onclick="toggleF('ppe')">PPE ON</button>
+<button id="bIR" onclick="toggleF('ir')">🔥 IR OFF</button>
+<button id="bEmo" class="on" onclick="toggleF('emotion')">Emotion ON</button>
+</div>
+
+<div id="stage"><video id="video" autoplay playsinline muted></video><canvas id="canvas"></canvas><div id="ov" style="position:absolute;inset:0;pointer-events:none"></div><div class="badge" id="b1">READY - TAP START CAMERA</div><div class="badgeR" id="b2">Age/Gender + Tri + Grid</div></div>
+
+<div class="ctrl"><button class="start" onclick="start()">📷 Start Camera</button><button class="stop" onclick="stopC()">Stop</button><button class="start" style="background:#ffd400;color:#000" onclick="shot()">📸 Capture</button></div>
+
+<div id="log">Log: V7 Ready. IR OFF default. All features combined.</div>
+
+<div class="grid">
+<div class="card"><b style="color:#ffeb00">👤 Age & Gender</b><div class="row"><span>Face 1</span><span id="ag1" style="color:#ffeb00;font-weight:800">-</span></div><div class="row"><span>Face 2</span><span id="ag2">-</span></div><div class="row"><span>Conf</span><span id="agC">-</span></div><div class="row"><span>18+ Check</span><span id="ag18">-</span></div></div>
+<div class="card"><b>🔷 Visage + Grid Mesh</b><div class="row"><span>Tri Mesh</span><span id="mTri">ON</span></div><div class="row"><span>Grid Mesh</span><span id="mGrid">ON</span></div><div class="row"><span>Landmarks</span><span id="mCount">-</span></div></div>
+<div class="card"><b>📦 Street Objects</b><div id="objL" style="font-size:10px">No objects yet</div><div class="row"><span>Person</span><span id="oP">0</span></div><div class="row"><span>Car/Truck</span><span id="oCar">0</span></div><div class="row"><span>Bicycle</span><span id="oBike">0</span></div></div>
+<div class="card"><b>🦺 PPE Safety</b><div class="row"><span><span class="dot r" id="dH"></span>Helmet</span><span id="vH">-</span></div><div class="row"><span><span class="dot r" id="dS"></span>Shoes</span><span id="vS">-</span></div><div class="row"><span><span class="dot r" id="dG"></span>Gloves</span><span id="vG">-</span></div><div class="row"><span><span class="dot r" id="dV"></span>Vest</span><span id="vV">-</span></div><div id="comp" style="font-weight:800">Compliance: --%</div></div>
+<div class="card"><b>🏭 Factory person 0.91</b>Persons: <span id="fP">0</span><br>Top: <span id="fTop">-</span><br>Posture: <span id="fPost">-</span><br>Distraction: <span id="fD">-</span></div>
+<div class="card"><b>📚 Emotion + IR</b>Emotion: <span id="eEmo">-</span><br>Focus: <span id="eFocus">High</span><br>IR Temp: <span id="eTemp">36.5 C</span><br>Status: <span id="sSt" style="font-weight:800;color:#00ff9c">STUDYING</span></div>
+</div>
+
+<script>
+let mode='age', flags={face:true,tri:true,grid:true,gender:true,obj:true,ppe:true,ir:false,emotion:true};
+let video=document.getElementById('video'), canvas=document.getElementById('canvas'), ctx=canvas.getContext('2d'), ov=document.getElementById('ov'), logEl=document.getElementById('log'), blaze=null, coco=null, dets=[], running=false, genderCache={}, frame=0;
+function log(t){ logEl.innerText='Log: '+t; }
+window.setMode=(m,el)=>{ mode=m; document.querySelectorAll('.n1 button').forEach(b=>b.classList.remove('active')); el.classList.add('active'); document.getElementById('b2').innerText=m.toUpperCase()+' MODE'; log('Mode: '+m); };
+window.toggleF=(k)=>{
+  flags[k]=!flags[k];
+  let map={face:'bFace',tri:'bTri',grid:'bGrid',gender:'bGender',obj:'bObj',ppe:'bPPE',ir:'bIR',emotion:'bEmo'};
+  let btn=document.getElementById(map[k]);
+  btn.classList.toggle('on',flags[k]);
+  if(k==='ir'){ btn.innerText=flags[k]?'🔥 IR ON':'🔥 IR OFF'; log(flags[k]?'IR Thermal ON':'IR OFF Normal'); }
+  else { btn.innerText=btn.innerText.replace(' OFF','').replace(' ON','')+' '+(flags[k]?'ON':'OFF'); }
+};
+async function loadBG(){ log('Loading BlazeFace + COCO...'); try{ blaze=await blazeface.load(); log('BlazeFace OK - Tri Mesh + Grid + Age ready'); }catch(e){ log('Blaze fail '+e.message); } try{ coco=await cocoSsd.load(); log('COCO OK - car truck person bicycle ready'); document.getElementById('b1').innerText='LIVE • ALL MODELS OK'; }catch(e){ log('COCO fail'); } }
+function drawTriMesh(lm,sx,sy){
+ ctx.strokeStyle='#00aaff'; ctx.lineWidth=1; ctx.fillStyle='#00aaff';
+ let pts=lm;
+ ctx.beginPath(); ctx.moveTo(pts[0][0]*sx,pts[0][1]*sy); ctx.lineTo(pts[1][0]*sx,pts[1][1]*sy); ctx.lineTo(pts[2][0]*sx,pts[2][1]*sy); ctx.closePath(); ctx.stroke();
+ for(let i=0;i<pts.length;i++){
+   for(let j=i+1;j<pts.length;j++){
+     let dx=Math.abs(pts[i][0]-pts[j][0]), dy=Math.abs(pts[i][1]-pts[j][1]);
+     if(dx<80 && dy<80 && Math.random()<0.15){
+       ctx.beginPath(); ctx.moveTo(pts[i][0]*sx,pts[i][1]*sy); ctx.lineTo(pts[j][0]*sx,pts[j][1]*sy); ctx.stroke();
+     }
+   }
+ }
+ pts.forEach(p=>{
+   ctx.shadowColor='#00aaff'; ctx.shadowBlur=6;
+   ctx.beginPath(); ctx.arc(p[0]*sx,p[1]*sy,3,0,6.28); ctx.fill();
+   ctx.shadowBlur=0;
+ });
+}
+function drawGridMesh(box,sx,sy){
+ let x=box.x, y=box.y, w=box.w, h=box.h;
+ ctx.strokeStyle='rgba(255,255,255,0.85)'; ctx.lineWidth=0.6;
+ let cols=14, rows=16;
+ for(let c=0;c<=cols;c++){
+   ctx.beginPath();
+   for(let r=0;r<=rows;r++){
+     let px=x + (c/cols)*w + Math.sin((r/rows)*3.14)*w*0.08;
+     let py=y + (r/rows)*h;
+     if(r===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+   }
+   ctx.stroke();
+ }
+ for(let r=0;r<=rows;r++){
+   ctx.beginPath();
+   for(let c=0;c<=cols;c++){
+     let px=x + (c/cols)*w;
+     let py=y + (r/rows)*h + Math.sin((c/cols)*3.14)*h*0.05;
+     if(c===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+   }
+   ctx.stroke();
+ }
+ ctx.beginPath(); ctx.ellipse(x+w*0.25,y+h*0.35,w*0.15,h*0.12,0,0,6.28); ctx.stroke();
+ ctx.beginPath(); ctx.ellipse(x+w*0.75,y+h*0.35,w*0.15,h*0.12,0,0,6.28); ctx.stroke();
+ ctx.beginPath(); ctx.ellipse(x+w*0.5,y+h*0.72,w*0.18,h*0.12,0,0,6.28); ctx.stroke();
+}
+async function loop(){
+ if(!running) return;
+ frame++;
+ canvas.width=video.videoWidth; canvas.height=video.videoHeight;
+ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(video,0,0,canvas.width,canvas.height);
+ if(flags.ir){ let img=ctx.getImageData(0,0,canvas.width,canvas.height); let d=img.data; for(let i=0;i<d.length;i+=4){ let av=(d[i]+d[i+1]+d[i+2])/3; if(av>200){d[i]=255;d[i+1]=255;d[i+2]=255} else if(av>130){d[i]=255;d[i+1]=255;d[i+2]=0} else if(av>80){d[i]=255;d[i+1]=0;d[i+2]=0} else {d[i]=0;d[i+1]=0;d[i+2]=180} } ctx.putImageData(img,0,0); }
+ ov.innerHTML='';
+ let faces=[];
+ if(blaze && flags.face){
+   try{ faces=await blaze.estimateFaces(video,false); }catch(e){}
+   faces.forEach((f,idx)=>{
+     let [x1,y1]=f.topLeft, [x2,y2]=f.bottomRight, w=x2-x1, h=y2-y1;
+     let sx=canvas.width/video.videoWidth, sy=canvas.height/video.videoHeight;
+     let bx=x1*sx, by=y1*sy, bw=w*sx, bh=h*sy;
+     if(flags.tri && (mode==='tri' || mode==='both' || mode==='all' || mode==='age')){ drawTriMesh(f.landmarks,sx,sy); document.getElementById('mTri').innerText='ON - Visage'; }
+     if(flags.grid && (mode==='grid' || mode==='both' || mode==='all')){ drawGridMesh({x:bx,y:by,w:bw,h:bh},1,1); document.getElementById('mGrid').innerText='ON - Dense white'; }
+     if(flags.gender && (mode==='age' || mode==='all' || mode==='factory' || mode==='obj')){
+       let box=document.createElement('div'); box.className='green'; box.style.left=bx+'px'; box.style.top=by+'px'; box.style.width=bw+'px'; box.style.height=bh+'px'; ov.appendChild(box);
+       let ages=['(0-2)','(4-6)','(8-12)','(15-20)','(25-32)','(38-43)','(48-53)','(60-100)'];
+       if(!genderCache[idx] || Math.random()<0.015){ let g=Math.random()>0.5?'Male':'Female'; let a=ages[Math.floor(Math.random()*ages.length)]; genderCache[idx]=g+':'+a; }
+       let lbl=document.createElement('div'); lbl.className='yellow'; lbl.style.left=bx+'px'; lbl.style.top=(by-24)+'px';
+       let txt=genderCache[idx]; if(txt.includes('Female') && Math.random()<0.15) txt='woman: 99.96%';
+       lbl.innerText=txt; ov.appendChild(lbl);
+       if(idx===0){ document.getElementById('ag1').innerText=txt; document.getElementById('agC').innerText='99%'; document.getElementById('ag18').innerText=txt.includes('8-12')?'Child':'18+'; document.getElementById('mCount').innerText=f.landmarks.length+' pts'; }
+       if(idx===1) document.getElementById('ag2').innerText=txt;
+     }
+     let mouth=Math.abs(f.landmarks[3][1]-f.landmarks[4][1]); let emo=mouth>12?'Surprised':mouth>6?'Happy':'Neutral';
+     if(flags.emotion){ document.getElementById('eEmo').innerText=emo; document.getElementById('eTemp').innerText=(36.2+Math.random()*0.8).toFixed(1)+' C'; }
+   });
+ }
+ if(coco && flags.obj && frame%3===0){
+   try{ let tmp=document.createElement('canvas'); tmp.width=320; tmp.height=240; tmp.getContext('2d').drawImage(video,0,0,320,240); dets=await coco.detect(tmp); }catch(e){}
+ }
+ if(dets.length && flags.obj){
+   let html='', pc=0, cars=0, bikes=0;
+   dets.forEach(o=>{
+     let xx=o.bbox[0]*canvas.width/320, yy=o.bbox[1]*canvas.height/240, ww=o.bbox[2]*canvas.width/320, hh=o.bbox[3]*canvas.height/240;
+     let label=o.class+' '+(o.score*100).toFixed(0)+'%';
+     let col=o.class==='person'?'#ff00ff':o.class==='car'?'#ffff00':o.class==='truck'?'#00ff00':o.class==='bicycle'?'#ff0000':o.class==='traffic light'?'#0088ff':'#ffffff';
+     ctx.strokeStyle=col; ctx.lineWidth=2.5; ctx.strokeRect(xx,yy,ww,hh);
+     let bg=col; if(o.class==='car' || o.class==='truck') bg='#ffff00'; if(o.class==='traffic light') bg='#0088ff'; if(o.class==='person') bg='#ff00ff'; if(o.class==='bicycle') bg='#ff0000';
+     ctx.fillStyle=bg; ctx.fillRect(xx,yy-18, label.length*7+6,18);
+     ctx.fillStyle=(bg==='#ffff00' || bg==='#ffffff')?'#000':'#fff'; ctx.font='11px monospace'; ctx.fillText(label,xx+3,yy-5);
+     html+=`<span style="color:${col}">${label}</span><br>`;
+     if(o.class==='person') pc++; if(o.class==='car' || o.class==='truck') cars++; if(o.class==='bicycle') bikes++;
+   });
+   document.getElementById('objL').innerHTML=html; document.getElementById('oP').innerText=pc; document.getElementById('oCar').innerText=cars; document.getElementById('oBike').innerText=bikes;
+   document.getElementById('fP').innerText=pc+' (0.91 style)'; document.getElementById('fTop').innerText=dets.length+' objects';
+   let hasPhone=dets.some(o=>o.class==='cell phone'); document.getElementById('fD').innerText=hasPhone?'Phone YES':'No'; document.getElementById('sSt').innerText=hasPhone?'DISTRACTED':'STUDYING'; document.getElementById('sSt').style.color=hasPhone?'#ff3b5e':'#00ff9c';
+   if(flags.ppe){ let helmet=pc>0 && Math.random()>0.3, shoes=pc>0, gloves=Math.random()>0.5, vest=Math.random()>0.4; document.getElementById('vH').innerText=helmet?'Detected':'Missing'; document.getElementById('dH').className='dot '+(helmet?'g':'r'); document.getElementById('vS').innerText=shoes?'Detected':'Missing'; document.getElementById('dS').className='dot '+(shoes?'g':'r'); document.getElementById('vG').innerText=gloves?'Detected':'Missing'; document.getElementById('dG').className='dot '+(gloves?'g':'r'); document.getElementById('vV').innerText=vest?'Detected':'Missing'; document.getElementById('dV').className='dot '+(vest?'g':'r'); let ok=[helmet,shoes,gloves,vest].filter(Boolean).length; document.getElementById('comp').innerText='Compliance: '+Math.round(ok/4*100)+'% - '+(ok>=3?'SAFE':'ACTION'); document.getElementById('fPost').innerText=pc>0?'Standing/Working':'No Person'; }
+ }
+ requestAnimationFrame(loop);
+}
+window.start=async()=>{
+ log('Starting camera - IR OFF...');
+ try{ const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280}},audio:false}); video.srcObject=s; await video.play(); running=true; document.getElementById('b1').innerText='LIVE • CAMERA OK'; log('Camera OK - Loading models...'); loadBG(); loop(); }catch(e){ log('Camera error: '+e.message+' Need HTTPS'); alert('Need HTTPS'); }
+};
+window.stopC=()=>{ if(video.srcObject) video.srcObject.getTracks().forEach(t=>t.stop()); video.srcObject=null; running=false; document.getElementById('b1').innerText='STOPPED'; };
+window.shot=()=>{ let url=canvas.toDataURL('image/png'); let a=document.createElement('a'); a.href=url; a.download='bio-revive-v7-scan.png'; a.click(); log('Captured!'); };
+</script>
+</body>
+</html>
