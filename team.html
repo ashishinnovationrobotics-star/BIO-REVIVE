@@ -23,8 +23,14 @@ nav{position:sticky;top:0;z-index:90;background:rgba(7,10,20,0.82);backdrop-filt
 .card{background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:18px;padding:18px;transition:0.24s}
 .card:hover{transform:translateY(-4px);border-color:rgba(44,246,179,0.22)}
 .card h3{color:white}.card b{color:var(--green)}
+.av{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;border-radius:12px;margin-bottom:12px;border:1px solid var(--border);display:block}
 .badge{display:inline-block;background:rgba(255,255,255,0.06);border:1px solid var(--border);padding:4px 10px;border-radius:999px;font-size:0.7rem;font-weight:700;margin-top:6px}
 .launch{background:linear-gradient(135deg,#0E1A33,#070A14);border:1px solid var(--border);border-radius:20px;padding:24px;text-align:center;margin:28px 0}
+.tour{position:relative;overflow:hidden;border-radius:22px;border:1px solid rgba(44,246,179,0.3);padding:26px;margin:26px 0;text-align:center;background:radial-gradient(600px 240px at 50% 0%,rgba(91,124,255,0.28),transparent),linear-gradient(135deg,#0b1430,#070A14);box-shadow:0 0 40px rgba(44,246,179,0.12)}
+.tour h2{font-family:'Manrope';color:white;font-size:1.5rem;margin:6px 0}.tour p{color:var(--muted);max-width:560px;margin:0 auto 14px;font-size:0.9rem;line-height:1.55}
+.faces{display:flex;justify-content:center;margin:12px 0 16px}.faces img{width:62px;height:62px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid var(--green);margin-left:-12px;box-shadow:0 0 18px rgba(44,246,179,0.35);animation:fl 3s ease-in-out infinite}.faces img:nth-child(2){animation-delay:.4s}.faces img:nth-child(3){animation-delay:.8s}.faces img:nth-child(4){animation-delay:1.2s}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.btn-tour{background:linear-gradient(135deg,#2cf6b3,#5b7cff);color:#04101a;border:none;padding:13px 26px;font-size:0.95rem;animation:glow 2.4s infinite}@keyframes glow{0%,100%{box-shadow:0 0 0 rgba(44,246,179,0)}50%{box-shadow:0 0 28px rgba(44,246,179,0.55)}}
 #boot{position:fixed;inset:0;z-index:99999;background:linear-gradient(180deg,#070A14,#0D1A33);display:flex;align-items:center;justify-content:center;transition:all 0.9s cubic-bezier(0.76,0,0.24,1)}
 #boot.hide{transform:translateY(-100%);opacity:0;pointer-events:none}
 .boot-core{position:absolute;width:640px;height:640px;border-radius:50%;border:1px dashed rgba(44,246,179,0.18);top:50%;left:50%;transform:translate(-50%,-50%);animation:rotate 28s linear infinite}
@@ -69,12 +75,14 @@ nav{position:sticky;top:0;z-index:90;background:rgba(7,10,20,0.82);backdrop-filt
 <a href="index.html" class="btn btn-dark">← Home</a>
 <a href="hardware.html" class="btn">Hardware →</a>
 <a href="face.html" class="btn">Face Scan →</a>
+<a href="team-cinema.html" class="btn btn-green">🎬 Cinematic Tour</a>
+<a href="team-tour.html" class="btn btn-green">🚀 Space Tour</a>
 <a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow">BIO-REVIVE AI ↗</a>
 </div>
 </nav>
 
 <div class="hero">
-<span class="mono" style="background:rgba(44,246,179,0.12);border:1px solid rgba(44,246,179,0.22);color:var(--green);padding:5px 12px;border-radius:999px;font-size:0.68rem;font-weight:800">MCA 2025 • JRU RANCHI • FUTURE TIME-TRAVEL LAB</span>
+<span class="mono" style="background:rgba(44,246,179,0.12);border:1px solid rgba(44,246,179,0.22);color:var(--green);padding:5px 12px;border-radius:999px;font-size:0.68rem;font-weight:800">MCA 2026 • JRU RANCHI • FUTURE TIME-TRAVEL LAB</span>
 <h1 style="margin-top:10px">Meet the Minds Behind<br>Bio-Revive 360°</h1>
 <p style="color:var(--muted);margin-top:6px">Futuristic Software • Health AI Genius • Scientist • Developer</p>
 
@@ -88,16 +96,26 @@ nav{position:sticky;top:0;z-index:90;background:rgba(7,10,20,0.82);backdrop-filt
 </div>
 
 <div class="row" style="margin-top:10px">
+<a href="team-cinema.html" class="btn btn-tour">🎬 Cinematic Team Tour</a>
+<a href="team-tour.html" class="btn btn-tour">🛰️ Start Space Tour</a>
 <a href="https://biorevive-jh9.caffeine.xyz/" target="_blank" class="btn btn-glow" style="padding:12px 24px">🚀 Launch BIO-REVIVE AI</a>
 <a href="index.html" class="btn btn-dark">← Back to Home</a>
 </div>
 </div>
 
 <div class="grid">
-<div class="card"><h3>👨‍💻 Ashish Kumar</h3><b>MC/25/018</b><br><span class="badge">Lead AI Developer & Architect</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">System Design, GenAI, RAG, AI Trinity, Cloud - Futuristic Software Lab Lead</p></div>
-<div class="card" style="border-color:rgba(44,246,179,0.22)"><h3>👩‍🎨 Gudiya Kumari</h3><b>MC/25/044</b><br><span class="badge">Frontend & UI/UX Scientist</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">React, Next.js, Dashboard, Visualization, Brain Mapping UI - UI/UX Genius</p></div>
-<div class="card"><h3>👨‍🔧 Harshvardhan Kumar</h3><b>MC/25/004</b><br><span class="badge">Backend & AI Integration</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">FastAPI, OCR, NLP, ML, Hardware ESP32, Edge AI - Backend & IoT</p></div>
-<div class="card" style="border-color:rgba(91,124,255,0.22)"><h3>📊 Saksham Keshri</h3><b>MC/25/010</b><br><span class="badge">Data Analytics & Research Lead</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">Data Structuring, Risk Indicators, Biological Age Analytics - Analytics Lead</p></div>
+<div class="card"><img class="av" src="ashish.jpg" alt="Ashish Kumar"><h3>👨‍💻 Ashish Kumar</h3><b>MC/25/018</b><br><span class="badge">Lead AI Developer & Architect</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">System Design, GenAI, RAG, AI Trinity, Cloud - Futuristic Software Lab Lead</p></div>
+<div class="card" style="border-color:rgba(44,246,179,0.22)"><img class="av" src="gudiya.jpg" alt="Gudiya Kumari"><h3>👩‍🎨 Gudiya Kumari</h3><b>MC/25/044</b><br><span class="badge">Frontend & UI/UX Scientist</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">React, Next.js, Dashboard, Visualization, Brain Mapping UI - UI/UX Genius</p></div>
+<div class="card"><img class="av" src="harsh.jpg" alt="Harshvardhan Kumar"><h3>👨‍🔧 Harshvardhan Kumar</h3><b>MC/25/004</b><br><span class="badge">Backend & AI Integration</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">FastAPI, OCR, NLP, ML, Hardware ESP32, Edge AI - Backend & IoT</p></div>
+<div class="card" style="border-color:rgba(91,124,255,0.22)"><img class="av" src="saksham.jpg" alt="Saksham Keshri"><h3>📊 Saksham Keshri</h3><b>MC/25/010</b><br><span class="badge">Data Analytics & Research Lead</span><p style="font-size:0.82rem;color:var(--muted);margin-top:6px">Data Structuring, Risk Indicators, Biological Age Analytics - Analytics Lead</p></div>
+</div>
+
+<div class="tour">
+<span class="mono" style="color:var(--green);font-size:0.68rem;letter-spacing:.2em">NEW · SPACE &amp; SCIENCE EXPERIENCE</span>
+<h2>Take the Cinematic Space Tour</h2>
+<div class="faces"><img src="ashish.jpg" alt=""><img src="gudiya.jpg" alt=""><img src="harsh.jpg" alt=""><img src="saksham.jpg" alt=""></div>
+<p>Orbit a living planet while each team member flashes onto the screen and a natural female voice explains their role. Includes ambient space sound, rotation controls and a full cinema view.</p>
+<a href="team-tour.html" class="btn btn-tour">🚀 Begin Space Tour</a>
 </div>
 
 <div class="launch">
@@ -113,7 +131,7 @@ nav{position:sticky;top:0;z-index:90;background:rgba(7,10,20,0.82);backdrop-filt
 </div>
 
 <footer style="text-align:center;padding:22px;color:var(--muted);border-top:1px solid var(--border);margin-top:28px;font-size:0.82rem">
-<div><b style="color:white">BIO-REVIVE 360° Future Lab</b> • Futuristic Software • Health AI Genius • Scientist • Developer</div>
+<div><b style="color:white">BIO-REVIVE 360° Future Lab</b> • Futuristic Software • Health AI Genius • Scientist • Developer • 2026</div>
 <div style="margin-top:6px">Team: Ashish MC/25/018 | Gudiya MC/25/044 | Harshvardhan MC/25/004 | Saksham MC/25/010 • JRU Ranchi</div>
 </footer>
 </div>
